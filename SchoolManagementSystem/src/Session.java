@@ -21,7 +21,6 @@ public class Session {
         this.startTime = startTime;
         this.endTime = endTime;
         this.classroomID = classroomID;
-        for (int i = 0; i < attendees.length; i++) {
             this.attendees.add(new Student(attendees[i]));
         }       
         this.attendees = new ArrayList<>(attendees);
