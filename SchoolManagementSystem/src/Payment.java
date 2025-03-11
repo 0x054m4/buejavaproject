@@ -5,7 +5,6 @@ public class Payment {
     private String description;
     private String date;
 
-    // Constructors
     public Payment(int paymentID) {
         this.paymentID = paymentID;
     }
@@ -17,7 +16,6 @@ public class Payment {
         this.date = date;
     }
 
-    // Getters and Setters
     public void setPaymentID(int paymentID) {
         this.paymentID = paymentID;
     }
@@ -58,28 +56,22 @@ public class Payment {
         return date;
     }
 
-    // Database operations (stubs)
     public boolean saveToDB() {
-        // Simulate saving to a database
         return true;
     }
 
     public boolean updateOnDB() {
-        // Simulate updating in a database
         return true;
     }
 
     public boolean fetchFromDB() {
-        // Simulate fetching from a database
         return true;
     }
 
     public boolean deleteFromDB() {
-        // Simulate deleting from a database
         return true;
     }
 
-    // Additional methods
     public boolean addPayment(float amount) {
         this.amount += amount;
         return true;

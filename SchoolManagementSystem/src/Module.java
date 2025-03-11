@@ -5,7 +5,6 @@ public class Module {
     private String moduleName;
     private ArrayList<Student> enrolledStudents;
 
-    // Constructors
     public Module(int moduleID) {
         this.moduleID = moduleID;
         this.enrolledStudents = new ArrayList<>();
@@ -16,7 +15,6 @@ public class Module {
         this.enrolledStudents = enrolledStudents;
     }
 
-    // Getters and Setters
     public void setModuleID(int moduleID) {
         this.moduleID = moduleID;
     }

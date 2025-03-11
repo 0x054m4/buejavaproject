@@ -2,15 +2,11 @@ public class Classroom {
     private int classroomId;
     private String roomName;
     private int capacity;
-
-    // Constructor
     public Classroom(int classroomId, String roomName, int capacity) {
         this.classroomId = classroomId;
         this.roomName = roomName;
         this.capacity = capacity;
     }
-
-    // Getters and Setters
     public void setClassroomId(int classroomId) {
         this.classroomId = classroomId;
     }
@@ -34,14 +30,10 @@ public class Classroom {
     public int getCapacity() {
         return capacity;
     }
-
-    // Assign a teacher to the classroom
     public boolean assignTeacher(int teacherID) {
         System.out.println("Teacher " + teacherID + " assigned to classroom " + classroomId);
         return true;
     }
-
-    // Update the classroom capacity
     public void updateCapacity(int newCapacity) {
         this.capacity = newCapacity;
         System.out.println("Updated classroom capacity to: " + newCapacity);
