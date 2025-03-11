@@ -31,7 +31,7 @@ public class Student {
 
     public void setName(String name) {
         this.name = name;
-=======
+
 public class Staff {
     private int staffId;
     private String name;
