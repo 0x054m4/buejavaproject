@@ -21,8 +21,8 @@ public class Session {
         this.startTime = startTime;
         this.endTime = endTime;
         this.classroomID = classroomID;
-        for (int i = 0; i < attendees.size(); i++) {
-            this.attendees.set(i, attendees.get(i));
+        for (int i = 0; i < attendees.length; i++) {
+            this.attendees.add(new Student(attendees[i]));
         }       
         this.status = status;
 
@@ -80,7 +80,7 @@ public class Session {
       this.attendees=attendees;
     }
 
-    public Student[] getAttendees() {
+    public ArrayList<Student> getAttendees() {
         for (Student attendee : attendees) {
             System.out.println(attendee);
         }
