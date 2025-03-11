@@ -77,7 +77,7 @@ public class Session {
     }
 
     public void setAttendees(ArrayList<Student> attendees) {
-      this.attendees=attendees;
+        this.attendees = new ArrayList<>(attendees); // Creates a copy of the list
     }
 
     public ArrayList<Student> getAttendees() {
