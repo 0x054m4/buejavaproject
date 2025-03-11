@@ -16,6 +16,7 @@ public class Session {
 
     public Session(int moduleID, String sessionName, Date startTime, String endTime,
                    int classroomID, int[] attendees, String status) {
+                   int classroomID, ArrayList<Student> attendees, String status) {
         this.moduleID = moduleID;
         this.sessionName = sessionName;
         this.startTime = startTime;
@@ -24,6 +25,7 @@ public class Session {
         for (int i = 0; i < attendees.length; i++) {
             this.attendees.add(new Student(attendees[i]));
         }       
+        this.attendees = new ArrayList<>(attendees);
         this.status = status;
 
     }
@@ -78,6 +80,7 @@ public class Session {
 
     public void setAttendees(ArrayList<Student> attendees) {
         this.attendees = new ArrayList<>(attendees); // Creates a copy of the list
+        this.attendees =attendees;
     }
 
     public ArrayList<Student> getAttendees() {
