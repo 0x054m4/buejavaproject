@@ -1,6 +1,3 @@
-import java.util.ArrayList;
-import java.util.Date;
-
 public class Enrollment {
     private int enrollmentID;
     private int studentID;
