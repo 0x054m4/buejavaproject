@@ -52,4 +52,8 @@ public class Enrollment{
     public int getEnrollmentID(){
         return enrollmentID;
     }
+
+    public void approveEnrollment(){
+        
+    }
 }
