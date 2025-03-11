@@ -21,8 +21,6 @@ public class Session {
         this.startTime = startTime;
         this.endTime = endTime;
         this.classroomID = classroomID;
-            this.attendees.add(new Student(attendees[i]));
-        }       
         this.attendees = new ArrayList<>(attendees);
         this.status = status;
 
@@ -77,7 +75,6 @@ public class Session {
     }
 
     public void setAttendees(ArrayList<Student> attendees) {
-        this.attendees = new ArrayList<>(attendees); // Creates a copy of the list
         this.attendees =attendees;
     }
 
