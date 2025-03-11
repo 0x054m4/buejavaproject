@@ -16,11 +16,11 @@ public class Staff {
         this.status = status;
     }
 
-    public int getStaffID() {
+    public int getStaffId() {
         return staffId;
     }
 
-    public void setStaffID(int staffId) {
+    public void setStaffId(int staffId) {
         this.staffId = staffId;
     }
 
@@ -30,6 +30,14 @@ public class Staff {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getRole() {
@@ -48,13 +56,11 @@ public class Staff {
         this.status = status;
     }
 
-    public boolean login(int staffID) {
-        System.out.println("Staff " + staffID + " logged in.");
+    public boolean login() {
         return true;
     }
 
     public void logout() {
-        System.out.println("Staff " + staffId + " logged out.");
     }
 }
 
