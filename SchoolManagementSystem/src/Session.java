@@ -15,7 +15,6 @@ public class Session {
     }
 
     public Session(int moduleID, String sessionName, Date startTime, String endTime,
-                   int classroomID, int[] attendees, String status) {
                    int classroomID, ArrayList<Student> attendees, String status) {
         this.moduleID = moduleID;
         this.sessionName = sessionName;
