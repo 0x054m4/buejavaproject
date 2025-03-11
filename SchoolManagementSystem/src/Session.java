@@ -18,27 +18,17 @@ public class Session {
 
     // Corrected Constructor
     public Session(int moduleID, String sessionName, Date startTime, String endTime,
-<<<<<<< HEAD
                    int classroomID, ArrayList<Student> attendees, String status) {
-=======
-            int classroomID, int[] attendees, String status) {
->>>>>>> d534e8d7d601b007f4a4f74918d215f317be1c5d
         this.moduleID = moduleID;
         this.sessionName = sessionName;
         this.startTime = startTime;
         this.endTime = endTime;
         this.classroomID = classroomID;
-<<<<<<< HEAD
         this.attendees = new ArrayList<>(attendees);
-=======
->>>>>>> d534e8d7d601b007f4a4f74918d215f317be1c5d
         this.status = status;
         this.attendees = new ArrayList<>();
 
-        // Convert int[] to ArrayList<Student>
-        for (int studentID : attendees) {
-            this.attendees.add(new Student(studentID));
-        }
+    
     }
 
     // Getters and Setters
@@ -91,15 +81,11 @@ public class Session {
     }
 
     public void setAttendees(ArrayList<Student> attendees) {
-<<<<<<< HEAD
         this.attendees =attendees;
-=======
-        this.attendees = new ArrayList<>(attendees); // Copies the list to prevent external modifications
->>>>>>> d534e8d7d601b007f4a4f74918d215f317be1c5d
     }
 
     public ArrayList<Student> getAttendees() {
-        return new ArrayList<>(attendees); // Returns a copy to maintain encapsulation
+        return new ArrayList<>(attendees); 
     }
 
     public void setStatus(String status) {
