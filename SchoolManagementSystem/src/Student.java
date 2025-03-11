@@ -7,7 +7,6 @@ public class Student {
     private float annualFee;
     private List<Module> enrolledModules;
 
-    // Constructors
     public Student(int studentID) {
         this.studentID = studentID;
     }
@@ -19,7 +18,6 @@ public class Student {
         this.enrolledModules = enrolledModules;
     }
 
-    // Getters and Setters
     public void setStudentID(int studentID) {
         this.studentID = studentID;
     }
@@ -60,7 +58,6 @@ public class Student {
         return enrolledModules;
     }
 
-    // Methods
     public void manageAccount(int studentID, Student newDetails) {
         if (this.studentID == studentID) {
             this.name = newDetails.getName();
@@ -71,15 +68,12 @@ public class Student {
     }
 
     public void enrollInModule(int moduleID) {
-        // Logic to enroll in a module
     }
 
     public void cancelEnrollment(int moduleID) {
-        // Logic to cancel enrollment in a module
     }
 
     public void updateEnrollment(int moduleID, int newModuleID) {
-        // Logic to update module enrollment
     }
 
     public List<Module> viewModules() {
