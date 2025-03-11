@@ -1,35 +1,32 @@
-import java.util.ArrayList;
-import java.util.Date;
+import java.util.*;
 
 public class Session {
     private int sessionID;
     private int moduleID;
     private String sessionName;
     private Date startTime;
-    private Date endTime;
+    private String endTime;
     private int classroomID;
-    private ArrayList<Student> attendees = new ArrayList<>();
+    private ArrayList<Student> attendees;
     private String status;
 
-    // Constructor with only sessionID
     public Session(int sessionID) {
         this.sessionID = sessionID;
+        this.attendees = new ArrayList<>();
     }
 
-    // Full constructor
-    public Session(int moduleID, String sessionName, Date startTime, Date endTime,
-                   int classroomID, int[] attendeeIDs, String status) {
+    public Session(int moduleID, String sessionName, Date startTime, String endTime,
+                   int classroomID, ArrayList<Student> attendees, String status) {
         this.moduleID = moduleID;
         this.sessionName = sessionName;
         this.startTime = startTime;
         this.endTime = endTime;
         this.classroomID = classroomID;
+        this.attendees = new ArrayList<>(attendees);
         this.status = status;
-        
-        // Convert array of student IDs to Student objects
-        for (int id : attendeeIDs) {
-            this.attendees.add(new Student(id));
-        }
+        this.attendees = new ArrayList<>();
+
+    
     }
 
     public void setSessionID(int sessionID) {
@@ -64,11 +61,11 @@ public class Session {
         return startTime;
     }
 
-    public void setEndTime(Date endTime) {
+    public void setEndTime(String endTime) {
         this.endTime = endTime;
     }
 
-    public Date getEndTime() {
+    public String getEndTime() {
         return endTime;
     }
 
@@ -81,11 +78,11 @@ public class Session {
     }
 
     public void setAttendees(ArrayList<Student> attendees) {
-        this.attendees = new ArrayList<>(attendees); // Ensures immutability
+        this.attendees =attendees;
     }
 
     public ArrayList<Student> getAttendees() {
-        return new ArrayList<>(attendees); // Returns a copy to prevent modification outside the class
+        return new ArrayList<>(attendees); 
     }
 
     public void setStatus(String status) {
