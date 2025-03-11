@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 import java.util.List;
 
 public class Student {
@@ -32,6 +33,8 @@ public class Student {
     public void setName(String name) {
         this.name = name;
 
+=======
+>>>>>>> 5f7bad084aa2e3980d86c42d23d54bc18549191f
 public class Staff {
     private int staffId;
     private String name;
@@ -65,13 +68,9 @@ public class Staff {
 
 <<<<<<< HEAD
     public void setrole(String role) {
-        this.role = role;
     }
-
     public String getrole() {
-        return role;
     }
-
     }
 
 =======
@@ -108,4 +107,3 @@ public class Staff {
 enum StaffStatus {
     ACTIVE, INACTIVE, SUSPENDED, TERMINATED;
 }
->>>>>>> 8e11b52cbbf7d995ecad38cbd05cd8d4f8333119
