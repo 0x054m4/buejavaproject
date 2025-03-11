@@ -59,21 +59,12 @@ public class Staff {
 
     public void setStaffID(int staffId) {
         this.staffId = staffId;
->>>>>>> 8e11b52cbbf7d995ecad38cbd05cd8d4f8333119
     }
 
     public String getName() {
         return name;
     }
 
-<<<<<<< HEAD
-    public void setrole(String role) {
-    }
-    public String getrole() {
-    }
-    }
-
-=======
     public void setName(String name) {
         this.name = name;
     }
