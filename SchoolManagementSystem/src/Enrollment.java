@@ -14,7 +14,6 @@ public class Enrollment {
         this.enrollmentStatus = enrollmentStatus;
     }
 
-    // Getters and Setters
     public void setEnrollmentID(int enrollmentID) {
         this.enrollmentID = enrollmentID;
     }
@@ -48,19 +47,19 @@ public class Enrollment {
     }
 
     public void setActive() {
-        this.enrollmentStatus = Status.ACTIVE;
+        enrollmentStatus = Status.ACTIVE;
     }
 
     public void setCancelled() {
-        this.enrollmentStatus = Status.CANCELED;
+        enrollmentStatus = Status.CANCELED;
     }
 
     public boolean isActive() {
-        return this.enrollmentStatus == Status.ACTIVE;
+        return enrollmentStatus == Status.ACTIVE;
     }
 
     public Status status() {
-        return this.enrollmentStatus;
+        return enrollmentStatus;
     }
 }
 
