@@ -1,47 +1,37 @@
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
 
 public class Session {
     private int sessionID;
     private int moduleID;
     private String sessionName;
     private Date startTime;
-    private String endTime;
+    private Date endTime;
     private int classroomID;
-    private ArrayList<Student> attendees;
+    private ArrayList<Student> attendees = new ArrayList<>();
     private String status;
 
-    // Constructor with session ID only
+    // Constructor with only sessionID
     public Session(int sessionID) {
         this.sessionID = sessionID;
-        this.attendees = new ArrayList<>();
     }
 
-    // Corrected Constructor
-    public Session(int moduleID, String sessionName, Date startTime, String endTime,
-<<<<<<< HEAD
-                   int classroomID, ArrayList<Student> attendees, String status) {
-=======
-            int classroomID, int[] attendees, String status) {
->>>>>>> d534e8d7d601b007f4a4f74918d215f317be1c5d
+    // Full constructor
+    public Session(int moduleID, String sessionName, Date startTime, Date endTime,
+                   int classroomID, int[] attendeeIDs, String status) {
         this.moduleID = moduleID;
         this.sessionName = sessionName;
         this.startTime = startTime;
         this.endTime = endTime;
         this.classroomID = classroomID;
-<<<<<<< HEAD
-        this.attendees = new ArrayList<>(attendees);
-=======
->>>>>>> d534e8d7d601b007f4a4f74918d215f317be1c5d
         this.status = status;
-        this.attendees = new ArrayList<>();
-
-        // Convert int[] to ArrayList<Student>
-        for (int studentID : attendees) {
-            this.attendees.add(new Student(studentID));
+        
+        // Convert array of student IDs to Student objects
+        for (int id : attendeeIDs) {
+            this.attendees.add(new Student(id));
         }
     }
 
-    // Getters and Setters
     public void setSessionID(int sessionID) {
         this.sessionID = sessionID;
     }
@@ -74,11 +64,11 @@ public class Session {
         return startTime;
     }
 
-    public void setEndTime(String endTime) {
+    public void setEndTime(Date endTime) {
         this.endTime = endTime;
     }
 
-    public String getEndTime() {
+    public Date getEndTime() {
         return endTime;
     }
 
@@ -91,15 +81,11 @@ public class Session {
     }
 
     public void setAttendees(ArrayList<Student> attendees) {
-<<<<<<< HEAD
-        this.attendees =attendees;
-=======
-        this.attendees = new ArrayList<>(attendees); // Copies the list to prevent external modifications
->>>>>>> d534e8d7d601b007f4a4f74918d215f317be1c5d
+        this.attendees = new ArrayList<>(attendees); // Ensures immutability
     }
 
     public ArrayList<Student> getAttendees() {
-        return new ArrayList<>(attendees); // Returns a copy to maintain encapsulation
+        return new ArrayList<>(attendees); // Returns a copy to prevent modification outside the class
     }
 
     public void setStatus(String status) {
