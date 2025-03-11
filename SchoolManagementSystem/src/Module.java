@@ -3,7 +3,7 @@ import java.util.*;
 public class Module {
     private int moduleID;
     private String moduleName;
-    private List<Student> enrolledStudents;
+    private ArrayList<Student> enrolledStudents;
 
     // Constructors
     public Module(int moduleID) {
@@ -11,7 +11,7 @@ public class Module {
         this.enrolledStudents = new ArrayList<>();
     }
 
-    public Module(String moduleName, List<Student> enrolledStudents) {
+    public Module(String moduleName, ArrayList<Student> enrolledStudents) {
         this.moduleName = moduleName;
         this.enrolledStudents = enrolledStudents;
     }
@@ -33,11 +33,11 @@ public class Module {
         return moduleName;
     }
 
-    public void setEnrolledStudents(List<Student> enrolledStudents) {
+    public void setEnrolledStudents(ArrayList<Student> enrolledStudents) {
         this.enrolledStudents = enrolledStudents;
     }
 
-    public List<Student> getEnrolledStudents() {
+    public ArrayList<Student> getEnrolledStudents() {
         return enrolledStudents;
     }
 
