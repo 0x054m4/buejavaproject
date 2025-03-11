@@ -10,13 +10,11 @@ public class Session {
     private ArrayList<Student> attendees;
     private String status;
 
-    // Constructor with session ID only
     public Session(int sessionID) {
         this.sessionID = sessionID;
         this.attendees = new ArrayList<>();
     }
 
-    // Corrected Constructor
     public Session(int moduleID, String sessionName, Date startTime, String endTime,
                    int classroomID, ArrayList<Student> attendees, String status) {
         this.moduleID = moduleID;
@@ -31,7 +29,6 @@ public class Session {
     
     }
 
-    // Getters and Setters
     public void setSessionID(int sessionID) {
         this.sessionID = sessionID;
     }
