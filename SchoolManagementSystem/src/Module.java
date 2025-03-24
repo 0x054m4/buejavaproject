@@ -3,16 +3,15 @@ import java.util.*;
 public class Module {
     private int moduleID;
     private String moduleName;
-    private ArrayList<Student> enrolledStudents;
 
     public Module(int moduleID) {
         this.moduleID = moduleID;
-        this.enrolledStudents = new ArrayList<>();
+        
     }
 
-    public Module(String moduleName, ArrayList<Student> enrolledStudents) {
+    public Module(String moduleName) {
         this.moduleName = moduleName;
-        this.enrolledStudents = enrolledStudents;
+        
     }
 
     public void setModuleID(int moduleID) {
@@ -31,24 +30,6 @@ public class Module {
         return moduleName;
     }
 
-    public void setEnrolledStudents(ArrayList<Student> enrolledStudents) {
-        this.enrolledStudents = enrolledStudents;
-    }
 
-    public ArrayList<Student> getEnrolledStudents() {
-        return enrolledStudents;
-    }
 
-    // Methods
-    public boolean addStudent(Student student) {
-        if (!enrolledStudents.contains(student)) {
-            enrolledStudents.add(student);
-            return true;
-        }
-        return false;
-    }
-
-    public boolean removeStudent(int studentID) {
-        return enrolledStudents.removeIf(student -> student.getStudentID() == studentID);
-    }
 }

@@ -1,7 +1,7 @@
 public class Payment {
     private int paymentID;
     private float amount;
-    private int studentId;
+    private Student student;
     private String description;
     private String date;
 
@@ -9,9 +9,9 @@ public class Payment {
         this.paymentID = paymentID;
     }
 
-    public Payment(float amount, int studentId, String description, String date) {
+    public Payment(float amount, Student student, String description, String date) {
         this.amount = amount;
-        this.studentId = studentId;
+        this.student = student;
         this.description = description;
         this.date = date;
     }
@@ -32,12 +32,12 @@ public class Payment {
         return amount;
     }
 
-    public void setPayeeId(int studentId) {
-        this.studentId = studentId;
+    public void setPayeeId(Student student) {
+        this.student = student;
     }
 
-    public int getPayeeId() {
-        return studentId;
+    public Student getPayeeId() {
+        return student;
     }
 
     public void setDescription(String description) {

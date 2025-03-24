@@ -1,16 +1,16 @@
 public class Enrollment {
     private int enrollmentID;
-    private int studentID;
-    private int moduleID;
+    private Student student;
+    private Module module;
     private Status enrollmentStatus;
 
     public Enrollment(int enrollmentID) {
         this.enrollmentID = enrollmentID;
     }
 
-    public Enrollment(int studentID, int moduleID, Status enrollmentStatus) {
-        this.studentID = studentID;
-        this.moduleID = moduleID;
+    public Enrollment(Student student, Module module, Status enrollmentStatus) {
+        this.student = student;
+        this.module = module;
         this.enrollmentStatus = enrollmentStatus;
     }
 
@@ -22,20 +22,17 @@ public class Enrollment {
         return enrollmentID;
     }
 
-    public void setStudentID(int studentID) {
-        this.studentID = studentID;
+    public void setStudent(Student student) {
+        this.student = student;
     }
-
-    public int getStudentID() {
-        return studentID;
+    public Student getStudent() {
+        return student;
     }
-
-    public void setModuleID(int moduleID) {
-        this.moduleID = moduleID;
+    public void setModule(Module module) {
+        this.module = module;
     }
-
-    public int getModuleID() {
-        return moduleID;
+    public Module getModule() {
+        return module;
     }
 
     public void setEnrollmentStatus(Status enrollmentStatus) {
@@ -46,19 +43,11 @@ public class Enrollment {
         return enrollmentStatus;
     }
 
-    public void setActive() {
-        enrollmentStatus = Status.ACTIVE;
+    public void setStatus(Status status) {
+        this.enrollmentStatus = status;
     }
 
-    public void setCancelled() {
-        enrollmentStatus = Status.CANCELED;
-    }
-
-    public boolean isActive() {
-        return enrollmentStatus == Status.ACTIVE;
-    }
-
-    public Status status() {
+    public Status getStatus() {
         return enrollmentStatus;
     }
 }
