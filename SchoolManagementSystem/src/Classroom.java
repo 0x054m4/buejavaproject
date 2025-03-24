@@ -2,10 +2,14 @@ public class Classroom {
     private int classroomId;
     private String roomName;
     private int capacity;
-    public Classroom(int classroomId, String roomName, int capacity) {
-        this.classroomId = classroomId;
+    public Classroom(String roomName, int capacity) {
         this.roomName = roomName;
         this.capacity = capacity;
+        // This constructor will be used to create a new classroom that's not in the database yet
+    }
+    public Classroom(int classroomId) {
+        this.classroomId = classroomId;
+        // This constructor will be used to create a classroom that's already in the database
     }
     public void setClassroomId(int classroomId) {
         this.classroomId = classroomId;
@@ -30,12 +34,5 @@ public class Classroom {
     public int getCapacity() {
         return capacity;
     }
-    public boolean assignTeacher(int teacherID) {
-        System.out.println("Teacher " + teacherID + " assigned to classroom " + classroomId);
-        return true;
-    }
-    public void updateCapacity(int newCapacity) {
-        this.capacity = newCapacity;
-        System.out.println("Updated classroom capacity to: " + newCapacity);
-    }
+ 
 }

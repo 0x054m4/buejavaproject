@@ -2,11 +2,11 @@ import java.util.*;
 
 public class Session {
     private int sessionID;
-    private int moduleID;
+    private Module module;
     private String sessionName;
     private Date startTime;
     private String endTime;
-    private int classroomID;
+    private Classroom classroom;
     private ArrayList<Student> attendees;
     private String status;
 
@@ -15,18 +15,15 @@ public class Session {
         this.attendees = new ArrayList<>();
     }
 
-    public Session(int moduleID, String sessionName, Date startTime, String endTime,
-                   int classroomID, ArrayList<Student> attendees, String status) {
-        this.moduleID = moduleID;
+    public Session(Module module, String sessionName, Date startTime, String endTime,
+                   Classroom classroom, ArrayList<Student> attendees, String status) {
+        this.module = module;
         this.sessionName = sessionName;
         this.startTime = startTime;
         this.endTime = endTime;
-        this.classroomID = classroomID;
+        this.classroom = classroom;
         this.attendees = new ArrayList<>(attendees);
         this.status = status;
-        this.attendees = new ArrayList<>();
-
-    
     }
 
     public void setSessionID(int sessionID) {
@@ -37,12 +34,12 @@ public class Session {
         return sessionID;
     }
 
-    public void setModuleID(int moduleID) {
-        this.moduleID = moduleID;
+    public void setModule(Module module) {
+        this.module = module;
     }
 
-    public int getModuleID() {
-        return moduleID;
+    public Module getModule() {
+        return module;
     }
 
     public void setSessionName(String sessionName) {
@@ -69,20 +66,20 @@ public class Session {
         return endTime;
     }
 
-    public void setClassroomID(int classroomID) {
-        this.classroomID = classroomID;
+    public void setClassroom(Classroom classroom) {
+        this.classroom = classroom;
     }
 
-    public int getClassroomID() {
-        return classroomID;
+    public Classroom getClassroom() {
+        return classroom;
     }
 
     public void setAttendees(ArrayList<Student> attendees) {
-        this.attendees =attendees;
+        this.attendees = new ArrayList<>(attendees);
     }
 
     public ArrayList<Student> getAttendees() {
-        return new ArrayList<>(attendees); 
+        return new ArrayList<>(attendees);
     }
 
     public void setStatus(String status) {

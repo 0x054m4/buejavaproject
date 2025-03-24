@@ -1,16 +1,22 @@
 
-    public class Admin {
+    public class Admin extends Staff {
 
-    // View statistics
-    public String viewStatistics() {
-        // Simulating statistics retrieval
-        return "Total Students: 500, Active Enrollments: 350, Modules Offered: 20";
+    public Admin(int staffId) {
+        super(staffId);  
     }
 
-    // Generate reports
-    public String generateReports() {
-        // Simulating report generation
-        return "Report Generated: Enrollment Summary Report for Q1 2025.";
+    public int[] viewStatistics() {
+        
+        
+        int[] statistics = {500, 350, 20};
+        return statistics;
+    }
+
+    
+    public void generateReports() {
+        
+        // Will save a .csv file with the reports
+        System.out.println("Reports generated successfully!");
     }
 
 }
