@@ -23,7 +23,7 @@ public class Session {
         this.endTime = endTime;
         this.classroom = classroom;
         this.attendees = new ArrayList<>(attendees);
-        this.status = status;
+        this.status = status;    
     }
 
     public void setSessionID(int sessionID) {
