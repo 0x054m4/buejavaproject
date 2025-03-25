@@ -34,5 +34,4 @@ public class Classroom {
     public int getCapacity() {
         return capacity;
     }
- 
 }
