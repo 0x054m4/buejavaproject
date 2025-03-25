@@ -5,7 +5,6 @@ public class Student {
     private String name;
     private String email;
     private float annualFee;
-    private List<Module> enrolledModules;
 
     public Student(int studentID) {
         this.studentID = studentID;
@@ -15,7 +14,6 @@ public class Student {
         this.name = name;
         this.email = email;
         this.annualFee = annualFee;
-        this.enrolledModules = enrolledModules;
     }
 
     public void setStudentID(int studentID) {
@@ -50,33 +48,11 @@ public class Student {
         return annualFee;
     }
 
-    public void setEnrolledModules(List<Module> enrolledModules) {
-        this.enrolledModules = enrolledModules;
-    }
-
-    public List<Module> getEnrolledModules() {
-        return enrolledModules;
-    }
-
     public void manageAccount(int studentID, Student newDetails) {
         if (this.studentID == studentID) {
             this.name = newDetails.getName();
             this.email = newDetails.getEmail();
             this.annualFee = newDetails.getAnnualFee();
-            this.enrolledModules = newDetails.getEnrolledModules();
         }
-    }
-
-    public void enrollInModule(int moduleID) {
-    }
-
-    public void cancelEnrollment(int moduleID) {
-    }
-
-    public void updateEnrollment(int moduleID, int newModuleID) {
-    }
-
-    public List<Module> viewModules() {
-        return enrolledModules;
     }
 }

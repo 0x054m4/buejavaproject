@@ -56,11 +56,11 @@ public class Staff {
         this.status = status;
     }
 
+   
     public boolean login() {
+        //to be implemented in phase 2
+        System.out.println("Logged in succesfully!");
         return true;
-    }
-
-    public void logout() {
     }
 }
 
