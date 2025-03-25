@@ -8,7 +8,7 @@ public class Session {
     private String endTime;
     private Classroom classroom;
     private ArrayList<Student> attendees;
-    private String status;
+    private Status status;
 
     public Session(int sessionID) {
         this.sessionID = sessionID;
@@ -16,7 +16,7 @@ public class Session {
     }
 
     public Session(Module module, String sessionName, Date startTime, String endTime,
-                   Classroom classroom, ArrayList<Student> attendees, String status) {
+                   Classroom classroom, ArrayList<Student> attendees, Status status) {
         this.module = module;
         this.sessionName = sessionName;
         this.startTime = startTime;
@@ -82,11 +82,15 @@ public class Session {
         return new ArrayList<>(attendees);
     }
 
-    public void setStatus(String status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 
-    public String getStatus() {
+    public Status getStatus() {
         return status;
     }
+}
+
+enum Status {
+    ACTIVE, CANCELED;
 }
