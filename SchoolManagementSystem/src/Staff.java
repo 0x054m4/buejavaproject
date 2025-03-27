@@ -20,10 +20,6 @@ public class Staff {
         return staffId;
     }
 
-    public void setStaffId(int staffId) {
-        this.staffId = staffId;
-    }
-
     public String getName() {
         return name;
     }

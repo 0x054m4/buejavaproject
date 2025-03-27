@@ -1,19 +1,18 @@
 import java.util.ArrayList;
-import java.util.List;
 
 public class Teacher extends Staff {
    
-    private List<Module> assignedModules; 
+    private ArrayList<Module> assignedModules; 
 
     public Teacher(int staffId) {
         super(staffId);
     }
 
-    public void setAssignedModules(List<Module> assignedModules) {
+    public void setAssignedModules(ArrayList<Module> assignedModules) {
         this.assignedModules = assignedModules;
     }
 
-    public List<Module> getAssignedModules() {
+    public ArrayList<Module> getAssignedModules() {
         return assignedModules;
     }
 
@@ -32,12 +31,12 @@ public class Teacher extends Staff {
         System.out.println("Module " + moduleID + " removed from teacher's assignments.");
     }
 
-    public void updateModuleAssignment(int moduleID, int newModuleID) {
-        for (Module module : assignedModules) {
-            if (module.getModuleID() == moduleID) {
-                module.setModuleID(newModuleID);
-                System.out.println("Module " + moduleID + " updated to " + newModuleID + ".");
-            }
-        }
-    }
+    // public void updateModuleAssignment(int moduleID, int newModuleID) {
+    //     for (Module module : assignedModules) {
+    //         if (module.getModuleID() == moduleID) {
+    //             module.setModuleID(newModuleID);
+    //             System.out.println("Module " + moduleID + " updated to " + newModuleID + ".");
+    //         }
+    //     }
+    // }
 }

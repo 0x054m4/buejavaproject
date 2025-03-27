@@ -11,9 +11,6 @@ public class Classroom {
         this.classroomId = classroomId;
         // This constructor will be used to create a classroom that's already in the database
     }
-    public void setClassroomId(int classroomId) {
-        this.classroomId = classroomId;
-    }
 
     public int getClassroomId() {
         return classroomId;

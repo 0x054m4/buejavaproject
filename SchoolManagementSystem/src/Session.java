@@ -26,10 +26,6 @@ public class Session {
         this.status = status;    
     }
 
-    public void setSessionID(int sessionID) {
-        this.sessionID = sessionID;
-    }
-
     public int getSessionID() {
         return sessionID;
     }

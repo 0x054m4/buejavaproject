@@ -3,19 +3,15 @@ import java.util.*;
 public class Module {
     private int moduleID;
     private String moduleName;
+    private float grade;
 
     public Module(int moduleID) {
         this.moduleID = moduleID;
-        
     }
 
-    public Module(String moduleName) {
+    public Module(String moduleName, float grade) {
         this.moduleName = moduleName;
-        
-    }
-
-    public void setModuleID(int moduleID) {
-        this.moduleID = moduleID;
+        this.grade = grade;        
     }
 
     public int getModuleID() {
@@ -30,6 +26,11 @@ public class Module {
         return moduleName;
     }
 
+    public void setGrade(float grade) {
+        this.grade = grade;
+    }
 
-
+    public float getGrade() {
+        return grade;
+    }
 }

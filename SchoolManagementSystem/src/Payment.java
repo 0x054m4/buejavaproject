@@ -16,10 +16,6 @@ public class Payment {
         this.date = date;
     }
 
-    public void setPaymentID(int paymentID) {
-        this.paymentID = paymentID;
-    }
-
     public int getPaymentID() {
         return paymentID;
     }
