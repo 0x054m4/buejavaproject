@@ -8,7 +8,6 @@ public class Student {
     private float annualFee;
     private ArrayList<Module> enrolledModule;
     private ArrayList<Assessment> assignedAssessment;
-   
     public Student(int studentID) {
         this.studentID = studentID;
     }
@@ -65,13 +64,6 @@ public class Student {
         return assignedAssessment;
     }
 
-    public void manageAccount(int studentID, Student newDetails) {
-        if (this.studentID == studentID) {
-            this.name = newDetails.getName();
-            this.email = newDetails.getEmail();
-            this.annualFee = newDetails.getAnnualFee();
-            this.enrolledModule = newDetails.getEnrolledModule();
-            this.assignedAssessment = newDetails.getAssignedAssessment();
-        }
-    }
+
+
 }
