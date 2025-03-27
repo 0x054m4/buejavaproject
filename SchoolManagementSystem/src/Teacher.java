@@ -31,12 +31,12 @@ public class Teacher extends Staff {
         System.out.println("Module " + moduleID + " removed from teacher's assignments.");
     }
 
-    public void updateModuleAssignment(int moduleID, int newModuleID) {
-        for (Module module : assignedModules) {
-            if (module.getModuleID() == moduleID) {
-                module.setModuleID(newModuleID);
-                System.out.println("Module " + moduleID + " updated to " + newModuleID + ".");
-            }
-        }
-    }
+    // public void updateModuleAssignment(int moduleID, int newModuleID) {
+    //     for (Module module : assignedModules) {
+    //         if (module.getModuleID() == moduleID) {
+    //             module.setModuleID(newModuleID);
+    //             System.out.println("Module " + moduleID + " updated to " + newModuleID + ".");
+    //         }
+    //     }
+    // }
 }
