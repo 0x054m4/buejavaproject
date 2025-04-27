@@ -1,6 +1,4 @@
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Scanner;
 
 public class SchooleMangementSystem {
@@ -10,10 +8,10 @@ public class SchooleMangementSystem {
         System.out.println("Enter student email: ");
         String email = new Scanner(System.in).nextLine();
         System.out.println("Enter student annual fee: ");
-        Scanner sc = new Scanner(System.in);
+        Scanner sc=new Scanner(System.in);
         float annualFee = sc.nextFloat();
         System.out.println("Enter student year (1-12): ");
-        Scanner sc1 = new Scanner(System.in);
+       Scanner sc1=new Scanner(System.in);
         int year = sc1.nextInt();
         Student newStudent = new Student(name, email, annualFee, year);
         newStudent.createAccount(students, newStudent);
@@ -22,24 +20,27 @@ public class SchooleMangementSystem {
 
     public void updateStudent(ArrayList<Student> students) {
         System.out.println("Enter student ID: ");
-        Scanner sc = new Scanner(System.in);
+        Scanner sc=new Scanner(System.in);
         int studentID = sc.nextInt();
-        Student studentInstance = null; // Initialize as null
-        Student updatedStudent = studentInstance.getStudent(studentID, students);
-        
+        Student updatedStudent = null;
+        for (Student s : students) {
+            if (s.getStudentID() == studentID) {
+                updatedStudent = s;
+                break;
+            }
+        }
         if (updatedStudent == null) {
             System.out.println("Student not found!");
             return;
         }
         System.out.println("Enter student name: ");
         String name = new Scanner(System.in).nextLine();
+        updatedStudent.setName(name);
         System.out.println("Enter student email: ");
         String email = new Scanner(System.in).nextLine();
-        System.out.println("Enter student annual fee: ");
-        Scanner sc2 = new Scanner(System.in);
-        float annualFee = sc2.nextFloat();
-        updatedStudent.setName(name);
         updatedStudent.setEmail(email);
+        System.out.println("Enter student annual fee: ");
+        float annualFee = Float.parseFloat(System.console().readLine());
         updatedStudent.setAnnualFee(annualFee);
         updatedStudent.manageAccount(students);
         System.out.println("Student updated successfully!");
@@ -47,28 +48,43 @@ public class SchooleMangementSystem {
 
     public void deleteStudent(ArrayList<Student> students) {
         System.out.println("Enter student ID: ");
-        Scanner sc = new Scanner(System.in);                             
+        Scanner sc=new Scanner(System.in);
         int studentID = sc.nextInt();
-        Student studentInstance = null; // Initialize as null
-        Student student = studentInstance.getStudent(studentID, students);
-        
-        if (student == null) {
+        Student deletedStudent = null;
+        for (Student s : students) {
+            if (s.getStudentID() == studentID) {
+                deletedStudent = s;
+                break;
+            }
+        }
+        if (deletedStudent == null) {
             System.out.println("Student not found!");
             return;
         }
-        student.deleteAccount(students);
+        deletedStudent.removeAccount(students);
         System.out.println("Student deleted successfully!");
     }
 
     public void viewStudentCourses(ArrayList<Enrollment> enrollments) {
         System.out.println("Enter student ID: ");
-        Scanner sc = new Scanner(System.in);
+        Scanner sc=new Scanner(System.in);
         int studentID = sc.nextInt();
-        Student.viewEnrollments(enrollments, studentID);
+        for (Enrollment e : enrollments) {
+            if (e.getStudent().getStudentID() == studentID) {
+                System.out.println("Student ID: " + e.getStudent().getStudentID());
+                System.out.println("Module ID: " + e.getModule().getModuleID());
+                System.out.println("Enrollment status: " + e.getEnrollmentStatus());
+            }
+        }
     }
 
     public void listAllStudents(ArrayList<Student> students) {
-        Student.listAllStudents(students);
+        for (Student s : students) {
+            System.out.println("Student ID: " + s.getStudentID());
+            System.out.println("Student name: " + s.getName());
+            System.out.println("Student email: " + s.getEmail());
+            System.out.println("Student annual fee: " + s.getAnnualFee());
+        }
     }
 
     public void addModule(ArrayList<Module> modules) {
@@ -82,7 +98,6 @@ public class SchooleMangementSystem {
         int moduleYear = sc1.nextInt();
         Module newModule = new Module(moduleName, maxCapacity, null, moduleYear);
         newModule.addModule(modules);
-        System.out.println("Module added successfully!");
     }
 
     public void updateModule(ArrayList<Module> modules) {
@@ -102,10 +117,10 @@ public class SchooleMangementSystem {
         }
         System.out.println("Enter module name: ");
         String moduleName = new Scanner(System.in).nextLine();
+        updatedModule.setModuleName(moduleName);
         System.out.println("Enter module max capacity: ");
         Scanner sc1=new Scanner(System.in);
         int maxCapacity = sc1.nextInt();
-        updatedModule.setModuleName(moduleName);
         updatedModule.setMaxCapacity(maxCapacity);
         updatedModule.updateModule(modules, updatedModule);
         System.out.println("Module updated successfully!");
@@ -115,23 +130,27 @@ public class SchooleMangementSystem {
         System.out.println("Enter module ID: ");
         Scanner sc1=new Scanner(System.in);
         int moduleID = sc1.nextInt();
-        Module moduleToDelete = null;
+        Module deletedModule = null;
         for (Module m : modules) {
             if (m.getModuleID() == moduleID) {
-                moduleToDelete = m;
+                deletedModule = m;
                 break;
             }
         }
-        if (moduleToDelete == null) {
+        if (deletedModule == null) {
             System.out.println("Module not found!");
             return;
         }
-        moduleToDelete.removeModule(modules, moduleToDelete);
+        deletedModule.removeModule(modules, deletedModule);
         System.out.println("Module deleted successfully!");
     }
 
     public void listAllModules(ArrayList<Module> modules) {
-        Module.listAllModules(modules);
+        for (Module m : modules) {
+            System.out.println("Module ID: " + m.getModuleID());
+            System.out.println("Module name: " + m.getModuleName());
+            System.out.println("Module max capacity: " + m.getMaxCapacity());
+        }
     }
 
     public void addClassroom(ArrayList<Classroom> classrooms) {
@@ -162,10 +181,10 @@ public class SchooleMangementSystem {
         }
         System.out.println("Enter classroom name: ");
         String roomName = new Scanner(System.in).nextLine();
+        updatedClassroom.setRoomName(roomName);
         System.out.println("Enter classroom capacity: ");
         Scanner s1c=new Scanner(System.in);
         int capacity = s1c.nextInt();
-        updatedClassroom.setRoomName(roomName);
         updatedClassroom.setCapacity(capacity);
         updatedClassroom.updateClassroom(classrooms);
         System.out.println("Classroom updated successfully!");
@@ -175,23 +194,27 @@ public class SchooleMangementSystem {
         System.out.println("Enter classroom ID: ");
         Scanner sc=new Scanner(System.in);
         int classroomID = sc.nextInt();
-        Classroom classroomToDelete = null;
+        Classroom deletedClassroom = null;
         for (Classroom c : classrooms) {
             if (c.getClassroomId() == classroomID) {
-                classroomToDelete = c;
+                deletedClassroom = c;
                 break;
             }
         }
-        if (classroomToDelete == null) {
+        if (deletedClassroom == null) {
             System.out.println("Classroom not found!");
             return;
         }
-        Classroom.removeClassroom(classrooms, classroomID);
+        deletedClassroom.deleteClassroom(classrooms);
         System.out.println("Classroom deleted successfully!");
     }
 
     public void listAllClassrooms(ArrayList<Classroom> classrooms) {
-        Classroom.listAllClassrooms(classrooms);
+        for (Classroom c : classrooms) {
+            System.out.println("Classroom ID: " + c.getClassroomId());
+            System.out.println("Classroom name: " + c.getRoomName());
+            System.out.println("Classroom capacity: " + c.getCapacity());
+        }
     }
 
     public void addEnrollment(ArrayList<Enrollment> enrollments, ArrayList<Student> students,
@@ -240,18 +263,17 @@ public class SchooleMangementSystem {
         System.out.println("Enter enrollment ID: ");
         Scanner sc=new Scanner(System.in);
         int enrollmentID = sc.nextInt();
-        Enrollment enrollmentToUpdate = null;
+        Enrollment updatedEnrollment = null;
         for (Enrollment e : enrollments) {
             if (e.getEnrollmentID() == enrollmentID) {
-                enrollmentToUpdate = e;
+                updatedEnrollment = e;
                 break;
             }
         }
-        if (enrollmentToUpdate == null) {
+        if (updatedEnrollment == null) {
             System.out.println("Enrollment not found!");
             return;
         }
-        
         System.out.println("Enter student ID: ");
         Scanner sc1=new Scanner(System.in);
         int studentID = sc1.nextInt();
@@ -259,11 +281,9 @@ public class SchooleMangementSystem {
         Scanner sc2=new Scanner(System.in);
         int moduleID = sc2.nextInt();
         System.out.println("Enter grade: ");
-        Scanner sc3=new Scanner(System.in);
-        float grade = sc3.nextFloat();
+        float grade = Float.parseFloat(System.console().readLine());
         Student student = null;
         Module module = null;
-        // Set student and module data from the arraylist
         for (Student s : students) {
             if (s.getStudentID() == studentID) {
                 student = s;
@@ -277,16 +297,17 @@ public class SchooleMangementSystem {
         for (Module m : modules) {
             if (m.getModuleID() == moduleID) {
                 module = m;
+                break;
             }
         }
         if (module == null) {
             System.out.println("Module not found!");
             return;
         }
-        enrollmentToUpdate.setStudent(student);
-        enrollmentToUpdate.setModule(module);
-        enrollmentToUpdate.setGrade(grade);
-        enrollmentToUpdate.updateEnrollment(enrollments);
+        updatedEnrollment.setStudent(student);
+        updatedEnrollment.setModule(module);
+        updatedEnrollment.setGrade(grade);
+        updatedEnrollment.updateEnrollment(enrollments);
         System.out.println("Enrollment updated successfully!");
     }
 
@@ -294,33 +315,42 @@ public class SchooleMangementSystem {
         System.out.println("Enter enrollment ID: ");
         Scanner sc=new Scanner(System.in);
         int enrollmentID = sc.nextInt();
-        Enrollment enrollmentToDelete = null;
+        Enrollment deletedEnrollment = null;
         for (Enrollment e : enrollments) {
             if (e.getEnrollmentID() == enrollmentID) {
-                enrollmentToDelete = e;
+                deletedEnrollment = e;
                 break;
             }
         }
-        if (enrollmentToDelete == null) {
+        if (deletedEnrollment == null) {
             System.out.println("Enrollment not found!");
             return;
         }
-        enrollmentToDelete.deleteEnrollment(enrollments);
+        deletedEnrollment.removeEnrollment(enrollments);
         System.out.println("Enrollment deleted successfully!");
     }
 
     public void listAllEnrollments(ArrayList<Enrollment> enrollments) {
-        Enrollment.listAllEnrollments(enrollments);
+        for (Enrollment e : enrollments) {
+            System.out.println("Enrollment ID: " + e.getEnrollmentID());
+            System.out.println("Student ID: " + e.getStudent().getStudentID());
+            System.out.println("Module ID: " + e.getModule().getModuleID());
+            System.out.println("Grade: " + e.getGrade());
+            System.out.println("Status: " + e.getEnrollmentStatus());
+        }
     }
 
+    /*
+     * public Session(Module module, String sessionName, Date startTime, String
+     * endTime,
+     * Classroom classroom, ArrayList<Student> attendees, String status)
+     */
     public void addSession(ArrayList<Session> sessions, ArrayList<Module> modules, ArrayList<Classroom> classrooms) {
         // Get module and classroom by ID
         System.out.println("Enter module ID: ");
-        Scanner sc = new Scanner(System.in);
-        int moduleID = sc.nextInt();
+        int moduleID = Integer.parseInt(System.console().readLine());
         System.out.println("Enter classroom ID: ");
-        Scanner sc1 = new Scanner(System.in);
-        int classroomID = sc1.nextInt();
+        int classroomID = Integer.parseInt(System.console().readLine());
         // Get module and classroom by ID
         Module module = null;
         Classroom classroom = null;
@@ -359,26 +389,22 @@ public class SchooleMangementSystem {
 
     public void updateSession(ArrayList<Session> sessions, ArrayList<Module> modules, ArrayList<Classroom> classrooms) {
         System.out.println("Enter session ID: ");
-        Scanner sc = new Scanner(System.in);
-        int sessionID = sc.nextInt();
-        Session sessionToUpdate = null;
+        int sessionID = Integer.parseInt(System.console().readLine());
+        Session updatedSession = null;
         for (Session s : sessions) {
             if (s.getSessionID() == sessionID) {
-                sessionToUpdate = s;
+                updatedSession = s;
                 break;
             }
         }
-        if (sessionToUpdate == null) {
+        if (updatedSession == null) {
             System.out.println("Session not found!");
             return;
         }
-        
         System.out.println("Enter module ID: ");
-        Scanner sc1 = new Scanner(System.in);
-        int moduleID = sc1.nextInt();
+        int moduleID = Integer.parseInt(System.console().readLine());
         System.out.println("Enter classroom ID: ");
-        Scanner sc2 = new Scanner(System.in);
-        int classroomID = sc2.nextInt();
+        int classroomID = Integer.parseInt(System.console().readLine());
         Module module = null;
         Classroom classroom = null;
         for (Module m : modules) {
@@ -410,46 +436,51 @@ public class SchooleMangementSystem {
         String endTime = new Scanner(System.in).nextLine();
         System.out.println("Enter session status: ");
         String status = new Scanner(System.in).nextLine();
-        sessionToUpdate.setSessionName(sessionName);
-        sessionToUpdate.setStartTime(startTime);
-        sessionToUpdate.setEndTime(endTime);
-        sessionToUpdate.setStatus(status);
-        sessionToUpdate.setModule(module);
-        sessionToUpdate.setClassroom(classroom);
-        sessionToUpdate.updateSession(sessions);
+        updatedSession.setSessionName(sessionName);
+        updatedSession.setStartTime(startTime);
+        updatedSession.setEndTime(endTime);
+        updatedSession.setStatus(status);
+        updatedSession.setModule(module);
+        updatedSession.setClassroom(classroom);
+        updatedSession.updateSession(sessions);
         System.out.println("Session updated successfully!");
     }
 
     public void deleteSession(ArrayList<Session> sessions) {
         System.out.println("Enter session ID: ");
-        Scanner sc = new Scanner(System.in);
-        int sessionID = sc.nextInt();
-        Session sessionToDelete = null;
+        int sessionID = Integer.parseInt(System.console().readLine());
+        Session deletedSession = null;
         for (Session s : sessions) {
             if (s.getSessionID() == sessionID) {
-                sessionToDelete = s;
+                deletedSession = s;
                 break;
             }
         }
-        if (sessionToDelete == null) {
+        if (deletedSession == null) {
             System.out.println("Session not found!");
             return;
         }
-        sessionToDelete.deleteSession(sessions);
+        deletedSession.removeSession(sessions);
         System.out.println("Session deleted successfully!");
     }
 
     public void listAllSessions(ArrayList<Session> sessions) {
-        Session.listAllSessions(sessions);
+        for (Session s : sessions) {
+            System.out.println("Session ID: " + s.getSessionID());
+            System.out.println("Module ID: " + s.getModule().getModuleID());
+            System.out.println("Session name: " + s.getSessionName());
+            System.out.println("Start time: " + s.getStartTime());
+            System.out.println("End time: " + s.getEndTime());
+            System.out.println("Classroom ID: " + s.getClassroom().getClassroomId());
+            System.out.println("Status: " + s.getStatus());
+        }
     }
 
     public void addPayment(ArrayList<Payment> payments, ArrayList<Student> students) {
         System.out.println("Enter student ID: ");
-        Scanner sc = new Scanner(System.in);
-        int studentID = sc.nextInt();
+        int studentID = Integer.parseInt(System.console().readLine());
         System.out.println("Enter amount: ");
-        Scanner sc1 = new Scanner(System.in);
-        float amount = sc1.nextFloat();
+        float amount = Float.parseFloat(System.console().readLine());
         System.out.println("Enter description: ");
         String description = new Scanner(System.in).nextLine();
         System.out.println("Enter date: ");
@@ -468,79 +499,127 @@ public class SchooleMangementSystem {
         Payment newPayment = new Payment(amount, student, description, date);
         newPayment.addPayment(payments);
         System.out.println("Payment added successfully!");
+        // float amount, Student student, String description, String date
     }
 
     public void updatePayment(ArrayList<Payment> payments) {
+        Payment updatedPayment = null;
         System.out.println("Enter payment ID: ");
-        Scanner sc = new Scanner(System.in);
-        int paymentID = sc.nextInt();
-        Payment paymentToUpdate = null;
+        int paymentID = Integer.parseInt(System.console().readLine());
         for (Payment p : payments) {
             if (p.getPaymentID() == paymentID) {
-                paymentToUpdate = p;
+                updatedPayment = p;
                 break;
             }
         }
-        if (paymentToUpdate == null) {
+        if (updatedPayment == null) {
             System.out.println("Payment not found!");
             return;
         }
         System.out.println("Enter amount: ");
-        Scanner sc1 = new Scanner(System.in);
-        float amount = sc1.nextFloat();
+        float amount = Float.parseFloat(System.console().readLine());
         System.out.println("Enter description: ");
         String description = new Scanner(System.in).nextLine();
         System.out.println("Enter date: ");
         String date = new Scanner(System.in).nextLine();
-        paymentToUpdate.setAmount(amount);
-        paymentToUpdate.setDescription(description);
-        paymentToUpdate.setDate(date);
-        paymentToUpdate.updatePayment(payments);
+        updatedPayment.setAmount(amount);
+        updatedPayment.setDescription(description);
+        updatedPayment.setDate(date);
+        updatedPayment.updatePayment(payments);
         System.out.println("Payment updated successfully!");
     }
 
     public void deletePayment(ArrayList<Payment> payments) {
         System.out.println("Enter payment ID: ");
-        Scanner sc = new Scanner(System.in);
-        int paymentID = sc.nextInt();
-        Payment paymentToDelete = null;
+        int paymentID = Integer.parseInt(System.console().readLine());
+        Payment deletedPayment = null;
         for (Payment p : payments) {
             if (p.getPaymentID() == paymentID) {
-                paymentToDelete = p;
+                deletedPayment = p;
                 break;
             }
         }
-        if (paymentToDelete == null) {
+        if (deletedPayment == null) {
             System.out.println("Payment not found!");
             return;
         }
-        paymentToDelete.deletePayment(payments);
+        deletedPayment.removePayment(payments);
         System.out.println("Payment deleted successfully!");
     }
 
     public void listAllPayments(ArrayList<Payment> payments) {
-        Payment.listAllPayments(payments);
+        for (Payment p : payments) {
+            System.out.println("Payment ID: " + p.getPaymentID());
+            System.out.println("Amount: " + p.getAmount());
+            System.out.println("Student ID: " + p.getPayeeId().getStudentID());
+            System.out.println("Description: " + p.getDescription());
+            System.out.println("Date: " + p.getDate());
+        }
     }
 
-    public void addTeacher() {
-        System.out.println("Adding a new teacher...");
-        // Implementation for adding a teacher
+    public void listAllTeachers(ArrayList<Teacher> teachers) {
+        for (Teacher t : teachers) {
+            System.out.println("Teacher ID: " + t.getStaffId());
+            System.out.println("Teacher name: " + t.getName());
+            System.out.println("Teacher email: " + t.getEmail());
+        }
+    }
+    public void addTeacher(ArrayList<Teacher> teachers) {
+        System.out.println("Enter teacher name: ");
+        String name = new Scanner(System.in).nextLine();
+        System.out.println("Enter teacher email: ");
+        String email = new Scanner(System.in).nextLine();
+        System.out.println("Enter role: ");
+        String role = new Scanner(System.in).nextLine();
+        StaffStatus status = StaffStatus.ACTIVE;
+        Teacher newTeacher = new Teacher(name, email, role, status);
+        teachers.add(newTeacher);
+        System.out.println("Teacher added successfully!");
+    }
+    public void updateTeacher(ArrayList<Teacher> teachers) {
+        System.out.println("Enter teacher ID: ");
+        int teacherID = Integer.parseInt(System.console().readLine());
+        // Check if teacher exists
+        Teacher updatedTeacher = null;
+        for (Teacher t : teachers) {
+            if (t.getStaffId() == teacherID) {
+                updatedTeacher = t;
+                break;
+            }
+        }
+        if (updatedTeacher == null) {
+            System.out.println("Teacher not found!");
+            return;
+        }
+        System.out.println("Enter teacher name: ");
+        String name = new Scanner(System.in).nextLine();
+        updatedTeacher.setName(name);
+        System.out.println("Enter teacher email: ");
+        String email = new Scanner(System.in).nextLine();
+        updatedTeacher.setEmail(email);
+        updatedTeacher.updateTeacher(teachers);
+        System.out.println("Teacher updated successfully!");
+    }
+    public void deleteTeacher(ArrayList<Teacher> teachers) {
+        System.out.println("Enter teacher ID: ");
+        int teacherID = Integer.parseInt(System.console().readLine());
+        // Check if teacher exists
+        Teacher deletedTeacher = null;
+        for (Teacher t : teachers) {
+            if (t.getStaffId() == teacherID) {
+                deletedTeacher = t;
+                break;
+            }
+        }
+        if (deletedTeacher == null) {
+            System.out.println("Teacher not found!");
+            return;
+        }
+
+        teachers.remove(deletedTeacher);
+        System.out.println("Teacher deleted successfully!");
     }
 
-    public void updateTeacher() {
-        System.out.println("Updating teacher details...");
-        // Implementation for updating a teacher
-    }
-
-    public void deleteTeacher() {
-        System.out.println("Deleting a teacher...");
-        // Implementation for deleting a teacher
-    }
-
-    public void listAllTeachers() {
-        System.out.println("Listing all teachers...");
-        // Implementation for listing all teachers
-    }
 
     public class studentFunction{
         // This will run for studentflow (loggedin) student
@@ -691,75 +770,6 @@ public class SchooleMangementSystem {
             }
         }
 
-    }
-    public void viewSessionAssessments(ArrayList<Session> sessions) {
-        System.out.println("Enter session ID: ");
-        Scanner sc = new Scanner(System.in);
-        int sessionID = sc.nextInt();
-        
-        Session session = null;
-        for (Session s : sessions) {
-            if (s.getSessionID() == sessionID) {
-                session = s;
-                break;
-            }
-        }
-        
-        if (session == null) {
-            System.out.println("Session not found!");
-            return;
-        }
-        
-        ArrayList<Assessment> assessments = session.getAssessments();
-        if (assessments.isEmpty()) {
-            System.out.println("No assessments found for this session.");
-            return;
-        }
-        
-        System.out.println("=== Assessments for Session: " + session.getSessionName() + " ===");
-        for (Assessment a : assessments) {
-            System.out.println("Assessment ID: " + a.getAssessmentID());
-            System.out.println("Title: " + a.getTitle());
-            System.out.println("Date: " + a.getDate());
-            System.out.println("Duration: " + a.getDuration());
-            System.out.println("Module: " + a.getModule().getModuleName());
-            System.out.println("-----------------");
-        }
-    }
-    
-    public void addAssessmentToSession(ArrayList<Session> sessions) {
-        System.out.println("Enter session ID: ");
-        Scanner sc = new Scanner(System.in);
-        int sessionID = sc.nextInt();
-        
-        Session session = null;
-        for (Session s : sessions) {
-            if (s.getSessionID() == sessionID) {
-                session = s;
-                break;
-            }
-        }
-        
-        if (session == null) {
-            System.out.println("Session not found!");
-            return;
-        }
-        
-        System.out.println("Enter assessment title: ");
-        String title = new Scanner(System.in).nextLine();
-        
-        System.out.println("Enter assessment duration (in minutes): ");
-        String duration = new Scanner(System.in).nextLine();
-        
-        // Using current date for simplicity
-        Date date = new Date();
-        
-        Module module = session.getModule();
-        
-        Assessment newAssessment = new Assessment(0, date, duration, module, title);
-        session.addAssessment(newAssessment);
-        
-        System.out.println("Assessment added to session successfully!");
     }
 
     public static void studentFlow(ArrayList<Student> students, ArrayList<Enrollment> enrollments,
@@ -932,9 +942,7 @@ public class SchooleMangementSystem {
                             System.out.println("2. Update session");
                             System.out.println("3. Delete session");
                             System.out.println("4. List all sessions");
-                            System.out.println("5. View session assessments");
-                            System.out.println("6. Add assessment to session");
-                            System.out.println("7. Back");
+                            System.out.println("5. Back");
                             Scanner sc3=new Scanner(System.in);
                             int sessionOption = sc3.nextInt();
                             switch (sessionOption) {
@@ -942,9 +950,8 @@ public class SchooleMangementSystem {
                                 case 2 -> app.updateSession(sessions, modules, classrooms);
                                 case 3 -> app.deleteSession(sessions);
                                 case 4 -> app.listAllSessions(sessions);
-                                case 5 -> app.viewSessionAssessments(sessions);
-                                case 6 -> app.addAssessmentToSession(sessions);
-                                case 7 -> main(args);
+            
+                                case 5 -> main(args);
                                 default -> {
                                     System.out.println("Invalid option. Please try again.");
                                     main(args);
@@ -982,10 +989,10 @@ public class SchooleMangementSystem {
                             Scanner sc1=new Scanner(System.in);
                             int teacherOption = sc1.nextInt();
                             switch (teacherOption) {
-                                case 1 -> app.addTeacher();
-                                case 2 -> app.updateTeacher();
-                                case 3 -> app.deleteTeacher();
-                                case 4 -> app.listAllTeachers();
+                                case 1 -> app.addTeacher(staff);
+                                case 2 -> app.updateTeacher(staff);
+                                case 3 -> app.deleteTeacher(staff);
+                                case 4 -> app.listAllTeachers(staff);
                                 case 5 -> main(args);
                                 default -> {
                                     System.out.println("Invalid option. Please try again.");

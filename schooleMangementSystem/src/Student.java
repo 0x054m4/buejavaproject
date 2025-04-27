@@ -72,14 +72,7 @@ public class Student {
         }
     }
 
-    public Student getStudent(int studentID, ArrayList<Student> students) {
-        for (Student s : students) {
-            if (s.getStudentID() == studentID) {
-                return s;
-            }
-        }
-        return null; // Return null if no matching student is found
-    }
+    
     public void viewCourses(ArrayList<Enrollment> enrollments) {
         System.out.println("Courses for Student ID: " + this.studentID);
         for (Enrollment enrollment : enrollments) {
@@ -88,37 +81,11 @@ public class Student {
             }
         }
     }
-    public void deleteAccount(ArrayList<Student> students) {
-        students.remove(this);
-    }
-
-    public static void viewEnrollments(ArrayList<Enrollment> enrollments, int studentID) {
-        System.out.println("=== Enrollments for Student ID: " + studentID + " ===");
-        boolean found = false;
-        for (Enrollment e : enrollments) {
-            if (e.getStudent().getStudentID() == studentID) {
-                found = true;
-                System.out.println("Module ID: " + e.getModule().getModuleID());
-                System.out.println("Module Name: " + e.getModule().getModuleName());
-                System.out.println("Enrollment Status: " + e.getEnrollmentStatus());
-                System.out.println("Grade: " + e.getGrade());
-                System.out.println("-----------------");
-            }
-        }
-        if (!found) {
-            System.out.println("No enrollments found for this student.");
-        }
-    }
-
-    public static void listAllStudents(ArrayList<Student> students) {
-        System.out.println("=== All Students ===");
+    public void removeAccount(ArrayList<Student> students) {
         for (Student s : students) {
-            System.out.println("Student ID: " + s.getStudentID());
-            System.out.println("Name: " + s.getName());
-            System.out.println("Email: " + s.getEmail());
-            System.out.println("Annual Fee: " + s.getAnnualFee());
-            System.out.println("Year: " + s.getYear());
-            System.out.println("-----------------");
+            if(s.getStudentID() == this.studentID) {
+                students.remove(s);
+            }
         }
     }
 

@@ -76,15 +76,4 @@ public class Module {
             }
         }
     }
-
-    public static void listAllModules(ArrayList<Module> modules) {
-        System.out.println("=== All Modules ===");
-        for (Module m : modules) {
-            System.out.println("Module ID: " + m.getModuleID());
-            System.out.println("Module Name: " + m.getModuleName());
-            System.out.println("Max Capacity: " + m.getMaxCapacity());
-            System.out.println("Module Year: " + m.getModuleYear());
-            System.out.println("-----------------");
-        }
-    }
 }

@@ -52,24 +52,5 @@ public class Classroom {
     public void addClassroom(ArrayList<Classroom> classrooms) {
         classrooms.add(this);
     }
-public static void removeClassroom(ArrayList<Classroom> classrooms, int classroomId) {
-    classrooms.removeIf(classroom -> classroom.getClassroomId() == classroomId);
-}
-
-public static Classroom getClassroomById(ArrayList<Classroom> classrooms, int classroomId) {
-    for (Classroom classroom : classrooms) {
-        if (classroom.getClassroomId() == classroomId) {
-            return classroom;
-        }
-    }
-    return null; // Return null if no classroom is found
-}
-
-public static void listAllClassrooms(ArrayList<Classroom> classrooms) {
-    for (Classroom classroom : classrooms) {
-        System.out.println("Classroom ID: " + classroom.getClassroomId() +
-                           ", Room Name: " + classroom.getRoomName() +
-                           ", Capacity: " + classroom.getCapacity());
-    }
-}
+ 
 }

@@ -10,12 +10,10 @@ public class Session {
     private Classroom classroom;
     private ArrayList<Student> attendees;
     private String status;
-    private ArrayList<Assessment> assessments;
 
     public Session(int sessionID) {
         this.sessionID = sessionID;
         this.attendees = new ArrayList<>();
-        this.assessments = new ArrayList<>();
     }
 
     public Session(Module module, String sessionName, String startTime, String endTime, Classroom classroom, ArrayList<Student> attendees, String status) {
@@ -24,8 +22,7 @@ public class Session {
         this.startTime = startTime;
         this.endTime = endTime;
         this.classroom = classroom;
-        this.attendees = attendees != null ? new ArrayList<>(attendees) : new ArrayList<>();
-        this.assessments = new ArrayList<>();
+        this.attendees = new ArrayList<>(attendees);
         this.status = status;
         this.sessionID = sessionCounter++;
     }
@@ -102,40 +99,5 @@ public class Session {
                 break;
             }
         }
-    }
-    public void setAssessments(ArrayList<Assessment> assessments) {
-        this.assessments = new ArrayList<>(assessments);
-    }
-
-    public ArrayList<Assessment> getAssessments() {
-        return new ArrayList<>(assessments);
-    }
-    
-    public void addAssessment(Assessment assessment) {
-        this.assessments.add(assessment);
-    }
-    
-    public void removeAssessment(Assessment assessment) {
-        this.assessments.remove(assessment);
-    }
-    
-    public static void listAllSessions(ArrayList<Session> sessions) {
-        System.out.println("=== All Sessions ===");
-        for (Session s : sessions) {
-            System.out.println("Session ID: " + s.getSessionID());
-            System.out.println("Session Name: " + s.getSessionName());
-            System.out.println("Module: " + s.getModule().getModuleName());
-            System.out.println("Classroom: " + s.getClassroom().getRoomName());
-            System.out.println("Start Time: " + s.getStartTime());
-            System.out.println("End Time: " + s.getEndTime());
-            System.out.println("Status: " + s.getStatus());
-            System.out.println("Attendees: " + s.getAttendees().size());
-            System.out.println("Assessments: " + s.getAssessments().size());
-            System.out.println("-----------------");
-        }
-    }
-    
-    public void deleteSession(ArrayList<Session> sessions) {
-        sessions.remove(this);
     }
 }

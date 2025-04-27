@@ -58,7 +58,7 @@ public class Payment {
     public void addPayment(ArrayList<Payment> payment) {
         payment.add(this);
     }
-    public void deletePayment(ArrayList<Payment> payment) {
+    public void removePayment(ArrayList<Payment> payment) {
         payment.remove(this);
     }
     public void updatePayment(ArrayList<Payment> payment) {
@@ -71,23 +71,5 @@ public class Payment {
 
     public String generateReceipt() {
         return "Receipt for Payment ID: " + paymentID + "\nAmount: " + amount + "\nDate: " + date;
-    }
-    
-    public static void listAllPayments(ArrayList<Payment> payments) {
-        System.out.println("=== All Payments ===");
-        if (payments.isEmpty()) {
-            System.out.println("No payments found.");
-            return;
-        }
-        
-        for (Payment payment : payments) {
-            System.out.println("Payment ID: " + payment.getPaymentID());
-            System.out.println("Student ID: " + payment.getPayeeId().getStudentID());
-            System.out.println("Student Name: " + payment.getPayeeId().getName());
-            System.out.println("Amount: $" + payment.getAmount());
-            System.out.println("Description: " + payment.getDescription());
-            System.out.println("Date: " + payment.getDate());
-            System.out.println("-----------------");
-        }
     }
 }
