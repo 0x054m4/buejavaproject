@@ -1,10 +1,7 @@
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
-public class Assessment implements Serializable {
-    private static final long serialVersionUID = 1L;
+public class Assessment {
     private static int assessmentCounter = 0;
     private int assessmentID;
     private Date date;

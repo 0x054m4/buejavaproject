@@ -1,34 +1,26 @@
-import java.io.*;
 import java.util.ArrayList;
-import java.util.List;
 
-public class Teacher extends Staff implements Serializable {
-    private static final long serialVersionUID = 1L;
-    private List<Module> assignedModules;
-    private static final String FILE_PATH = "teachers.dat";
-    
+public class Teacher extends Staff {
+    private ArrayList<Module> assignedModules;
     public Teacher(int staffId) {
         super(staffId);
         assignedModules = new ArrayList<>();
     }
-    
     public Teacher(String name, String email, String role, StaffStatus status) {
         super(name, email, role, status);
         assignedModules = new ArrayList<>();
     }   
-    
-    public void setAssignedModules(List<Module> assignedModules) {
+    public void setAssignedModules(ArrayList<Module> assignedModules) {
         this.assignedModules = assignedModules;
     }
 
-    public List<Module> getAssignedModules() {
+    public ArrayList<Module> getAssignedModules() {
         return assignedModules;
     }
 
     public void assignModule(Module module) {
         assignedModules.add(module);
         System.out.println("Module " + module.getModuleID() + " assigned to teacher.");
-        saveAllTeachers(getAllTeachers());
     }
 
     public void removeModuleAssignment(int moduleID) {
@@ -39,34 +31,29 @@ public class Teacher extends Staff implements Serializable {
             }
         }
         System.out.println("Module " + moduleID + " removed from teacher's assignments.");
-        saveAllTeachers(getAllTeachers());
     }
-    
-    public void updateTeacher() {
-        List<Teacher> teachers = getAllTeachers();
-        for (int i = 0; i < teachers.size(); i++) {
-            if (teachers.get(i).getStaffId() == this.getStaffId()) {
-                teachers.set(i, this);
+    public void updateTeacher(ArrayList<Teacher> teachers) {
+        for (Teacher teacher : teachers) {
+            if (teacher.getStaffId() == this.getStaffId()) {
+                teacher.setName(this.getName());
+                teacher.setEmail(this.getEmail());
+                teacher.setRole(this.getRole());
+                teacher.setStatus(this.getStatus());
+                teacher.setAssignedModules(this.getAssignedModules());
                 break;
             }
         }
-        saveAllTeachers(teachers);
     }
     
-    public void addTeacher() {
-        List<Teacher> teachers = getAllTeachers();
+    public void addTeacher(ArrayList<Teacher> teachers) {
         teachers.add(this);
-        saveAllTeachers(teachers);
     }
     
-    public void deleteTeacher() {
-        List<Teacher> teachers = getAllTeachers();
-        teachers.removeIf(t -> t.getStaffId() == this.getStaffId());
-        saveAllTeachers(teachers);
+    public void deleteTeacher(ArrayList<Teacher> teachers) {
+        teachers.remove(this);
     }
     
-    public static void listAllTeachers() {
-        List<Teacher> teachers = getAllTeachers();
+    public static void listAllTeachers(ArrayList<Teacher> teachers) {
         System.out.println("=== All Teachers ===");
         for (Teacher t : teachers) {
             System.out.println("Teacher ID: " + t.getStaffId());
@@ -80,9 +67,8 @@ public class Teacher extends Staff implements Serializable {
     }
     
     // Find teachers by module
-    public static List<Teacher> getTeachersByModule(int moduleID) {
-        List<Teacher> teachers = getAllTeachers();
-        List<Teacher> moduleTeachers = new ArrayList<>();
+    public static ArrayList<Teacher> getTeachersByModule(ArrayList<Teacher> teachers, int moduleID) {
+        ArrayList<Teacher> moduleTeachers = new ArrayList<>();
         for (Teacher t : teachers) {
             for (Module m : t.getAssignedModules()) {
                 if (m.getModuleID() == moduleID) {
@@ -95,9 +81,8 @@ public class Teacher extends Staff implements Serializable {
     }
     
     // Find teachers by status
-    public static List<Teacher> getTeachersByStatus(StaffStatus status) {
-        List<Teacher> teachers = getAllTeachers();
-        List<Teacher> filteredTeachers = new ArrayList<>();
+    public static ArrayList<Teacher> getTeachersByStatus(ArrayList<Teacher> teachers, StaffStatus status) {
+        ArrayList<Teacher> filteredTeachers = new ArrayList<>();
         for (Teacher t : teachers) {
             if (t.getStatus() == status) {
                 filteredTeachers.add(t);
@@ -117,9 +102,8 @@ public class Teacher extends Staff implements Serializable {
     }
     
     // View all students across assigned modules
-    public List<Student> getAllStudents() {
-        List<Student> allStudents = new ArrayList<>();
-        List<Enrollment> enrollments = Enrollment.getAllEnrollments();
+    public ArrayList<Student> getAllStudents(ArrayList<Enrollment> enrollments) {
+        ArrayList<Student> allStudents = new ArrayList<>();
         
         for (Module module : assignedModules) {
             for (Enrollment e : enrollments) {
@@ -143,10 +127,8 @@ public class Teacher extends Staff implements Serializable {
     }
     
     // Generate a teacher report
-    public String generateTeacherReport() {
+    public String generateTeacherReport(ArrayList<Enrollment> enrollments) {
         StringBuilder report = new StringBuilder();
-        List<Enrollment> enrollments = Enrollment.getAllEnrollments();
-        
         report.append("Teacher Report\n");
         report.append("ID: ").append(getStaffId()).append("\n");
         report.append("Name: ").append(getName()).append("\n");
@@ -179,41 +161,8 @@ public class Teacher extends Staff implements Serializable {
         return report.toString();
     }
 
+
     public boolean login() {
         return true; // Placeholder for login logic
-    }
-    
-    // File operations
-    public static List<Teacher> getAllTeachers() {
-        List<Teacher> teachers = new ArrayList<>();
-        File file = new File(FILE_PATH);
-        
-        if (file.exists()) {
-            try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
-                teachers = (List<Teacher>) ois.readObject();
-            } catch (IOException | ClassNotFoundException e) {
-                System.out.println("Error loading teachers: " + e.getMessage());
-            }
-        }
-        
-        return teachers;
-    }
-    
-    public static void saveAllTeachers(List<Teacher> teachers) {
-        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(FILE_PATH))) {
-            oos.writeObject(teachers);
-        } catch (IOException e) {
-            System.out.println("Error saving teachers: " + e.getMessage());
-        }
-    }
-    
-    public static Teacher getTeacherById(int teacherId) {
-        List<Teacher> teachers = getAllTeachers();
-        for (Teacher teacher : teachers) {
-            if (teacher.getStaffId() == teacherId) {
-                return teacher;
-            }
-        }
-        return null;
     }
 }

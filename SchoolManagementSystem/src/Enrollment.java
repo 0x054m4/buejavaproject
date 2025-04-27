@@ -1,16 +1,12 @@
-import java.io.*;
 import java.util.ArrayList;
-import java.util.List;
 
-public class Enrollment implements IEnrollment, Serializable {
-    private static final long serialVersionUID = 1L;
+public class Enrollment implements IEnrollment {
     private static int enrollmentCounter = 0;
     private int enrollmentID;
     private Student student;
     private Module module;
     private Status enrollmentStatus;
     private float grade;
-    private static final String FILE_PATH = "enrollments.dat";
 
     public Enrollment(int enrollmentID) {
         this.enrollmentID = enrollmentID;
@@ -35,11 +31,9 @@ public class Enrollment implements IEnrollment, Serializable {
     public Student getStudent() {
         return student;
     }
-    
     public void setGrade(float grade) {
         this.grade = grade;
     }
-    
     public float getGrade() {
         return grade;
     }
@@ -52,15 +46,16 @@ public class Enrollment implements IEnrollment, Serializable {
         return module;
     }
 
+
     public Status getEnrollmentStatus() {
         return enrollmentStatus;
     }
 
-    public void generateReports(Module module) {
-        List<Enrollment> enrollments = getAllEnrollments();
+
+    public void generateReports(ArrayList<Enrollment> enrollments, Module module) {
         int enrolledStudents = 0;
         for (Enrollment enrollment : enrollments) {
-            if (enrollment.getModule().getModuleID() == module.getModuleID()) {
+            if (enrollment.getModule().equals(module)) {
                 enrolledStudents++;
             }
         }
@@ -70,37 +65,31 @@ public class Enrollment implements IEnrollment, Serializable {
         System.out.println("Status: " + (enrolledStudents >= module.getMaxCapacity() ? "Full" : "Available"));
     }
 
-    public void addEnrollment() {
-        List<Enrollment> enrollments = getAllEnrollments();
+    
+    public void addEnrollment(ArrayList<Enrollment> enrollments) {
         enrollments.add(this);
-        saveAllEnrollments(enrollments);
     }
 
-    public void removeEnrollment() {
-        List<Enrollment> enrollments = getAllEnrollments();
+    
+    public void removeEnrollment(ArrayList<Enrollment> enrollments) {
         enrollments.remove(this);
-        saveAllEnrollments(enrollments);
     }
 
-    public void updateEnrollment() {
-        List<Enrollment> enrollments = getAllEnrollments();
+    
+    public void updateEnrollment(ArrayList<Enrollment> enrollments) {
         for (int i = 0; i < enrollments.size(); i++) {
             if (enrollments.get(i).getEnrollmentID() == this.enrollmentID) {
                 enrollments.set(i, this);
                 break;
             }
         }
-        saveAllEnrollments(enrollments);
     }
     
-    public void deleteEnrollment() {
-        List<Enrollment> enrollments = getAllEnrollments();
-        enrollments.removeIf(e -> e.getEnrollmentID() == this.enrollmentID);
-        saveAllEnrollments(enrollments);
+    public void deleteEnrollment(ArrayList<Enrollment> enrollments) {
+        enrollments.remove(this);
     }
     
-    public static void listAllEnrollments() {
-        List<Enrollment> enrollments = getAllEnrollments();
+    public static void listAllEnrollments(ArrayList<Enrollment> enrollments) {
         System.out.println("=== All Enrollments ===");
         for (Enrollment e : enrollments) {
             System.out.println("Enrollment ID: " + e.getEnrollmentID());
@@ -119,9 +108,8 @@ public class Enrollment implements IEnrollment, Serializable {
     }
     
     // Get all enrollments for a specific student
-    public static List<Enrollment> getEnrollmentsByStudent(int studentID) {
-        List<Enrollment> enrollments = getAllEnrollments();
-        List<Enrollment> studentEnrollments = new ArrayList<>();
+    public static ArrayList<Enrollment> getEnrollmentsByStudent(ArrayList<Enrollment> enrollments, int studentID) {
+        ArrayList<Enrollment> studentEnrollments = new ArrayList<>();
         for (Enrollment e : enrollments) {
             if (e.getStudent().getStudentID() == studentID) {
                 studentEnrollments.add(e);
@@ -131,9 +119,8 @@ public class Enrollment implements IEnrollment, Serializable {
     }
     
     // Get all enrollments for a specific module
-    public static List<Enrollment> getEnrollmentsByModule(int moduleID) {
-        List<Enrollment> enrollments = getAllEnrollments();
-        List<Enrollment> moduleEnrollments = new ArrayList<>();
+    public static ArrayList<Enrollment> getEnrollmentsByModule(ArrayList<Enrollment> enrollments, int moduleID) {
+        ArrayList<Enrollment> moduleEnrollments = new ArrayList<>();
         for (Enrollment e : enrollments) {
             if (e.getModule().getModuleID() == moduleID) {
                 moduleEnrollments.add(e);
@@ -143,8 +130,7 @@ public class Enrollment implements IEnrollment, Serializable {
     }
     
     // Calculate average grade for a module
-    public static float calculateModuleAverage(int moduleID) {
-        List<Enrollment> enrollments = getAllEnrollments();
+    public static float calculateModuleAverage(ArrayList<Enrollment> enrollments, int moduleID) {
         float totalGrade = 0;
         int count = 0;
         
@@ -159,8 +145,7 @@ public class Enrollment implements IEnrollment, Serializable {
     }
     
     // Calculate average grade for a student
-    public static float calculateStudentAverage(int studentID) {
-        List<Enrollment> enrollments = getAllEnrollments();
+    public static float calculateStudentAverage(ArrayList<Enrollment> enrollments, int studentID) {
         float totalGrade = 0;
         int count = 0;
         
@@ -194,51 +179,16 @@ public class Enrollment implements IEnrollment, Serializable {
 
     @Override
     public void activate() {
-        this.enrollmentStatus = Status.ACTIVE;
-        System.out.println("Enrollment activated.");
-        updateEnrollment();
+    this.enrollmentStatus = Status.ACTIVE;
+    System.out.println("Enrollment activated.");
     }
 
     @Override
     public void cancel() {
-        enrollmentStatus = Status.CANCELLED;
-        System.out.println("Enrollment cancelled.");
-        updateEnrollment();
+    enrollmentStatus = Status.CANCELLED;
+    System.out.println("Enrollment cancelled.");
     }
-    
-    // File operations
-    public static List<Enrollment> getAllEnrollments() {
-        List<Enrollment> enrollments = new ArrayList<>();
-        File file = new File(FILE_PATH);
-        
-        if (file.exists()) {
-            try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
-                enrollments = (List<Enrollment>) ois.readObject();
-            } catch (IOException | ClassNotFoundException e) {
-                System.out.println("Error loading enrollments: " + e.getMessage());
-            }
-        }
-        
-        return enrollments;
-    }
-    
-    public static void saveAllEnrollments(List<Enrollment> enrollments) {
-        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(FILE_PATH))) {
-            oos.writeObject(enrollments);
-        } catch (IOException e) {
-            System.out.println("Error saving enrollments: " + e.getMessage());
-        }
-    }
-    
-    public static Enrollment getEnrollmentById(int enrollmentId) {
-        List<Enrollment> enrollments = getAllEnrollments();
-        for (Enrollment enrollment : enrollments) {
-            if (enrollment.getEnrollmentID() == enrollmentId) {
-                return enrollment;
-            }
-        }
-        return null;
-    }
+
 }
 
 enum Status {
