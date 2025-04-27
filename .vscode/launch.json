@@ -3,6 +3,13 @@
   "configurations": [
     {
       "type": "java",
+      "name": "SchooleMangementSystem",
+      "request": "launch",
+      "mainClass": "SchooleMangementSystem",
+      "projectName": "buejavaproject_2a6ff146"
+    },
+    {
+      "type": "java",
       "name": "App",
       "request": "launch",
       "mainClass": "App",

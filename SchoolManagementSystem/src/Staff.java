@@ -1,5 +1,7 @@
+import java.io.Serializable;
 
-public class Staff {
+public class Staff implements Serializable {
+    private static final long serialVersionUID = 1L;
     private static int staffCounter = 0;
     private int staffId;
     private String name;

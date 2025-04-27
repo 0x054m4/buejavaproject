@@ -1,128 +1,126 @@
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Scanner;
 
 public class SchooleMangementSystem {
-    public void addStudent(ArrayList<Student> students) {
+    public void addStudent() {
         System.out.println("Enter student name: ");
         String name = new Scanner(System.in).nextLine();
         System.out.println("Enter student email: ");
         String email = new Scanner(System.in).nextLine();
         System.out.println("Enter student annual fee: ");
-        Scanner sc=new Scanner(System.in);
+        Scanner sc = new Scanner(System.in);
         float annualFee = sc.nextFloat();
         System.out.println("Enter student year (1-12): ");
-       Scanner sc1=new Scanner(System.in);
+        Scanner sc1 = new Scanner(System.in);
         int year = sc1.nextInt();
         Student newStudent = new Student(name, email, annualFee, year);
-        newStudent.createAccount(students, newStudent);
+        newStudent.createAccount(newStudent);
         System.out.println("Student added successfully!");
     }
 
-    public void updateStudent(ArrayList<Student> students) {
+    public void updateStudent() {
         System.out.println("Enter student ID: ");
-        Scanner sc=new Scanner(System.in);
+        Scanner sc = new Scanner(System.in);
         int studentID = sc.nextInt();
-        Student updatedStudent = new Student(studentID);
-        for (Student s : students) {
-            if (s.getStudentID() == studentID) {
-                updatedStudent = s;
-                break;
-            }
+        Student updatedStudent = Student.getStudentById(studentID);
+        
+        if (updatedStudent == null) {
+            System.out.println("Student not found!");
+            return;
         }
         System.out.println("Enter student name: ");
         String name = new Scanner(System.in).nextLine();
-        updatedStudent.setName(name);
         System.out.println("Enter student email: ");
         String email = new Scanner(System.in).nextLine();
-        updatedStudent.setEmail(email);
         System.out.println("Enter student annual fee: ");
-        float annualFee = Float.parseFloat(System.console().readLine());
+        Scanner sc2 = new Scanner(System.in);
+        float annualFee = sc2.nextFloat();
+        updatedStudent.setName(name);
+        updatedStudent.setEmail(email);
         updatedStudent.setAnnualFee(annualFee);
-        updatedStudent.manageAccount(students);
+        updatedStudent.manageAccount();
         System.out.println("Student updated successfully!");
     }
 
-    public void deleteStudent(ArrayList<Student> students) {
+    public void deleteStudent() {
         System.out.println("Enter student ID: ");
-        Scanner sc=new Scanner(System.in);                             
+        Scanner sc = new Scanner(System.in);                             
         int studentID = sc.nextInt();
-        Student deletedStudent = new Student(studentID);
-        students.remove(deletedStudent);
+        Student student = Student.getStudentById(studentID);
+        
+        if (student == null) {
+            System.out.println("Student not found!");
+            return;
+        }
+        student.deleteAccount();
         System.out.println("Student deleted successfully!");
     }
 
-    public void viewStudentCourses(ArrayList<Enrollment> enrollments) {
+    public void viewStudentCourses() {
         System.out.println("Enter student ID: ");
-        Scanner sc=new Scanner(System.in);
+        Scanner sc = new Scanner(System.in);
         int studentID = sc.nextInt();
-        for (Enrollment e : enrollments) {
-            if (e.getStudent().getStudentID() == studentID) {
-                System.out.println("Student ID: " + e.getStudent().getStudentID());
-                System.out.println("Module ID: " + e.getModule().getModuleID());
-                System.out.println("Enrollment status: " + e.getEnrollmentStatus());
-            }
-        }
+        Student.viewEnrollments(studentID);
     }
 
-    public void listAllStudents(ArrayList<Student> students) {
-        for (Student s : students) {
-            System.out.println("Student ID: " + s.getStudentID());
-            System.out.println("Student name: " + s.getName());
-            System.out.println("Student email: " + s.getEmail());
-            System.out.println("Student annual fee: " + s.getAnnualFee());
-        }
+    public void listAllStudents() {
+        Student.listAllStudents();
     }
 
-    public void addModule(ArrayList<Module> modules) {
+    public void addModule() {
         System.out.println("Enter module name: ");
         String moduleName = new Scanner(System.in).nextLine();
         System.out.println("Enter module max capacity: ");
-        Scanner sc=new Scanner(System.in);
+        Scanner sc = new Scanner(System.in);
         int maxCapacity = sc.nextInt();
         System.out.println("Enter module year (1-12): ");
-        Scanner sc1=new Scanner(System.in);
+        Scanner sc1 = new Scanner(System.in);
         int moduleYear = sc1.nextInt();
         Module newModule = new Module(moduleName, maxCapacity, null, moduleYear);
-        newModule.addModule(modules);
+        newModule.addModule();
+        System.out.println("Module added successfully!");
     }
 
-    public void updateModule(ArrayList<Module> modules) {
+    public void updateModule() {
         System.out.println("Enter module ID: ");
-        Scanner sc=new Scanner(System.in);
+        Scanner sc = new Scanner(System.in);
         int moduleID = sc.nextInt();
-        Module updatedModule = new Module(moduleID);
-        for (Module m : modules) {
-            if (m.getModuleID() == moduleID) {
-                updatedModule = m;
-                break;
-            }
+        Module updatedModule = Module.getModuleById(moduleID);
+        
+        if (updatedModule == null) {
+            System.out.println("Module not found!");
+            return;
         }
+        
         System.out.println("Enter module name: ");
         String moduleName = new Scanner(System.in).nextLine();
-        updatedModule.setModuleName(moduleName);
         System.out.println("Enter module max capacity: ");
-        Scanner sc1=new Scanner(System.in);
+        Scanner sc1 = new Scanner(System.in);
         int maxCapacity = sc1.nextInt();
+        updatedModule.setModuleName(moduleName);
         updatedModule.setMaxCapacity(maxCapacity);
-        updatedModule.updateModule(modules, updatedModule);
+        updatedModule.updateModule();
         System.out.println("Module updated successfully!");
     }
 
-    public void deleteModule(ArrayList<Module> modules) {
+    public void deleteModule() {
         System.out.println("Enter module ID: ");
-        Scanner sc1=new Scanner(System.in);
+        Scanner sc1 = new Scanner(System.in);
         int moduleID = sc1.nextInt();
-        Module deletedModule = new Module(moduleID);
-        modules.remove(deletedModule);
+        Module moduleToDelete = Module.getModuleById(moduleID);
+        
+        if (moduleToDelete == null) {
+            System.out.println("Module not found!");
+            return;
+        }
+        
+        moduleToDelete.removeModule();
         System.out.println("Module deleted successfully!");
     }
 
-    public void listAllModules(ArrayList<Module> modules) {
-        for (Module m : modules) {
-            System.out.println("Module ID: " + m.getModuleID());
-            System.out.println("Module name: " + m.getModuleName());
-            System.out.println("Module max capacity: " + m.getMaxCapacity());
-        }
+    public void listAllModules() {
+        Module.listAllModules();
     }
 
     public void addClassroom(ArrayList<Classroom> classrooms) {
@@ -140,19 +138,23 @@ public class SchooleMangementSystem {
         System.out.println("Enter classroom ID: ");
         Scanner sc=new Scanner(System.in);
         int classroomID = sc.nextInt();
-        Classroom updatedClassroom = new Classroom(classroomID);
+        Classroom updatedClassroom = null;
         for (Classroom c : classrooms) {
             if (c.getClassroomId() == classroomID) {
                 updatedClassroom = c;
                 break;
             }
         }
+        if (updatedClassroom == null) {
+            System.out.println("Classroom not found!");
+            return;
+        }
         System.out.println("Enter classroom name: ");
         String roomName = new Scanner(System.in).nextLine();
-        updatedClassroom.setRoomName(roomName);
         System.out.println("Enter classroom capacity: ");
         Scanner s1c=new Scanner(System.in);
         int capacity = s1c.nextInt();
+        updatedClassroom.setRoomName(roomName);
         updatedClassroom.setCapacity(capacity);
         updatedClassroom.updateClassroom(classrooms);
         System.out.println("Classroom updated successfully!");
@@ -162,17 +164,23 @@ public class SchooleMangementSystem {
         System.out.println("Enter classroom ID: ");
         Scanner sc=new Scanner(System.in);
         int classroomID = sc.nextInt();
-        Classroom deletedClassroom = new Classroom(classroomID);
-        classrooms.remove(deletedClassroom);
+        Classroom classroomToDelete = null;
+        for (Classroom c : classrooms) {
+            if (c.getClassroomId() == classroomID) {
+                classroomToDelete = c;
+                break;
+            }
+        }
+        if (classroomToDelete == null) {
+            System.out.println("Classroom not found!");
+            return;
+        }
+        Classroom.removeClassroom(classrooms, classroomID);
         System.out.println("Classroom deleted successfully!");
     }
 
     public void listAllClassrooms(ArrayList<Classroom> classrooms) {
-        for (Classroom c : classrooms) {
-            System.out.println("Classroom ID: " + c.getClassroomId());
-            System.out.println("Classroom name: " + c.getRoomName());
-            System.out.println("Classroom capacity: " + c.getCapacity());
-        }
+        Classroom.listAllClassrooms(classrooms);
     }
 
     public void addEnrollment(ArrayList<Enrollment> enrollments, ArrayList<Student> students,
@@ -221,7 +229,18 @@ public class SchooleMangementSystem {
         System.out.println("Enter enrollment ID: ");
         Scanner sc=new Scanner(System.in);
         int enrollmentID = sc.nextInt();
-        Enrollment updatedEnrollment = new Enrollment(enrollmentID);
+        Enrollment enrollmentToUpdate = null;
+        for (Enrollment e : enrollments) {
+            if (e.getEnrollmentID() == enrollmentID) {
+                enrollmentToUpdate = e;
+                break;
+            }
+        }
+        if (enrollmentToUpdate == null) {
+            System.out.println("Enrollment not found!");
+            return;
+        }
+        
         System.out.println("Enter student ID: ");
         Scanner sc1=new Scanner(System.in);
         int studentID = sc1.nextInt();
@@ -229,7 +248,8 @@ public class SchooleMangementSystem {
         Scanner sc2=new Scanner(System.in);
         int moduleID = sc2.nextInt();
         System.out.println("Enter grade: ");
-        float grade = Float.parseFloat(System.console().readLine());
+        Scanner sc3=new Scanner(System.in);
+        float grade = sc3.nextFloat();
         Student student = null;
         Module module = null;
         // Set student and module data from the arraylist
@@ -252,10 +272,10 @@ public class SchooleMangementSystem {
             System.out.println("Module not found!");
             return;
         }
-        updatedEnrollment.setStudent(student);
-        updatedEnrollment.setModule(module);
-        updatedEnrollment.setGrade(grade);
-        updatedEnrollment.updateEnrollment(enrollments);
+        enrollmentToUpdate.setStudent(student);
+        enrollmentToUpdate.setModule(module);
+        enrollmentToUpdate.setGrade(grade);
+        enrollmentToUpdate.updateEnrollment(enrollments);
         System.out.println("Enrollment updated successfully!");
     }
 
@@ -263,32 +283,33 @@ public class SchooleMangementSystem {
         System.out.println("Enter enrollment ID: ");
         Scanner sc=new Scanner(System.in);
         int enrollmentID = sc.nextInt();
-        Enrollment deletedEnrollment = new Enrollment(enrollmentID);
-        enrollments.remove(deletedEnrollment);
+        Enrollment enrollmentToDelete = null;
+        for (Enrollment e : enrollments) {
+            if (e.getEnrollmentID() == enrollmentID) {
+                enrollmentToDelete = e;
+                break;
+            }
+        }
+        if (enrollmentToDelete == null) {
+            System.out.println("Enrollment not found!");
+            return;
+        }
+        enrollmentToDelete.deleteEnrollment(enrollments);
         System.out.println("Enrollment deleted successfully!");
     }
 
     public void listAllEnrollments(ArrayList<Enrollment> enrollments) {
-        for (Enrollment e : enrollments) {
-            System.out.println("Enrollment ID: " + e.getEnrollmentID());
-            System.out.println("Student ID: " + e.getStudent().getStudentID());
-            System.out.println("Module ID: " + e.getModule().getModuleID());
-            System.out.println("Grade: " + e.getGrade());
-            System.out.println("Status: " + e.getEnrollmentStatus());
-        }
+        Enrollment.listAllEnrollments(enrollments);
     }
 
-    /*
-     * public Session(Module module, String sessionName, Date startTime, String
-     * endTime,
-     * Classroom classroom, ArrayList<Student> attendees, String status)
-     */
     public void addSession(ArrayList<Session> sessions, ArrayList<Module> modules, ArrayList<Classroom> classrooms) {
         // Get module and classroom by ID
         System.out.println("Enter module ID: ");
-        int moduleID = Integer.parseInt(System.console().readLine());
+        Scanner sc = new Scanner(System.in);
+        int moduleID = sc.nextInt();
         System.out.println("Enter classroom ID: ");
-        int classroomID = Integer.parseInt(System.console().readLine());
+        Scanner sc1 = new Scanner(System.in);
+        int classroomID = sc1.nextInt();
         // Get module and classroom by ID
         Module module = null;
         Classroom classroom = null;
@@ -327,12 +348,26 @@ public class SchooleMangementSystem {
 
     public void updateSession(ArrayList<Session> sessions, ArrayList<Module> modules, ArrayList<Classroom> classrooms) {
         System.out.println("Enter session ID: ");
-        int sessionID = Integer.parseInt(System.console().readLine());
-        Session updatedSession = new Session(sessionID);
+        Scanner sc = new Scanner(System.in);
+        int sessionID = sc.nextInt();
+        Session sessionToUpdate = null;
+        for (Session s : sessions) {
+            if (s.getSessionID() == sessionID) {
+                sessionToUpdate = s;
+                break;
+            }
+        }
+        if (sessionToUpdate == null) {
+            System.out.println("Session not found!");
+            return;
+        }
+        
         System.out.println("Enter module ID: ");
-        int moduleID = Integer.parseInt(System.console().readLine());
+        Scanner sc1 = new Scanner(System.in);
+        int moduleID = sc1.nextInt();
         System.out.println("Enter classroom ID: ");
-        int classroomID = Integer.parseInt(System.console().readLine());
+        Scanner sc2 = new Scanner(System.in);
+        int classroomID = sc2.nextInt();
         Module module = null;
         Classroom classroom = null;
         for (Module m : modules) {
@@ -364,41 +399,46 @@ public class SchooleMangementSystem {
         String endTime = new Scanner(System.in).nextLine();
         System.out.println("Enter session status: ");
         String status = new Scanner(System.in).nextLine();
-        updatedSession.setSessionName(sessionName);
-        updatedSession.setStartTime(startTime);
-        updatedSession.setEndTime(endTime);
-        updatedSession.setStatus(status);
-        updatedSession.setModule(module);
-        updatedSession.setClassroom(classroom);
-        updatedSession.updateSession(sessions);
+        sessionToUpdate.setSessionName(sessionName);
+        sessionToUpdate.setStartTime(startTime);
+        sessionToUpdate.setEndTime(endTime);
+        sessionToUpdate.setStatus(status);
+        sessionToUpdate.setModule(module);
+        sessionToUpdate.setClassroom(classroom);
+        sessionToUpdate.updateSession(sessions);
         System.out.println("Session updated successfully!");
     }
 
     public void deleteSession(ArrayList<Session> sessions) {
         System.out.println("Enter session ID: ");
-        int sessionID = Integer.parseInt(System.console().readLine());
-        Session deletedSession = new Session(sessionID);
-        sessions.remove(deletedSession);
+        Scanner sc = new Scanner(System.in);
+        int sessionID = sc.nextInt();
+        Session sessionToDelete = null;
+        for (Session s : sessions) {
+            if (s.getSessionID() == sessionID) {
+                sessionToDelete = s;
+                break;
+            }
+        }
+        if (sessionToDelete == null) {
+            System.out.println("Session not found!");
+            return;
+        }
+        sessionToDelete.deleteSession(sessions);
         System.out.println("Session deleted successfully!");
     }
 
     public void listAllSessions(ArrayList<Session> sessions) {
-        for (Session s : sessions) {
-            System.out.println("Session ID: " + s.getSessionID());
-            System.out.println("Module ID: " + s.getModule().getModuleID());
-            System.out.println("Session name: " + s.getSessionName());
-            System.out.println("Start time: " + s.getStartTime());
-            System.out.println("End time: " + s.getEndTime());
-            System.out.println("Classroom ID: " + s.getClassroom().getClassroomId());
-            System.out.println("Status: " + s.getStatus());
-        }
+        Session.listAllSessions(sessions);
     }
 
     public void addPayment(ArrayList<Payment> payments, ArrayList<Student> students) {
         System.out.println("Enter student ID: ");
-        int studentID = Integer.parseInt(System.console().readLine());
+        Scanner sc = new Scanner(System.in);
+        int studentID = sc.nextInt();
         System.out.println("Enter amount: ");
-        float amount = Float.parseFloat(System.console().readLine());
+        Scanner sc1 = new Scanner(System.in);
+        float amount = sc1.nextFloat();
         System.out.println("Enter description: ");
         String description = new Scanner(System.in).nextLine();
         System.out.println("Enter date: ");
@@ -417,116 +457,59 @@ public class SchooleMangementSystem {
         Payment newPayment = new Payment(amount, student, description, date);
         newPayment.addPayment(payments);
         System.out.println("Payment added successfully!");
-        // float amount, Student student, String description, String date
     }
 
     public void updatePayment(ArrayList<Payment> payments) {
-        Payment updatedPayment = null;
         System.out.println("Enter payment ID: ");
-        int paymentID = Integer.parseInt(System.console().readLine());
+        Scanner sc = new Scanner(System.in);
+        int paymentID = sc.nextInt();
+        Payment paymentToUpdate = null;
         for (Payment p : payments) {
             if (p.getPaymentID() == paymentID) {
-                updatedPayment = p;
+                paymentToUpdate = p;
+                break;
             }
         }
-        if (updatedPayment == null) {
+        if (paymentToUpdate == null) {
             System.out.println("Payment not found!");
             return;
         }
         System.out.println("Enter amount: ");
-        float amount = Float.parseFloat(System.console().readLine());
+        Scanner sc1 = new Scanner(System.in);
+        float amount = sc1.nextFloat();
         System.out.println("Enter description: ");
         String description = new Scanner(System.in).nextLine();
         System.out.println("Enter date: ");
         String date = new Scanner(System.in).nextLine();
-        updatedPayment.setAmount(amount);
-        updatedPayment.setDescription(description);
-        updatedPayment.setDate(date);
-        updatedPayment.updatePayment(payments);
+        paymentToUpdate.setAmount(amount);
+        paymentToUpdate.setDescription(description);
+        paymentToUpdate.setDate(date);
+        paymentToUpdate.updatePayment(payments);
         System.out.println("Payment updated successfully!");
     }
 
     public void deletePayment(ArrayList<Payment> payments) {
         System.out.println("Enter payment ID: ");
-        int paymentID = Integer.parseInt(System.console().readLine());
-        Payment deletedPayment = new Payment(paymentID);
-        payments.remove(deletedPayment);
+        Scanner sc = new Scanner(System.in);
+        int paymentID = sc.nextInt();
+        Payment paymentToDelete = null;
+        for (Payment p : payments) {
+            if (p.getPaymentID() == paymentID) {
+                paymentToDelete = p;
+                break;
+            }
+        }
+        if (paymentToDelete == null) {
+            System.out.println("Payment not found!");
+            return;
+        }
+        paymentToDelete.deletePayment(payments);
         System.out.println("Payment deleted successfully!");
     }
 
     public void listAllPayments(ArrayList<Payment> payments) {
-        for (Payment p : payments) {
-            System.out.println("Payment ID: " + p.getPaymentID());
-            System.out.println("Amount: " + p.getAmount());
-            System.out.println("Student ID: " + p.getPayeeId().getStudentID());
-            System.out.println("Description: " + p.getDescription());
-            System.out.println("Date: " + p.getDate());
-        }
+        Payment.listAllPayments(payments);
     }
-
-    public void listAllTeachers(ArrayList<Teacher> teachers) {
-        for (Teacher t : teachers) {
-            System.out.println("Teacher ID: " + t.getStaffId());
-            System.out.println("Teacher name: " + t.getName());
-            System.out.println("Teacher email: " + t.getEmail());
-        }
-    }
-    public void addTeacher(ArrayList<Teacher> teachers) {
-        System.out.println("Enter teacher name: ");
-        String name = new Scanner(System.in).nextLine();
-        System.out.println("Enter teacher email: ");
-        String email = new Scanner(System.in).nextLine();
-        System.out.println("Enter role: ");
-        String role = new Scanner(System.in).nextLine();
-        StaffStatus status = StaffStatus.ACTIVE;
-        Teacher newTeacher = new Teacher(name, email, role, status);
-        teachers.add(newTeacher);
-        System.out.println("Teacher added successfully!");
-    }
-    public void updateTeacher(ArrayList<Teacher> teachers) {
-        System.out.println("Enter teacher ID: ");
-        int teacherID = Integer.parseInt(System.console().readLine());
-        // Check if teacher exists
-        Teacher updatedTeacher = null;
-        for (Teacher t : teachers) {
-            if (t.getStaffId() == teacherID) {
-                updatedTeacher = t;
-                break;
-            }
-        }
-        if (updatedTeacher == null) {
-            System.out.println("Teacher not found!");
-            return;
-        }
-        System.out.println("Enter teacher name: ");
-        String name = new Scanner(System.in).nextLine();
-        updatedTeacher.setName(name);
-        System.out.println("Enter teacher email: ");
-        String email = new Scanner(System.in).nextLine();
-        updatedTeacher.setEmail(email);
-        updatedTeacher.updateTeacher(teachers);
-        System.out.println("Teacher updated successfully!");
-    }
-    public void deleteTeacher(ArrayList<Teacher> teachers) {
-        System.out.println("Enter teacher ID: ");
-        int teacherID = Integer.parseInt(System.console().readLine());
-        // Check if teacher exists
-        Teacher deletedTeacher = null;
-        for (Teacher t : teachers) {
-            if (t.getStaffId() == teacherID) {
-                deletedTeacher = t;
-                break;
-            }
-        }
-        if (deletedTeacher == null) {
-            System.out.println("Teacher not found!");
-            return;
-        }
-
-        teachers.remove(deletedTeacher);
-        System.out.println("Teacher deleted successfully!");
-    }
-
 
     public class studentFunction{
         // This will run for studentflow (loggedin) student
@@ -678,329 +661,393 @@ public class SchooleMangementSystem {
         }
 
     }
-
-    public static void studentFlow(ArrayList<Student> students, ArrayList<Enrollment> enrollments,
-            ArrayList<Session> sessions, ArrayList<Payment> payments, ArrayList<Module> modules, String[] args) throws Exception {
-                System.out.println("Please login to continue.");
-                int studentID = 0;
-                System.out.println("Enter your student ID: ");
-                studentID = new Scanner(System.in).nextInt();
-                // Check if student exists
-                Student student = null;
-                for (Student s : students) {
-                    if (s.getStudentID() == studentID) {
-                        student = s;
-                        break;
-                    }
-                }
-                if (student == null) {
-                    System.out.println("Student not found!");
-                    main(args);
-                }
-                
-                int option = 0;
-            while(true){
-                System.out.println("What would you like to do?");
-                System.out.println("1. View enrolled-in courses");
-                System.out.println("2. Enroll in a course");
-                System.out.println("3. View payments");
-                System.out.println("4. Logout");
-                option = Integer.parseInt(System.console().readLine());
-                studentFunction studentFunction = new SchooleMangementSystem().new studentFunction();
-                switch (option) {
-                    case 1:
-                        studentFunction.viewEnrolledCourses(enrollments, student);
-                        break;
-                    case 2:
-                        studentFunction.enrollToModule(modules, enrollments, student);
-                        break;
-                    case 3:
-                        studentFunction.viewPayments(payments, student);
-                    case 4:
-                        System.out.println("Logging out...");
-                        main(null);
-                        break;
-                    default:
-                        System.out.println("Invalid option. Please try again.");
-                        break;
-                }
+    public void viewSessionAssessments(ArrayList<Session> sessions) {
+        System.out.println("Enter session ID: ");
+        Scanner sc = new Scanner(System.in);
+        int sessionID = sc.nextInt();
+        
+        Session session = null;
+        for (Session s : sessions) {
+            if (s.getSessionID() == sessionID) {
+                session = s;
+                break;
             }
+        }
+        
+        if (session == null) {
+            System.out.println("Session not found!");
+            return;
+        }
+        
+        ArrayList<Assessment> assessments = session.getAssessments();
+        if (assessments.isEmpty()) {
+            System.out.println("No assessments found for this session.");
+            return;
+        }
+        
+        System.out.println("=== Assessments for Session: " + session.getSessionName() + " ===");
+        for (Assessment a : assessments) {
+            System.out.println("Assessment ID: " + a.getAssessmentID());
+            System.out.println("Title: " + a.getTitle());
+            System.out.println("Date: " + a.getDate());
+            System.out.println("Duration: " + a.getDuration());
+            System.out.println("Module: " + a.getModule().getModuleName());
+            System.out.println("-----------------");
+        }
     }
-    public static void staffFlow(ArrayList<Student> students, ArrayList<Enrollment> enrollments,
-            ArrayList<Session> sessions, ArrayList<Payment> payments, ArrayList<Module> modules,
-            ArrayList<Classroom> classrooms, String[] args, ArrayList<Teacher> staff) throws Exception {
-                boolean loggedIn = false;
-                if (!loggedIn) {
-                    System.out.println("Please login to continue.");
-                    int staffID = 0;
-                    System.out.println("Enter your staff ID: ");
-                    Scanner sc=new Scanner(System.in);
-                    staffID = sc.nextInt();
-                    Admin admin = new Admin(staffID);
-                    loggedIn = admin.login();
-                    if (loggedIn) {
-                        System.out.println("Login successful!");
-                    } else {
-                        System.out.println("Login failed. Please try again.");
-                        staffFlow(students, enrollments, sessions, payments, modules, classrooms, args, staff);
-                    }
-                }
-                while (true) {
-                    System.out.println("What would you like to do?");
-                    System.out.println("1. Manage students");
-                    System.out.println("2. Manage modules");
-                    System.out.println("3. Manage classrooms");
-                    System.out.println("4. Manage enrollments");
-                    System.out.println("5. Manage sessions");
-                    System.out.println("6. Manage payments");
-                    System.out.println("7. Manage teachers");
-                    System.out.println("8. Exit");
-                    Scanner sc=new Scanner(System.in);
-                    int option = sc.nextInt();
-                    SchooleMangementSystem app = new SchooleMangementSystem();
-                    switch (option) {
-                        case 1 -> {
-                            System.out.println("1. Add student");
-                            System.out.println("2. Update student");
-                            System.out.println("3. Delete student");
-                            System.out.println("4. View student courses");
-                            System.out.println("5. List all students");
-                            System.out.println("6. Back");
-                             Scanner sc1=new Scanner(System.in);
-                            int studentOption = sc1.nextInt();
-                            switch (studentOption) {
-                                case 1 -> app.addStudent(students);
-                                case 2 -> app.updateStudent(students);
-                                case 3 -> app.deleteStudent(students);
-                                case 4 -> app.viewStudentCourses(enrollments);
-                                case 5 -> app.listAllStudents(students);
-                                case 6 -> main(args);
-                                default -> {
-                                    System.out.println("Invalid option. Please try again.");
-                                    main(args);
-                            }
-                            }
-                        }
-                        case 2 -> {
-                            System.out.println("1. Add module");
-                            System.out.println("2. Update module");
-                            System.out.println("3. Delete module");
-                            System.out.println("4. List all modules");
-                            System.out.println("5. Back");
-                            Scanner sc1=new Scanner(System.in);
-                            int moduleOption = sc1.nextInt();
-                            switch (moduleOption) {
-                                case 1 -> app.addModule(modules);
-                                case 2 -> app.updateModule(modules);
-                                case 3 -> app.deleteModule(modules);
-                                case 4 -> app.listAllModules(modules);
-                                case 5 -> main(args);
-                                default -> {
-                                    System.out.println("Invalid option. Please try again.");
-                                    main(args);
-                                }
-                            }
-                        }
+    
+    public void addAssessmentToSession(ArrayList<Session> sessions) {
+        System.out.println("Enter session ID: ");
+        Scanner sc = new Scanner(System.in);
+        int sessionID = sc.nextInt();
+        
+        Session session = null;
+        for (Session s : sessions) {
+            if (s.getSessionID() == sessionID) {
+                session = s;
+                break;
+            }
+        }
+        
+        if (session == null) {
+            System.out.println("Session not found!");
+            return;
+        }
+        
+        System.out.println("Enter assessment title: ");
+        String title = new Scanner(System.in).nextLine();
+        
+        System.out.println("Enter assessment duration (in minutes): ");
+        String duration = new Scanner(System.in).nextLine();
+        
+        // Using current date for simplicity
+        Date date = new Date();
+        
+        Module module = session.getModule();
+        
+        Assessment newAssessment = new Assessment(0, date, duration, module, title);
+        session.addAssessment(newAssessment);
+        
+        System.out.println("Assessment added to session successfully!");
+    }
 
-                        case 3 -> {
-                            System.out.println("1. Add classroom");
-                            System.out.println("2. Update classroom");
-                            System.out.println("3. Delete classroom");
-                            System.out.println("4. List all classrooms");
-                            System.out.println("5. Back");
-                            Scanner sc2=new Scanner(System.in);
-                            int classroomOption = sc2.nextInt();
-                            switch (classroomOption) {
-                                case 1 -> app.addClassroom(classrooms);
-                                case 2 -> app.updateClassroom(classrooms);
-                                case 3 -> app.deleteClassroom(classrooms);
-                                case 4 -> app.listAllClassrooms(classrooms);
-                                case 5 -> main(args);
-                                default -> {
-                                    System.out.println("Invalid option. Please try again.");
-                                    main(args);
-                                }
-                            }
-                        }
-
-                        case 4 -> {
-                            System.out.println("1. Add enrollment");
-                            System.out.println("2. Update enrollment");
-                            System.out.println("3. Delete enrollment");
-                            System.out.println("4. List all enrollments");
-                            System.out.println("5. Back");
-                            Scanner sc1=new Scanner(System.in);
-                            int enrollmentOption =sc1.nextInt();
-                            switch (enrollmentOption) {
-                                case 1 -> app.addEnrollment(enrollments, students, modules);
-                                case 2 -> app.updateEnrollment(enrollments, students, modules);
-                                case 3 -> app.deleteEnrollment(enrollments);
-                                case 4 -> app.listAllEnrollments(enrollments);
-                                case 5 -> main(args);
-                                default -> {
-                                    System.out.println("Invalid option. Please try again.");
-                                    main(args);
-                                }
-                            }
-                        }
-
-                        case 5 -> {
-                            System.out.println("1. Add session");
-                            System.out.println("2. Update session");
-                            System.out.println("3. Delete session");
-                            System.out.println("4. List all sessions");
-                            System.out.println("5. Back");
-                            Scanner sc3=new Scanner(System.in);
-                            int sessionOption = sc3.nextInt();
-                            switch (sessionOption) {
-                                case 1 -> app.addSession(sessions, modules, classrooms);
-                                case 2 -> app.updateSession(sessions, modules, classrooms);
-                                case 3 -> app.deleteSession(sessions);
-                                case 4 -> app.listAllSessions(sessions);
+    public static void studentFlow(String[] args) throws Exception {
+        System.out.println("Please login to continue.");
+        int studentID = 0;
+        System.out.println("Enter your student ID: ");
+        studentID = new Scanner(System.in).nextInt();
+        // Check if student exists
+        Student student = Student.getStudentById(studentID);
+        
+        if (student == null) {
+            System.out.println("Student not found!");
+            main(args);
+            return;
+        }
+        
+        int option = 0;
+        while(true) {
+            System.out.println("What would you like to do?");
+            System.out.println("1. View enrolled-in courses");
+            System.out.println("2. Enroll in a course");
+            System.out.println("3. View payments");
+            System.out.println("4. Logout");
+            option = Integer.parseInt(System.console().readLine());
+            studentFunction studentFunction = new SchooleMangementSystem().new studentFunction();
+            switch (option) {
+                case 1:
+                    student.viewCourses();
+                    break;
+                case 2:
+                    studentFunction.enrollToModule(student);
+                    break;
+                case 3:
+                    studentFunction.viewPayments(student);
+                    break;
+                case 4:
+                    System.out.println("Logging out...");
+                    main(null);
+                    break;
+                default:
+                    System.out.println("Invalid option. Please try again.");
+                    break;
+            }
+        }
+    }
+    public static void staffFlow(String[] args) throws Exception {
+        boolean loggedIn = false;
+        if (!loggedIn) {
+            System.out.println("Please login to continue.");
+            int staffID = 0;
+            System.out.println("Enter your staff ID: ");
+            Scanner sc = new Scanner(System.in);
+            staffID = sc.nextInt();
+            Admin admin = new Admin(staffID);
+            loggedIn = admin.login();
+            if (loggedIn) {
+                System.out.println("Login successful!");
+            } else {
+                System.out.println("Login failed. Please try again.");
+                staffFlow(args);
+            }
+        }
+        
+        while (true) {
+            System.out.println("What would you like to do?");
+            System.out.println("1. Manage students");
+            System.out.println("2. Manage modules");
+            System.out.println("3. Manage classrooms");
+            System.out.println("4. Manage enrollments");
+            System.out.println("5. Manage sessions");
+            System.out.println("6. Manage payments");
+            System.out.println("7. Manage teachers");
+            System.out.println("8. Exit");
+            Scanner sc = new Scanner(System.in);
+            int option = sc.nextInt();
+            SchooleMangementSystem app = new SchooleMangementSystem();
             
-                                case 5 -> main(args);
-                                default -> {
-                                    System.out.println("Invalid option. Please try again.");
-                                    main(args);
-                                }
-                            }
-                        }
-
-                        case 6 -> {
-                            System.out.println("1. Add payment");
-                            System.out.println("2. Update payment");
-                            System.out.println("3. Delete payment");
-                            System.out.println("4. List all payments");
-                            System.out.println("5. Back");
-                            Scanner sc1=new Scanner(System.in);
-                            int paymentOption = sc1.nextInt();
-                            switch (paymentOption) {
-                                case 1 -> app.addPayment(payments, students);
-                                case 2 -> app.updatePayment(payments);
-                                case 3 -> app.deletePayment(payments);
-                                case 4 -> app.listAllPayments(payments);
-                                case 5 -> main(args);
-                                default -> {
-                                    System.out.println("Invalid option. Please try again.");
-                                    main(args);
-                                }
-                            }
-                        }
-
-                        case 7 -> {
-                            System.out.println("1. Add teacher");
-                            System.out.println("2. Update teacher");
-                            System.out.println("3. Delete teacher");
-                            System.out.println("4. List all teachers");
-                            System.out.println("5. Back");
-                            Scanner sc1=new Scanner(System.in);
-                            int teacherOption = sc1.nextInt();
-                            switch (teacherOption) {
-                                case 1 -> app.addTeacher(staff);
-                                case 2 -> app.updateTeacher(staff);
-                                case 3 -> app.deleteTeacher(staff);
-                                case 4 -> app.listAllTeachers(staff);
-                                case 5 -> main(args);
-                                default -> {
-                                    System.out.println("Invalid option. Please try again.");
-                                    main(args);
-                                }
-                            }
-                        }
-
-                        case 8 -> {
-                            System.out.println("Exiting...");
-                            main(args);
-                        }
+            switch (option) {
+                case 1 -> {
+                    System.out.println("1. Add student");
+                    System.out.println("2. Update student");
+                    System.out.println("3. Delete student");
+                    System.out.println("4. View student courses");
+                    System.out.println("5. List all students");
+                    System.out.println("6. Back");
+                    Scanner sc1 = new Scanner(System.in);
+                    int studentOption = sc1.nextInt();
+                    switch (studentOption) {
+                        case 1 -> app.addStudent();
+                        case 2 -> app.updateStudent();
+                        case 3 -> app.deleteStudent();
+                        case 4 -> app.viewStudentCourses();
+                        case 5 -> app.listAllStudents();
+                        case 6 -> main(args);
                         default -> {
                             System.out.println("Invalid option. Please try again.");
                             main(args);
                         }
                     }
                 }
-    
-    }
-    public static void teacherFlow(ArrayList<Student> students, ArrayList<Enrollment> enrollments,
-            ArrayList<Session> sessions, ArrayList<Payment> payments, ArrayList<Module> modules,
-            ArrayList<Classroom> classrooms, String[] args, ArrayList<Teacher> staff) throws Exception {
-                boolean loggedIn = false;
-                if (!loggedIn) {
-                    System.out.println("Please login to continue.");
-                    int teacherID = 0;
-                    System.out.println("Enter your teacher ID: ");
-                            Scanner sc=new Scanner(System.in);
-                    teacherID = sc.nextInt();
-                    Teacher teacher = null;
-                    for (Teacher t : staff) {
-                        if (t.getStaffId() == teacherID) {
-                            teacher = t;
-                            break;
-                        }
-                    }
-                    if (teacher == null) {
-                        System.out.println("Teacher not found!");
-                        main(args);
-                    }
-                    if (loggedIn) {
-                        System.out.println("Login successful!");
-                    } else {
-                        System.out.println("Login failed. Please try again.");
-                        teacherFlow(students, enrollments, sessions, payments, modules, classrooms, args, staff);
-                    }
-                }
-                while (true) {
-                    System.out.println("What would you like to do?");
-                    System.out.println("1. List students");
-                    System.out.println("2. Add session");
-                    System.out.println("3. Register attendee");
-                    System.out.println("4. Logout");
-                    Scanner sc=new Scanner(System.in);
-                    int option = sc.nextInt();
-                    TeacherFunction teacherFunction = new SchooleMangementSystem().new TeacherFunction();
-                    switch (option) {
-                        case 1:
-                            teacherFunction.listStudents(students);
-                            break;
-                        case 2:
-                            teacherFunction.addSession(sessions, modules, classrooms);
-                            break;
-                        case 3:
-                            teacherFunction.registerAttendee(sessions, students);
-                            break;
-                        case 4:
-                            System.out.println("Logging out...");
-                            main(args);
-                            break;
-                        default:
+                case 2 -> {
+                    System.out.println("1. Add module");
+                    System.out.println("2. Update module");
+                    System.out.println("3. Delete module");
+                    System.out.println("4. List all modules");
+                    System.out.println("5. Back");
+                    Scanner sc1 = new Scanner(System.in);
+                    int moduleOption = sc1.nextInt();
+                    switch (moduleOption) {
+                        case 1 -> app.addModule();
+                        case 2 -> app.updateModule();
+                        case 3 -> app.deleteModule();
+                        case 4 -> app.listAllModules();
+                        case 5 -> main(args);
+                        default -> {
                             System.out.println("Invalid option. Please try again.");
                             main(args);
-                            break;
+                        }
                     }
                 }
+                case 3 -> {
+                    System.out.println("1. Add classroom");
+                    System.out.println("2. Update classroom");
+                    System.out.println("3. Delete classroom");
+                    System.out.println("4. List all classrooms");
+                    System.out.println("5. Back");
+                    Scanner sc2 = new Scanner(System.in);
+                    int classroomOption = sc2.nextInt();
+                    switch (classroomOption) {
+                        case 1 -> app.addClassroom();
+                        case 2 -> app.updateClassroom();
+                        case 3 -> app.deleteClassroom();
+                        case 4 -> app.listAllClassrooms();
+                        case 5 -> main(args);
+                        default -> {
+                            System.out.println("Invalid option. Please try again.");
+                            main(args);
+                        }
+                    }
+                }
+
+                case 4 -> {
+                    System.out.println("1. Add enrollment");
+                    System.out.println("2. Update enrollment");
+                    System.out.println("3. Delete enrollment");
+                    System.out.println("4. List all enrollments");
+                    System.out.println("5. Back");
+                    Scanner sc1 = new Scanner(System.in);
+                    int enrollmentOption =sc1.nextInt();
+                    switch (enrollmentOption) {
+                        case 1 -> app.addEnrollment();
+                        case 2 -> app.updateEnrollment();
+                        case 3 -> app.deleteEnrollment();
+                        case 4 -> app.listAllEnrollments();
+                        case 5 -> main(args);
+                        default -> {
+                            System.out.println("Invalid option. Please try again.");
+                            main(args);
+                        }
+                    }
+                }
+
+                case 5 -> {
+                    System.out.println("1. Add session");
+                    System.out.println("2. Update session");
+                    System.out.println("3. Delete session");
+                    System.out.println("4. List all sessions");
+                    System.out.println("5. View session assessments");
+                    System.out.println("6. Add assessment to session");
+                    System.out.println("7. Back");
+                    Scanner sc3 = new Scanner(System.in);
+                    int sessionOption = sc3.nextInt();
+                    switch (sessionOption) {
+                        case 1 -> app.addSession();
+                        case 2 -> app.updateSession();
+                        case 3 -> app.deleteSession();
+                        case 4 -> app.listAllSessions();
+                        case 5 -> app.viewSessionAssessments();
+                        case 6 -> app.addAssessmentToSession();
+                        case 7 -> main(args);
+                        default -> {
+                            System.out.println("Invalid option. Please try again.");
+                            main(args);
+                        }
+                    }
+                }
+
+                case 6 -> {
+                    System.out.println("1. Add payment");
+                    System.out.println("2. Update payment");
+                    System.out.println("3. Delete payment");
+                    System.out.println("4. List all payments");
+                    System.out.println("5. Back");
+                    Scanner sc1 = new Scanner(System.in);
+                    int paymentOption = sc1.nextInt();
+                    switch (paymentOption) {
+                        case 1 -> app.addPayment();
+                        case 2 -> app.updatePayment();
+                        case 3 -> app.deletePayment();
+                        case 4 -> app.listAllPayments();
+                        case 5 -> main(args);
+                        default -> {
+                            System.out.println("Invalid option. Please try again.");
+                            main(args);
+                        }
+                    }
+                }
+
+                case 7 -> {
+                    System.out.println("1. Add teacher");
+                    System.out.println("2. Update teacher");
+                    System.out.println("3. Delete teacher");
+                    System.out.println("4. List all teachers");
+                    System.out.println("5. Back");
+                    Scanner sc1 = new Scanner(System.in);
+                    int teacherOption = sc1.nextInt();
+                    switch (teacherOption) {
+                        case 1 -> app.addTeacher();
+                        case 2 -> app.updateTeacher();
+                        case 3 -> app.deleteTeacher();
+                        case 4 -> app.listAllTeachers();
+                        case 5 -> main(args);
+                        default -> {
+                            System.out.println("Invalid option. Please try again.");
+                            main(args);
+                        }
+                    }
+                }
+
+                case 8 -> {
+                    System.out.println("Exiting...");
+                    main(args);
+                }
+                default -> {
+                    System.out.println("Invalid option. Please try again.");
+                    main(args);
+                }
             }
+        }
+    }
+    public static void teacherFlow(String[] args) throws Exception {
+        boolean loggedIn = false;
+        if (!loggedIn) {
+            System.out.println("Please login to continue.");
+            int teacherID = 0;
+            System.out.println("Enter your teacher ID: ");
+            Scanner sc = new Scanner(System.in);
+            teacherID = sc.nextInt();
+            Teacher teacher = Teacher.getTeacherById(teacherID);
+            
+            if (teacher == null) {
+                System.out.println("Teacher not found!");
+                main(args);
+                return;
+            }
+            
+            loggedIn = teacher.login();
+            
+            if (loggedIn) {
+                System.out.println("Login successful!");
+            } else {
+                System.out.println("Login failed. Please try again.");
+                teacherFlow(args);
+            }
+        }
+        
+        while (true) {
+            System.out.println("What would you like to do?");
+            System.out.println("1. List students");
+            System.out.println("2. Add session");
+            System.out.println("3. Register attendee");
+            System.out.println("4. Logout");
+            Scanner sc = new Scanner(System.in);
+            int option = sc.nextInt();
+            TeacherFunction teacherFunction = new SchooleMangementSystem().new TeacherFunction();
+            
+            switch (option) {
+                case 1:
+                    teacherFunction.listStudents();
+                    break;
+                case 2:
+                    teacherFunction.addSession();
+                    break;
+                case 3:
+                    teacherFunction.registerAttendee();
+                    break;
+                case 4:
+                    System.out.println("Logging out...");
+                    main(args);
+                    break;
+                default:
+                    System.out.println("Invalid option. Please try again.");
+                    main(args);
+                    break;
+            }
+        }
+    }
 
 
         public static void main(String[] args) throws Exception {
-            DataStore data = DataStore.getInstance();
-    
+            // Initialize all data files when the application starts
+            DataInitializer.initializeAllFiles();
+            
             System.out.println("Welcome to School Management System!");
             System.out.println("1. Student.");
             System.out.println("2. Admin.");
             System.out.println("3. Teacher.");
-            Scanner sc=new Scanner(System.in);
+            Scanner sc = new Scanner(System.in);
             int userType = sc.nextInt();
-    
+
             if (userType == 1) {
-                studentFlow(data.students, data.enrollments, data.sessions, data.payments, data.modules, args);
+                studentFlow(args);
             } else if (userType == 2) {
-                staffFlow(data.students, data.enrollments, data.sessions, data.payments, data.modules, data.classrooms, args, data.teachers);
-            }
-            else if (userType == 3) {
-                teacherFlow(data.students, data.enrollments, data.sessions, data.payments, data.modules, data.classrooms, args, data.teachers);
+                staffFlow(args);
+            } else if (userType == 3) {
+                teacherFlow(args);
             } else {
                 System.out.println("Invalid option. Please try again.");
                 main(args);
             }
         }
     }
-    
