@@ -1,25 +1,23 @@
 import java.util.ArrayList;
 
-public class Enrollment {
+public class Enrollment implements IEnrollment {
+    private static int enrollmentCounter = 0;
     private int enrollmentID;
     private Student student;
     private Module module;
     private Status enrollmentStatus;
+    private float grade;
 
-    
     public Enrollment(int enrollmentID) {
         this.enrollmentID = enrollmentID;
     }
 
-    public Enrollment(Student student, Module module, Status enrollmentStatus) {
+    public Enrollment(Student student, Module module, Status enrollmentStatus){
         this.student = student;
         this.module = module;
         this.enrollmentStatus = enrollmentStatus;
-    }
-
-    
-    public void setEnrollmentID(int enrollmentID) {
-        this.enrollmentID = enrollmentID;
+        grade = 0.0f;
+        this.enrollmentID = enrollmentCounter++;
     }
 
     public int getEnrollmentID() {
@@ -32,6 +30,12 @@ public class Enrollment {
 
     public Student getStudent() {
         return student;
+    }
+    public void setGrade(float grade) {
+        this.grade = grade;
+    }
+    public float getGrade() {
+        return grade;
     }
 
     public void setModule(Module module) {
@@ -47,17 +51,7 @@ public class Enrollment {
         return enrollmentStatus;
     }
 
-    
-    public void activate() {
-        this.enrollmentStatus = Status.ACTIVE;
-    }
 
-    
-    public void cancel() {
-        this.enrollmentStatus = Status.CANCELED;
-    }
-
-    
     public void generateReports(ArrayList<Enrollment> enrollments, Module module) {
         int enrolledStudents = 0;
         for (Enrollment enrollment : enrollments) {
@@ -90,9 +84,21 @@ public class Enrollment {
             }
         }
     }
+
+    @Override
+    public void activate() {
+    this.enrollmentStatus = Status.ACTIVE;
+    System.out.println("Enrollment activated.");
+    }
+
+    @Override
+    public void cancel() {
+    enrollmentStatus = Status.CANCELLED;
+    System.out.println("Enrollment cancelled.");
+    }
+
 }
 
-
 enum Status {
-    ACTIVE, CANCELED;
+    ACTIVE, CANCELLED;
 }

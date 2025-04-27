@@ -1,4 +1,6 @@
+
 public class Staff {
+    private static int staffCounter = 0;
     private int staffId;
     private String name;
     private String email;
@@ -14,6 +16,7 @@ public class Staff {
         this.email = email;
         this.role = role;
         this.status = status;
+        this.staffId = staffCounter++;
     }
 
     public int getStaffId() {
@@ -52,11 +55,11 @@ public class Staff {
         this.status = status;
     }
 
-   
     public boolean login() {
-        //to be implemented in phase 2
-        System.out.println("Logged in succesfully!");
         return true;
+    }
+
+    public void logout() {
     }
 }
 

@@ -1,29 +1,30 @@
 import java.util.*;
 
 public class Session {
+    private static int sessionCounter = 0;
     private int sessionID;
     private Module module;
     private String sessionName;
-    private Date startTime;
+    private String startTime;
     private String endTime;
     private Classroom classroom;
     private ArrayList<Student> attendees;
-    private Status status;
+    private String status;
 
     public Session(int sessionID) {
         this.sessionID = sessionID;
         this.attendees = new ArrayList<>();
     }
 
-    public Session(Module module, String sessionName, Date startTime, String endTime,
-                   Classroom classroom, ArrayList<Student> attendees, Status status) {
+    public Session(Module module, String sessionName, String startTime, String endTime, Classroom classroom, ArrayList<Student> attendees, String status) {
         this.module = module;
         this.sessionName = sessionName;
         this.startTime = startTime;
         this.endTime = endTime;
         this.classroom = classroom;
         this.attendees = new ArrayList<>(attendees);
-        this.status = status;    
+        this.status = status;
+        this.sessionID = sessionCounter++;
     }
 
     public int getSessionID() {
@@ -46,11 +47,11 @@ public class Session {
         return sessionName;
     }
 
-    public void setStartTime(Date startTime) {
+    public void setStartTime(String startTime) {
         this.startTime = startTime;
     }
 
-    public Date getStartTime() {
+    public String getStartTime() {
         return startTime;
     }
 
@@ -78,15 +79,25 @@ public class Session {
         return new ArrayList<>(attendees);
     }
 
-    public void setStatus(Status status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 
-    public Status getStatus() {
+    public String getStatus() {
         return status;
     }
-}
-
-enum Status {
-    ACTIVE, CANCELED;
+    public void addSession(ArrayList<Session> session){
+        session.add(this);
+    }
+    public void removeSession(ArrayList<Session> session){
+        session.remove(this);
+    }
+    public void updateSession(ArrayList<Session> session){
+        for (int i = 0; i < session.size(); i++) {
+            if (session.get(i).getSessionID() == this.sessionID) {
+                session.set(i, this);
+                break;
+            }
+        }
+    }
 }

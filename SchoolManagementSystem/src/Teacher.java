@@ -1,13 +1,15 @@
 import java.util.ArrayList;
 
 public class Teacher extends Staff {
-   
-    private ArrayList<Module> assignedModules; 
-
+    private ArrayList<Module> assignedModules;
     public Teacher(int staffId) {
         super(staffId);
+        assignedModules = new ArrayList<>();
     }
-
+    public Teacher(String name, String email, String role, StaffStatus status) {
+        super(name, email, role, status);
+        assignedModules = new ArrayList<>();
+    }   
     public void setAssignedModules(ArrayList<Module> assignedModules) {
         this.assignedModules = assignedModules;
     }
@@ -24,19 +26,26 @@ public class Teacher extends Staff {
     public void removeModuleAssignment(int moduleID) {
         for (Module module : assignedModules) {
             if (module.getModuleID() == moduleID) {
-               assignedModules.remove(module);
-                System.out.println("Module " + moduleID + " removed");
+                assignedModules.remove(module);
+                break;
             }
         }
         System.out.println("Module " + moduleID + " removed from teacher's assignments.");
     }
+    public void updateTeacher(ArrayList<Teacher> teachers) {
+        for (Teacher teacher : teachers) {
+            if (teacher.getStaffId() == this.getStaffId()) {
+                teacher.setName(this.getName());
+                teacher.setEmail(this.getEmail());
+                teacher.setRole(this.getRole());
+                teacher.setStatus(this.getStatus());
+                break;
+            }
+        }
+    }
 
-    // public void updateModuleAssignment(int moduleID, int newModuleID) {
-    //     for (Module module : assignedModules) {
-    //         if (module.getModuleID() == moduleID) {
-    //             module.setModuleID(newModuleID);
-    //             System.out.println("Module " + moduleID + " updated to " + newModuleID + ".");
-    //         }
-    //     }
-    // }
+
+    public boolean login() {
+        return true; // Placeholder for login logic
+    }
 }

@@ -1,42 +1,25 @@
 import java.util.ArrayList;
-<<<<<<< Updated upstream
-
-=======
-import java.util.List;
->>>>>>> Stashed changes
 
 public class Student {
+    private static int studentCounter = 0;
     private int studentID;
     private String name;
     private String email;
     private float annualFee;
-<<<<<<< Updated upstream
-    private ArrayList<Module> enrolledModule;
-    private ArrayList<Assessment> assignedAssessment;
-=======
+    private int year;
     
->>>>>>> Stashed changes
     public Student(int studentID) {
         this.studentID = studentID;
     }
-
-<<<<<<< Updated upstream
-    public Student(String name, String email, float annualFee, ArrayList<Module> enrolledModule, ArrayList<Assessment> assignedAssessment) {
-        this.name = name;
-        this.email = email;
-        this.annualFee = annualFee;
-        this.enrolledModule = enrolledModule;
-        this.assignedAssessment = assignedAssessment;
-=======
     
-    public Student(String name, String email, float annualFee) {
+    public Student(String name, String email, float annualFee, int year) {
         this.name = name;
         this.email = email;
         this.annualFee = annualFee;
->>>>>>> Stashed changes
+        this.year = year;
+        this.studentID = studentCounter++;
     }
 
-    
     public int getStudentID() {
         return studentID;
     }
@@ -58,6 +41,12 @@ public class Student {
     public String getEmail() {
         return email;
     }
+    public void setYear(int year) {
+        this.year = year;
+    }
+    public int getYear() {
+        return year;
+    }
     
     
     public void setAnnualFee(float annualFee) {
@@ -68,39 +57,17 @@ public class Student {
         return annualFee;
     }
 
-<<<<<<< Updated upstream
-    public void setEnrolledModule(ArrayList<Module> enrolledModule) {
-        this.enrolledModule = enrolledModule;
-    }
-
-    public ArrayList<Module> getEnrolledModule() {
-        return enrolledModule;
-    }
-
-    public void setAssignedAssessment(ArrayList<Assessment> assignedAssessment) {
-        this.assignedAssessment = assignedAssessment;
-    }
-
-    public ArrayList<Assessment> getAssignedAssessment() {
-        return assignedAssessment;
-    }
-
-
-
-=======
     
     public void createAccount(ArrayList<Student> students, Student newStudent) {
-        this.studentID = students.size() + 1;
         students.add(newStudent);
     }
 
     
-    public void manageAccount(ArrayList<Student> students, Student updatedStudent) {
+    public void manageAccount(ArrayList<Student> students) {
         for (Student s : students) {
-            if (s.getStudentID() == updatedStudent.getStudentID()) {
-                s.setName(updatedStudent.getName());
-                s.setEmail(updatedStudent.getEmail());
-                s.setAnnualFee(updatedStudent.getAnnualFee());
+            if(s.getStudentID() == this.studentID) {
+                students.remove(s);
+                students.add(this);
             }
         }
     }
@@ -114,5 +81,15 @@ public class Student {
             }
         }
     }
->>>>>>> Stashed changes
+    public void removeAccount(ArrayList<Student> students) {
+        for (Student s : students) {
+            if(s.getStudentID() == this.studentID) {
+                students.remove(s);
+            }
+        }
+    }
+
+    public boolean login(){
+      return true;
+    }
 }
