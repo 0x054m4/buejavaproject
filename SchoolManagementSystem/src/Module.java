@@ -1,23 +1,28 @@
+import java.lang.reflect.Array;
 import java.util.*;
 
 public class Module {
     private int moduleID;
     private String moduleName;
-    private float grade;
 
     public Module(int moduleID) {
         this.moduleID = moduleID;
     }
 
-    public Module(String moduleName, float grade) {
+    public Module(String moduleName) {
         this.moduleName = moduleName;
-        this.grade = grade;        
+        
+    }
+
+    public void setModuleID(int moduleID) {
+        this.moduleID = moduleID;
     }
 
     public int getModuleID() {
         return moduleID;
     }
 
+    
     public void setModuleName(String moduleName) {
         this.moduleName = moduleName;
     }
@@ -26,11 +31,6 @@ public class Module {
         return moduleName;
     }
 
-    public void setGrade(float grade) {
-        this.grade = grade;
-    }
 
-    public float getGrade() {
-        return grade;
-    }
+
 }

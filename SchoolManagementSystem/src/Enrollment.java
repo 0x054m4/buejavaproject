@@ -1,0 +1,98 @@
+import java.util.ArrayList;
+
+public class Enrollment {
+    private int enrollmentID;
+    private Student student;
+    private Module module;
+    private Status enrollmentStatus;
+
+    
+    public Enrollment(int enrollmentID) {
+        this.enrollmentID = enrollmentID;
+    }
+
+    public Enrollment(Student student, Module module, Status enrollmentStatus) {
+        this.student = student;
+        this.module = module;
+        this.enrollmentStatus = enrollmentStatus;
+    }
+
+    
+    public void setEnrollmentID(int enrollmentID) {
+        this.enrollmentID = enrollmentID;
+    }
+
+    public int getEnrollmentID() {
+        return enrollmentID;
+    }
+
+    public void setStudent(Student student) {
+        this.student = student;
+    }
+
+    public Student getStudent() {
+        return student;
+    }
+
+    public void setModule(Module module) {
+        this.module = module;
+    }
+
+    public Module getModule() {
+        return module;
+    }
+
+
+    public Status getEnrollmentStatus() {
+        return enrollmentStatus;
+    }
+
+    
+    public void activate() {
+        this.enrollmentStatus = Status.ACTIVE;
+    }
+
+    
+    public void cancel() {
+        this.enrollmentStatus = Status.CANCELED;
+    }
+
+    
+    public void generateReports(ArrayList<Enrollment> enrollments, Module module) {
+        int enrolledStudents = 0;
+        for (Enrollment enrollment : enrollments) {
+            if (enrollment.getModule().equals(module)) {
+                enrolledStudents++;
+            }
+        }
+        System.out.println("Module: " + module.getModuleName());
+        System.out.println("Total Enrolled Students: " + enrolledStudents);
+        System.out.println("Max Capacity: " + module.getMaxCapacity());
+        System.out.println("Status: " + (enrolledStudents >= module.getMaxCapacity() ? "Full" : "Available"));
+    }
+
+    
+    public void addEnrollment(ArrayList<Enrollment> enrollments) {
+        enrollments.add(this);
+    }
+
+    
+    public void removeEnrollment(ArrayList<Enrollment> enrollments) {
+        enrollments.remove(this);
+    }
+
+    
+    public void updateEnrollment(ArrayList<Enrollment> enrollments) {
+        for (int i = 0; i < enrollments.size(); i++) {
+            if (enrollments.get(i).getEnrollmentID() == this.enrollmentID) {
+                enrollments.set(i, this);
+                break;
+            }
+        }
+    }
+}
+
+
+enum Status {
+    ACTIVE, CANCELED;
+}

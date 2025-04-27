@@ -52,22 +52,6 @@ public class Payment {
         return date;
     }
 
-    public boolean saveToDB() {
-        return true;
-    }
-
-    public boolean updateOnDB() {
-        return true;
-    }
-
-    public boolean fetchFromDB() {
-        return true;
-    }
-
-    public boolean deleteFromDB() {
-        return true;
-    }
-
     public boolean addPayment(float amount) {
         this.amount += amount;
         return true;
