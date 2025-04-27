@@ -1,3 +1,4 @@
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Scanner;
@@ -9,10 +10,10 @@ public class SchooleMangementSystem {
         System.out.println("Enter student email: ");
         String email = new Scanner(System.in).nextLine();
         System.out.println("Enter student annual fee: ");
-        Scanner sc=new Scanner(System.in);
+        Scanner sc = new Scanner(System.in);
         float annualFee = sc.nextFloat();
         System.out.println("Enter student year (1-12): ");
-        Scanner sc1=new Scanner(System.in);
+        Scanner sc1 = new Scanner(System.in);
         int year = sc1.nextInt();
         Student newStudent = new Student(name, email, annualFee, year);
         newStudent.createAccount(students, newStudent);
@@ -21,15 +22,11 @@ public class SchooleMangementSystem {
 
     public void updateStudent(ArrayList<Student> students) {
         System.out.println("Enter student ID: ");
-        Scanner sc=new Scanner(System.in);
+        Scanner sc = new Scanner(System.in);
         int studentID = sc.nextInt();
-        Student updatedStudent = null;
-        for (Student s : students) {
-            if (s.getStudentID() == studentID) {
-                updatedStudent = s;
-                break;
-            }
-        }
+        Student studentInstance = null; // Initialize as null
+        Student updatedStudent = studentInstance.getStudent(studentID, students);
+        
         if (updatedStudent == null) {
             System.out.println("Student not found!");
             return;
@@ -39,7 +36,7 @@ public class SchooleMangementSystem {
         System.out.println("Enter student email: ");
         String email = new Scanner(System.in).nextLine();
         System.out.println("Enter student annual fee: ");
-        Scanner sc2=new Scanner(System.in);
+        Scanner sc2 = new Scanner(System.in);
         float annualFee = sc2.nextFloat();
         updatedStudent.setName(name);
         updatedStudent.setEmail(email);
@@ -50,15 +47,11 @@ public class SchooleMangementSystem {
 
     public void deleteStudent(ArrayList<Student> students) {
         System.out.println("Enter student ID: ");
-        Scanner sc=new Scanner(System.in);                             
+        Scanner sc = new Scanner(System.in);                             
         int studentID = sc.nextInt();
-        Student student = null;
-        for (Student s : students) {
-            if (s.getStudentID() == studentID) {
-                student = s;
-                break;
-            }
-        }
+        Student studentInstance = null; // Initialize as null
+        Student student = studentInstance.getStudent(studentID, students);
+        
         if (student == null) {
             System.out.println("Student not found!");
             return;
@@ -69,7 +62,7 @@ public class SchooleMangementSystem {
 
     public void viewStudentCourses(ArrayList<Enrollment> enrollments) {
         System.out.println("Enter student ID: ");
-        Scanner sc=new Scanner(System.in);
+        Scanner sc = new Scanner(System.in);
         int studentID = sc.nextInt();
         Student.viewEnrollments(enrollments, studentID);
     }
@@ -529,67 +522,24 @@ public class SchooleMangementSystem {
         Payment.listAllPayments(payments);
     }
 
-    public void listAllTeachers(ArrayList<Teacher> teachers) {
-        Teacher.listAllTeachers(teachers);
+    public void addTeacher() {
+        System.out.println("Adding a new teacher...");
+        // Implementation for adding a teacher
     }
-    
-    public void addTeacher(ArrayList<Teacher> teachers) {
-        System.out.println("Enter teacher name: ");
-        String name = new Scanner(System.in).nextLine();
-        System.out.println("Enter teacher email: ");
-        String email = new Scanner(System.in).nextLine();
-        System.out.println("Enter role: ");
-        String role = new Scanner(System.in).nextLine();
-        StaffStatus status = StaffStatus.ACTIVE;
-        Teacher newTeacher = new Teacher(name, email, role, status);
-        newTeacher.addTeacher(teachers);
-        System.out.println("Teacher added successfully!");
+
+    public void updateTeacher() {
+        System.out.println("Updating teacher details...");
+        // Implementation for updating a teacher
     }
-    
-    public void updateTeacher(ArrayList<Teacher> teachers) {
-        System.out.println("Enter teacher ID: ");
-        Scanner sc = new Scanner(System.in);
-        int teacherID = sc.nextInt();
-        // Check if teacher exists
-        Teacher teacherToUpdate = null;
-        for (Teacher t : teachers) {
-            if (t.getStaffId() == teacherID) {
-                teacherToUpdate = t;
-                break;
-            }
-        }
-        if (teacherToUpdate == null) {
-            System.out.println("Teacher not found!");
-            return;
-        }
-        System.out.println("Enter teacher name: ");
-        String name = new Scanner(System.in).nextLine();
-        System.out.println("Enter teacher email: ");
-        String email = new Scanner(System.in).nextLine();
-        teacherToUpdate.setName(name);
-        teacherToUpdate.setEmail(email);
-        teacherToUpdate.updateTeacher(teachers);
-        System.out.println("Teacher updated successfully!");
+
+    public void deleteTeacher() {
+        System.out.println("Deleting a teacher...");
+        // Implementation for deleting a teacher
     }
-    
-    public void deleteTeacher(ArrayList<Teacher> teachers) {
-        System.out.println("Enter teacher ID: ");
-        Scanner sc = new Scanner(System.in);
-        int teacherID = sc.nextInt();
-        // Check if teacher exists
-        Teacher teacherToDelete = null;
-        for (Teacher t : teachers) {
-            if (t.getStaffId() == teacherID) {
-                teacherToDelete = t;
-                break;
-            }
-        }
-        if (teacherToDelete == null) {
-            System.out.println("Teacher not found!");
-            return;
-        }
-        teacherToDelete.deleteTeacher(teachers);
-        System.out.println("Teacher deleted successfully!");
+
+    public void listAllTeachers() {
+        System.out.println("Listing all teachers...");
+        // Implementation for listing all teachers
     }
 
     public class studentFunction{
@@ -1032,10 +982,10 @@ public class SchooleMangementSystem {
                             Scanner sc1=new Scanner(System.in);
                             int teacherOption = sc1.nextInt();
                             switch (teacherOption) {
-                                case 1 -> app.addTeacher(staff);
-                                case 2 -> app.updateTeacher(staff);
-                                case 3 -> app.deleteTeacher(staff);
-                                case 4 -> app.listAllTeachers(staff);
+                                case 1 -> app.addTeacher();
+                                case 2 -> app.updateTeacher();
+                                case 3 -> app.deleteTeacher();
+                                case 4 -> app.listAllTeachers();
                                 case 5 -> main(args);
                                 default -> {
                                     System.out.println("Invalid option. Please try again.");

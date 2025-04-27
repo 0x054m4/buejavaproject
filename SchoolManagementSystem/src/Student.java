@@ -72,7 +72,14 @@ public class Student {
         }
     }
 
-    
+    public Student getStudent(int studentID, ArrayList<Student> students) {
+        for (Student s : students) {
+            if (s.getStudentID() == studentID) {
+                return s;
+            }
+        }
+        return null; // Return null if no matching student is found
+    }
     public void viewCourses(ArrayList<Enrollment> enrollments) {
         System.out.println("Courses for Student ID: " + this.studentID);
         for (Enrollment enrollment : enrollments) {
