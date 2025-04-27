@@ -1,7 +1,6 @@
-
-    public class Admin extends Staff {
+public class Admin extends Staff {
 
     public Admin(int staffId) {
-        super(staffId);  
+        super(staffId);
     }
 }
