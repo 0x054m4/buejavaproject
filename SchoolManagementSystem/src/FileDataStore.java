@@ -25,6 +25,10 @@ public class FileDataStore {
         try {
             File file = new File(STUDENTS_FILE);
             if (!file.exists()) {
+                // Create the file if it doesn't exist
+                file.createNewFile();
+                
+                System.out.println("No student data found.");
                 return students;
             }
 
@@ -33,20 +37,22 @@ public class FileDataStore {
             
             String line;
             while ((line = reader.readLine()) != null) {
+                System.out.println("Loading student data: " + line);
                 String[] data = line.split(",");
                 if (data.length >= 5) {
                     int studentID = Integer.parseInt(data[0]);
                     String name = data[1];
                     String email = data[2];
                     String password = data[3];
-                    float annualFee = Float.parseFloat(data[3]);
-                    int year = Integer.parseInt(data[4]);
+                    float annualFee = Float.parseFloat(data[4]);
+                    int year = Integer.parseInt(data[5]);
                     
                     Student student = new Student(name, email, annualFee, year, password);
                     // Set the studentID directly to maintain consistency
                     students.add(student);
                 }
             }
+            System.out.println("Student data loaded successfully.");
             reader.close();
             input.close();
             
@@ -100,7 +106,7 @@ public class FileDataStore {
                     String name = data[1];
                     String email = data[2];
                     String password = data[3];
-                    StaffStatus status = StaffStatus.valueOf(data[3]);
+                    StaffStatus status = StaffStatus.valueOf(data[4]);
                     String role = "admin";
                     Admin admin = new Admin(name, email, role, status, password);
                     admins.add(admin);
@@ -270,7 +276,7 @@ public class FileDataStore {
                     String name = data[1];
                     String email = data[2];
                     String password = data[3];
-                    StaffStatus status = StaffStatus.valueOf(data[3]);
+                    StaffStatus status = StaffStatus.valueOf(data[4]);
                     String role = "teacher";
                     Teacher teacher = new Teacher(name, email, role, status, password);
                     teachers.add(teacher);

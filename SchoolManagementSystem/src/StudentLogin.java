@@ -199,13 +199,18 @@ public class StudentLogin extends javax.swing.JFrame {
         String email = LoginEmailField.getText();
         String password = new String(LoginPasswordField.getPassword());
         String role = (String) LoginRoleComboBox.getSelectedItem();
-        //javax.swing.JOptionPane.showMessageDialog(this, "Email: " + email + "\nPassword: " + password + "\nRole: " + role);
+        
         if(role.equals("Student")){
             Student s = studentLogin(email, password);
             if(s == null){
                 javax.swing.JOptionPane.showMessageDialog(this, "Invalid email or password");
+            } else {
+                // Proceed to student dashboard
+                StudentView studentView = new StudentView(s);
+                studentView.setVisible(true);
+                this.dispose(); // Close the login window
+            }
         }
-    }
         else if(role.equals("Teacher")){
             Teacher t = teacherLogin(email, password);
             if(t == null){

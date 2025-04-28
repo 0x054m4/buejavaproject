@@ -18,6 +18,7 @@ public class Student {
         this.email = email;
         this.annualFee = annualFee;
         this.year = year;
+        this.password = password;
         this.studentID = studentCounter++;
     }
     public String getPassword() {
