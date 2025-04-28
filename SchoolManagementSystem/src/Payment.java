@@ -57,16 +57,25 @@ public class Payment {
 
     public void addPayment(ArrayList<Payment> payment) {
         payment.add(this);
+        // Persist the data to file
+        FileDataStore.savePayments(payment);
     }
+    
     public void removePayment(ArrayList<Payment> payment) {
         payment.remove(this);
+        // Persist the data to file
+        FileDataStore.savePayments(payment);
     }
+    
     public void updatePayment(ArrayList<Payment> payment) {
         for(int i = 0; i < payment.size(); i++) {
             if(payment.get(i).getPaymentID() == this.paymentID) {
                 payment.set(i, this);
+                break;
             }
         }
+        // Persist the data to file
+        FileDataStore.savePayments(payment);
     }
 
     public String generateReceipt() {

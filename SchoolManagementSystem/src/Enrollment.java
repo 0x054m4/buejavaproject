@@ -68,11 +68,15 @@ public class Enrollment implements IEnrollment {
     
     public void addEnrollment(ArrayList<Enrollment> enrollments) {
         enrollments.add(this);
+        // Persist the data to file
+        FileDataStore.saveEnrollments(enrollments);
     }
 
     
     public void removeEnrollment(ArrayList<Enrollment> enrollments) {
         enrollments.remove(this);
+        // Persist the data to file
+        FileDataStore.saveEnrollments(enrollments);
     }
 
     
@@ -83,20 +87,21 @@ public class Enrollment implements IEnrollment {
                 break;
             }
         }
+        // Persist the data to file
+        FileDataStore.saveEnrollments(enrollments);
     }
 
     @Override
     public void activate() {
-    this.enrollmentStatus = Status.ACTIVE;
-    System.out.println("Enrollment activated.");
+        this.enrollmentStatus = Status.ACTIVE;
+        System.out.println("Enrollment activated.");
     }
 
     @Override
     public void cancel() {
-    enrollmentStatus = Status.CANCELLED;
-    System.out.println("Enrollment cancelled.");
+        enrollmentStatus = Status.CANCELLED;
+        System.out.println("Enrollment cancelled.");
     }
-
 }
 
 enum Status {

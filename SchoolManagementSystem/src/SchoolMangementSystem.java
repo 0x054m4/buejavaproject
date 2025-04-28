@@ -1,5 +1,7 @@
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.io.File;
+import java.lang.reflect.Array;
 
 public class SchoolMangementSystem {
 
@@ -1118,7 +1120,14 @@ public class SchoolMangementSystem {
     }
 
     public static void main(String[] args) throws Exception {
-        DataStore data = DataStore.getInstance();
+        // Load data from files
+        ArrayList<Student> students = FileDataStore.loadStudents();
+        ArrayList<Module> modules = FileDataStore.loadModules();
+        ArrayList<Classroom> classrooms = FileDataStore.loadClassrooms();
+        ArrayList<Teacher> teachers = FileDataStore.loadTeachers();
+        ArrayList<Session> sessions = FileDataStore.loadSessions(modules, classrooms);
+        ArrayList<Enrollment> enrollments = FileDataStore.loadEnrollments(students, modules);
+        ArrayList<Payment> payments = FileDataStore.loadPayments(students);
 
         System.out.println("Welcome to School Management System!");
         System.out.println("1. Student.");
@@ -1128,11 +1137,28 @@ public class SchoolMangementSystem {
         int userType = sc.nextInt();
 
         if (userType == 1) {
-            studentFlow(data.students, data.enrollments, data.sessions, data.payments, data.modules, args);
+            // Get data from files
+            // Load data from files
+            studentFlow(students, enrollments, sessions, payments, modules, args);
+            // Save changes to files
+            FileDataStore.saveStudents(students);
+            FileDataStore.saveEnrollments(enrollments);
+            FileDataStore.savePayments(payments);
         } else if (userType == 2) {
-            staffFlow(data.students, data.enrollments, data.sessions, data.payments, data.modules, data.classrooms, args, data.teachers);
+            staffFlow(students, enrollments, sessions, payments, modules, classrooms, args, teachers);
+            // Save all changes to files
+            FileDataStore.saveStudents(students);
+            FileDataStore.saveModules(modules);
+            FileDataStore.saveClassrooms(classrooms);
+            FileDataStore.saveTeachers(teachers);
+            FileDataStore.saveSessions(sessions);
+            FileDataStore.saveEnrollments(enrollments);
+            FileDataStore.savePayments(payments);
         } else if (userType == 3) {
-            teacherFlow(data.students, data.enrollments, data.sessions, data.payments, data.modules, data.classrooms, args, data.teachers);
+            teacherFlow(students, enrollments, sessions, payments, modules, classrooms, args, teachers);
+            // Save changes to files
+            FileDataStore.saveSessions(sessions);
+            FileDataStore.saveTeachers(teachers);
         } else {
             System.out.println("Invalid option. Please try again.");
             main(args);

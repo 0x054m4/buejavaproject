@@ -60,6 +60,8 @@ public class Student {
     
     public void createAccount(ArrayList<Student> students, Student newStudent) {
         students.add(newStudent);
+        // Persist the data to file
+        FileDataStore.saveStudents(students);
     }
 
     
@@ -68,8 +70,11 @@ public class Student {
             if(s.getStudentID() == this.studentID) {
                 students.remove(s);
                 students.add(this);
+                break;
             }
         }
+        // Persist the updated data to file
+        FileDataStore.saveStudents(students);
     }
 
     
@@ -81,12 +86,16 @@ public class Student {
             }
         }
     }
+    
     public void removeAccount(ArrayList<Student> students) {
         for (Student s : students) {
             if(s.getStudentID() == this.studentID) {
                 students.remove(s);
+                break;
             }
         }
+        // Persist the updated data to file
+        FileDataStore.saveStudents(students);
     }
 
     public boolean login(){

@@ -2,14 +2,17 @@ import java.util.ArrayList;
 
 public class Teacher extends Staff {
     private ArrayList<Module> assignedModules;
+    
     public Teacher(int staffId) {
         super(staffId);
         assignedModules = new ArrayList<>();
     }
+    
     public Teacher(String name, String email, String role, StaffStatus status) {
         super(name, email, role, status);
         assignedModules = new ArrayList<>();
     }   
+    
     public void setAssignedModules(ArrayList<Module> assignedModules) {
         this.assignedModules = assignedModules;
     }
@@ -32,6 +35,7 @@ public class Teacher extends Staff {
         }
         System.out.println("Module " + moduleID + " removed from teacher's assignments.");
     }
+    
     public void updateTeacher(ArrayList<Teacher> teachers) {
         for (Teacher teacher : teachers) {
             if (teacher.getStaffId() == this.getStaffId()) {
@@ -42,8 +46,9 @@ public class Teacher extends Staff {
                 break;
             }
         }
+        // Persist the data to file
+        FileDataStore.saveTeachers(teachers);
     }
-
 
     public boolean login() {
         return true; // Placeholder for login logic

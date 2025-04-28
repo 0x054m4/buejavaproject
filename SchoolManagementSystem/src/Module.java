@@ -60,11 +60,15 @@ public class Module {
 
     public void addModule(ArrayList<Module> module) {
         module.add(this);
+        // Persist the data to file
+        FileDataStore.saveModules(module);
     }
  
     
     public void removeModule(ArrayList<Module> module, Module removedModule) {
         module.remove(removedModule);
+        // Persist the data to file
+        FileDataStore.saveModules(module);
     }
 
     
@@ -75,5 +79,7 @@ public class Module {
                 m.setMaxCapacity(editedModule.getMaxCapacity());
             }
         }
+        // Persist the data to file
+        FileDataStore.saveModules(module);
     }
 }

@@ -5,12 +5,14 @@ public class Classroom {
     private int classroomId;
     private String roomName;
     private int capacity;
+    
     public Classroom(String roomName, int capacity) {
         this.roomName = roomName;
         this.capacity = capacity;
         this.classroomId = classroomCounter++;
         // This constructor will be used to create a new classroom that's not in the database yet
     }
+    
     public Classroom(int classroomId) {
         this.classroomId = classroomId;
         // This constructor will be used to create a classroom that's already in the database
@@ -35,22 +37,32 @@ public class Classroom {
     public int getCapacity() {
         return capacity;
     }
+    
     public void updateClassroom(ArrayList<Classroom> classrooms) {
         for (Classroom classroom : classrooms) {
             if (classroom.getClassroomId() == this.getClassroomId()) {
                 classrooms.set(classrooms.indexOf(classroom), this);
+                break;
             }
         }
+        // Persist the data to file
+        FileDataStore.saveClassrooms(classrooms);
     }
+    
     public void deleteClassroom(ArrayList<Classroom> classrooms) {
         for (Classroom classroom : classrooms) {
             if (classroom.getClassroomId() == this.getClassroomId()) {
                 classrooms.remove(classroom);
+                break;
             }
         }
+        // Persist the data to file
+        FileDataStore.saveClassrooms(classrooms);
     }
+    
     public void addClassroom(ArrayList<Classroom> classrooms) {
         classrooms.add(this);
+        // Persist the data to file
+        FileDataStore.saveClassrooms(classrooms);
     }
- 
 }
