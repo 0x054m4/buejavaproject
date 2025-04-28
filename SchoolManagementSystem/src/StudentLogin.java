@@ -14,6 +14,7 @@ public class StudentLogin extends javax.swing.JFrame {
      */
     public StudentLogin() {
         initComponents();
+        this.setLocationRelativeTo(null);
     }
 
     /**
