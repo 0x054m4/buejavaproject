@@ -3,6 +3,8 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 
+import java.util.ArrayList;
+
 /**
  *
  * @author omarhashad
@@ -160,9 +162,66 @@ public class StudentLogin extends javax.swing.JFrame {
     private void LoginEmailFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LoginEmailFieldActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_LoginEmailFieldActionPerformed
-
+    Student studentLogin(String email, String password) {
+        ArrayList<Student> students = new ArrayList<>();
+        students = FileDataStore.loadStudents();
+        for (Student student : students) {
+            if (student.getEmail().equals(email) && student.getPassword().equals(password)) {
+                // If a match is found, return the student object
+                return student;
+            }
+        }
+        return null; // If no match is found, return null
+    }
+    Teacher teacherLogin(String email, String password) {
+        ArrayList<Teacher> teachers = new ArrayList<>();
+        teachers = FileDataStore.loadTeachers();
+        for (Teacher teacher : teachers) {
+            if (teacher.getEmail().equals(email) && teacher.getPassword().equals(password)) {
+                // If a match is found, return the teacher object
+                return teacher;
+            }
+        }
+        return null; // If no match is found, return null
+    }
+    Admin adminLogin(String email, String password) {
+        ArrayList<Admin> admins = new ArrayList<>();
+        admins = FileDataStore.loadAdmins();
+        for (Admin admin : admins) {
+            if (admin.getEmail().equals(email) && admin.getPassword().equals(password)) {
+                // If a match is found, return the admin object
+                return admin;
+            }
+        }
+        return null; // If no match is found, return null
+    }
     private void LoginBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LoginBtnActionPerformed
-        
+        String email = LoginEmailField.getText();
+        String password = new String(LoginPasswordField.getPassword());
+        String role = (String) LoginRoleComboBox.getSelectedItem();
+        //javax.swing.JOptionPane.showMessageDialog(this, "Email: " + email + "\nPassword: " + password + "\nRole: " + role);
+        if(role.equals("Student")){
+            Student s = studentLogin(email, password);
+            if(s == null){
+                javax.swing.JOptionPane.showMessageDialog(this, "Invalid email or password");
+        }
+    }
+        else if(role.equals("Teacher")){
+            Teacher t = teacherLogin(email, password);
+            if(t == null){
+                javax.swing.JOptionPane.showMessageDialog(this, "Invalid email or password");
+            }
+        }
+        else if(role.equals("Admin")){
+            Admin a = adminLogin(email, password);
+            if(a == null){
+                javax.swing.JOptionPane.showMessageDialog(this, "Invalid email or password");
+            }
+        }
+        else{
+            javax.swing.JOptionPane.showMessageDialog(this, "Please select a role");
+        }
+
     }//GEN-LAST:event_LoginBtnActionPerformed
 
     /**

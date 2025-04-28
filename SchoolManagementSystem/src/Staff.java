@@ -6,14 +6,17 @@ public class Staff {
     private String email;
     private String role;
     private StaffStatus status;
+    private String password;
 
     public Staff(int staffId) {
         this.staffId = staffId;
     }
 
-    public Staff(String name, String email, String role, StaffStatus status) {
+
+    public Staff(String name, String email, String role, StaffStatus status, String password) {
         this.name = name;
         this.email = email;
+        this.password = password;
         this.role = role;
         this.status = status;
         this.staffId = staffCounter++;
@@ -25,6 +28,12 @@ public class Staff {
 
     public String getName() {
         return name;
+    }
+    public String getPassword() {
+        return password;
+    }
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public void setName(String name) {

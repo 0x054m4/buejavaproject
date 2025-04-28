@@ -38,10 +38,11 @@ public class FileDataStore {
                     int studentID = Integer.parseInt(data[0]);
                     String name = data[1];
                     String email = data[2];
+                    String password = data[3];
                     float annualFee = Float.parseFloat(data[3]);
                     int year = Integer.parseInt(data[4]);
                     
-                    Student student = new Student(name, email, annualFee, year);
+                    Student student = new Student(name, email, annualFee, year, password);
                     // Set the studentID directly to maintain consistency
                     students.add(student);
                 }
@@ -64,6 +65,7 @@ public class FileDataStore {
                 String line = student.getStudentID() + "," + 
                               student.getName() + "," + 
                               student.getEmail() + "," + 
+                                student.getPassword() + "," +
                               student.getAnnualFee() + "," + 
                               student.getYear();
                 writer.write(line);
@@ -75,6 +77,63 @@ public class FileDataStore {
             
         } catch (IOException e) {
             System.err.println("Error saving students: " + e.getMessage());
+        }
+    }
+
+    // Admin operations
+    public static ArrayList<Admin> loadAdmins() {
+        ArrayList<Admin> admins = new ArrayList<>();
+        try {
+            File file = new File(TEACHERS_FILE);
+            if (!file.exists()) {
+                return admins;
+            }
+
+            DataInputStream input = new DataInputStream(new FileInputStream(file));
+            BufferedReader reader = new BufferedReader(new InputStreamReader(input));
+            
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] data = line.split(",");
+                if (data.length >= 4) {
+                    int staffId = Integer.parseInt(data[0]);
+                    String name = data[1];
+                    String email = data[2];
+                    String password = data[3];
+                    StaffStatus status = StaffStatus.valueOf(data[3]);
+                    String role = "admin";
+                    Admin admin = new Admin(name, email, role, status, password);
+                    admins.add(admin);
+                }
+            }
+            reader.close();
+            input.close();
+            
+        } catch (IOException e) {
+            System.err.println("Error loading admins: " + e.getMessage());
+        }
+        return admins;
+    }
+    public static void saveAdmins(ArrayList<Admin> admins) {
+        try {
+            DataOutputStream output = new DataOutputStream(new FileOutputStream(TEACHERS_FILE));
+            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(output));
+            
+            for (Admin admin : admins) {
+                String line = admin.getStaffId() + "," + 
+                              admin.getName() + "," + 
+                              admin.getEmail() + "," + 
+                                admin.getPassword() + "," +
+                              admin.getStatus();
+                writer.write(line);
+                writer.newLine();
+            }
+            
+            writer.close();
+            output.close();
+            
+        } catch (IOException e) {
+            System.err.println("Error saving admins: " + e.getMessage());
         }
     }
 
@@ -210,9 +269,10 @@ public class FileDataStore {
                     int staffId = Integer.parseInt(data[0]);
                     String name = data[1];
                     String email = data[2];
+                    String password = data[3];
                     StaffStatus status = StaffStatus.valueOf(data[3]);
                     String role = "teacher";
-                    Teacher teacher = new Teacher(name, email, role, status);
+                    Teacher teacher = new Teacher(name, email, role, status, password);
                     teachers.add(teacher);
                 }
             }
@@ -234,6 +294,8 @@ public class FileDataStore {
                 String line = teacher.getStaffId() + "," + 
                               teacher.getName() + "," + 
                               teacher.getEmail() + "," + 
+
+                                teacher.getPassword() + "," +
                               teacher.getStatus();
                 writer.write(line);
                 writer.newLine();

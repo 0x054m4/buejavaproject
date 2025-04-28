@@ -7,17 +7,24 @@ public class Student {
     private String email;
     private float annualFee;
     private int year;
+    private String password;
     
     public Student(int studentID) {
         this.studentID = studentID;
     }
     
-    public Student(String name, String email, float annualFee, int year) {
+    public Student(String name, String email, float annualFee, int year, String password) {
         this.name = name;
         this.email = email;
         this.annualFee = annualFee;
         this.year = year;
         this.studentID = studentCounter++;
+    }
+    public String getPassword() {
+        return password;
+    }
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public int getStudentID() {

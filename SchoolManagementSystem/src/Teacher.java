@@ -8,8 +8,8 @@ public class Teacher extends Staff {
         assignedModules = new ArrayList<>();
     }
     
-    public Teacher(String name, String email, String role, StaffStatus status) {
-        super(name, email, role, status);
+    public Teacher(String name, String email, String role, StaffStatus status, String password) {
+        super(name, email, role, status, password);
         assignedModules = new ArrayList<>();
     }   
     
