@@ -2,6 +2,16 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group/>
+        <group>
+            <file>file:/Users/omarhashad/Documents/GitHub/buejavaproject/SchoolManagementSystem/src/SchoolMangementSystem.java</file>
+            <file>file:/Users/omarhashad/Documents/GitHub/buejavaproject/SchoolManagementSystem/src/Admin.java</file>
+            <file>file:/Users/omarhashad/Documents/GitHub/buejavaproject/SchoolManagementSystem/src/IEnrollment.java</file>
+            <file>file:/Users/omarhashad/Documents/GitHub/buejavaproject/SchoolManagementSystem/src/Assessment.java</file>
+            <file>file:/Users/omarhashad/Documents/GitHub/buejavaproject/SchoolManagementSystem/src/Module.java</file>
+            <file>file:/Users/omarhashad/Documents/GitHub/buejavaproject/SchoolManagementSystem/src/Payment.java</file>
+            <file>file:/Users/omarhashad/Documents/GitHub/buejavaproject/SchoolManagementSystem/src/Menu.java</file>
+            <file>file:/Users/omarhashad/Documents/GitHub/buejavaproject/SchoolManagementSystem/src/StudentLogin.java</file>
+            <file>file:/Users/omarhashad/Documents/GitHub/buejavaproject/SchoolManagementSystem/src/StudentView.java</file>
+        </group>
     </open-files>
 </project-private>
