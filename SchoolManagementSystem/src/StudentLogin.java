@@ -31,10 +31,10 @@ public class StudentLogin extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        StudentEmailField = new javax.swing.JTextField();
-        StudentPassField = new javax.swing.JPasswordField();
-        StudentLoginBtn = new javax.swing.JButton();
-        jComboBox1 = new javax.swing.JComboBox<>();
+        LoginEmailField = new javax.swing.JTextField();
+        LoginPasswordField = new javax.swing.JPasswordField();
+        LoginBtn = new javax.swing.JButton();
+        LoginRoleComboBox = new javax.swing.JComboBox<>();
         jLabel6 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -82,26 +82,26 @@ public class StudentLogin extends javax.swing.JFrame {
         jLabel5.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jLabel5.setText("Email");
 
-        StudentEmailField.setToolTipText("");
-        StudentEmailField.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        StudentEmailField.addActionListener(new java.awt.event.ActionListener() {
+        LoginEmailField.setToolTipText("");
+        LoginEmailField.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        LoginEmailField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                StudentEmailFieldActionPerformed(evt);
+                LoginEmailFieldActionPerformed(evt);
             }
         });
 
-        StudentPassField.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        LoginPasswordField.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
-        StudentLoginBtn.setBackground(new java.awt.Color(51, 153, 255));
-        StudentLoginBtn.setForeground(new java.awt.Color(255, 255, 255));
-        StudentLoginBtn.setText("Login");
-        StudentLoginBtn.addActionListener(new java.awt.event.ActionListener() {
+        LoginBtn.setBackground(new java.awt.Color(51, 153, 255));
+        LoginBtn.setForeground(new java.awt.Color(255, 255, 255));
+        LoginBtn.setText("Login");
+        LoginBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                StudentLoginBtnActionPerformed(evt);
+                LoginBtnActionPerformed(evt);
             }
         });
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Select User Type ...", "Student", "Teacher", "Admin" }));
+        LoginRoleComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Select User Type ...", "Student", "Teacher", "Admin" }));
 
         jLabel6.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jLabel6.setText("Select User Type:");
@@ -123,12 +123,12 @@ public class StudentLogin extends javax.swing.JFrame {
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                 .addGroup(layout.createSequentialGroup()
                                     .addGap(30, 30, 30)
-                                    .addComponent(StudentLoginBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 211, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(LoginBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 211, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addComponent(jLabel4)
                                 .addComponent(jLabel5)
-                                .addComponent(StudentEmailField)
-                                .addComponent(StudentPassField, javax.swing.GroupLayout.DEFAULT_SIZE, 280, Short.MAX_VALUE)
-                                .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
+                                .addComponent(LoginEmailField)
+                                .addComponent(LoginPasswordField, javax.swing.GroupLayout.DEFAULT_SIZE, 280, Short.MAX_VALUE)
+                                .addComponent(LoginRoleComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
                 .addContainerGap(50, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -140,30 +140,30 @@ public class StudentLogin extends javax.swing.JFrame {
                 .addGap(94, 94, 94)
                 .addComponent(jLabel6)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(LoginRoleComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 65, Short.MAX_VALUE)
                 .addComponent(jLabel5)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(StudentEmailField, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(LoginEmailField, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(35, 35, 35)
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(StudentPassField, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(LoginPasswordField, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(43, 43, 43)
-                .addComponent(StudentLoginBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(LoginBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(52, 52, 52))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void StudentEmailFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_StudentEmailFieldActionPerformed
+    private void LoginEmailFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LoginEmailFieldActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_StudentEmailFieldActionPerformed
+    }//GEN-LAST:event_LoginEmailFieldActionPerformed
 
-    private void StudentLoginBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_StudentLoginBtnActionPerformed
-
-    }//GEN-LAST:event_StudentLoginBtnActionPerformed
+    private void LoginBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LoginBtnActionPerformed
+        
+    }//GEN-LAST:event_LoginBtnActionPerformed
 
     /**
      * @param args the command line arguments
@@ -201,11 +201,11 @@ public class StudentLogin extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTextField StudentEmailField;
+    private javax.swing.JButton LoginBtn;
+    private javax.swing.JTextField LoginEmailField;
+    private javax.swing.JPasswordField LoginPasswordField;
+    private javax.swing.JComboBox<String> LoginRoleComboBox;
     private javax.swing.JLabel StudentIcon;
-    private javax.swing.JButton StudentLoginBtn;
-    private javax.swing.JPasswordField StudentPassField;
-    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;

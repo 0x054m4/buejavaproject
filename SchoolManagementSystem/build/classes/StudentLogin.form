@@ -39,13 +39,13 @@
                           <Group type="103" groupAlignment="0" max="-2" attributes="0">
                               <Group type="102" alignment="0" attributes="0">
                                   <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
-                                  <Component id="StudentLoginBtn" min="-2" pref="211" max="-2" attributes="0"/>
+                                  <Component id="LoginBtn" min="-2" pref="211" max="-2" attributes="0"/>
                               </Group>
                               <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
                               <Component id="jLabel5" alignment="0" min="-2" max="-2" attributes="0"/>
-                              <Component id="StudentEmailField" alignment="0" max="32767" attributes="0"/>
-                              <Component id="StudentPassField" alignment="0" pref="280" max="32767" attributes="0"/>
-                              <Component id="jComboBox1" alignment="0" max="32767" attributes="0"/>
+                              <Component id="LoginEmailField" alignment="0" max="32767" attributes="0"/>
+                              <Component id="LoginPasswordField" alignment="0" pref="280" max="32767" attributes="0"/>
+                              <Component id="LoginRoleComboBox" alignment="0" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                   </Group>
@@ -63,17 +63,17 @@
               <EmptySpace min="-2" pref="94" max="-2" attributes="0"/>
               <Component id="jLabel6" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="jComboBox1" min="-2" pref="39" max="-2" attributes="0"/>
+              <Component id="LoginRoleComboBox" min="-2" pref="39" max="-2" attributes="0"/>
               <EmptySpace pref="65" max="32767" attributes="0"/>
               <Component id="jLabel5" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="StudentEmailField" min="-2" pref="38" max="-2" attributes="0"/>
+              <Component id="LoginEmailField" min="-2" pref="38" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="35" max="-2" attributes="0"/>
               <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="StudentPassField" min="-2" pref="38" max="-2" attributes="0"/>
+              <Component id="LoginPasswordField" min="-2" pref="38" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="43" max="-2" attributes="0"/>
-              <Component id="StudentLoginBtn" min="-2" pref="44" max="-2" attributes="0"/>
+              <Component id="LoginBtn" min="-2" pref="44" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="52" max="-2" attributes="0"/>
           </Group>
       </Group>
@@ -162,7 +162,7 @@
         <Property name="text" type="java.lang.String" value="Email"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JTextField" name="StudentEmailField">
+    <Component class="javax.swing.JTextField" name="LoginEmailField">
       <Properties>
         <Property name="toolTipText" type="java.lang.String" value=""/>
         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
@@ -172,10 +172,10 @@
         </Property>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="StudentEmailFieldActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="LoginEmailFieldActionPerformed"/>
       </Events>
     </Component>
-    <Component class="javax.swing.JPasswordField" name="StudentPassField">
+    <Component class="javax.swing.JPasswordField" name="LoginPasswordField">
       <Properties>
         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
           <Border info="org.netbeans.modules.form.compat2.border.BevelBorderInfo">
@@ -184,7 +184,7 @@
         </Property>
       </Properties>
     </Component>
-    <Component class="javax.swing.JButton" name="StudentLoginBtn">
+    <Component class="javax.swing.JButton" name="LoginBtn">
       <Properties>
         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
           <Color blue="ff" green="99" red="33" type="rgb"/>
@@ -195,10 +195,10 @@
         <Property name="text" type="java.lang.String" value="Login"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="StudentLoginBtnActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="LoginBtnActionPerformed"/>
       </Events>
     </Component>
-    <Component class="javax.swing.JComboBox" name="jComboBox1">
+    <Component class="javax.swing.JComboBox" name="LoginRoleComboBox">
       <Properties>
         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
           <StringArray count="4">
