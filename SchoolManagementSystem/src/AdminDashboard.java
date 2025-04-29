@@ -114,6 +114,7 @@ public class AdminDashboard extends javax.swing.JFrame {
     // Data collections
     private ArrayList<Student> students;
     private ArrayList<Teacher> teachers;
+    private ArrayList<Admin> admins;
     private ArrayList<Module> modules;
     private ArrayList<Classroom> classrooms;
     private ArrayList<Session> sessions;
@@ -126,6 +127,7 @@ public class AdminDashboard extends javax.swing.JFrame {
     private JTable moduleTable;
     private JTable assessmentTable;
     private JTable paymentTable;
+    private JTable adminTable;
     
     /**
      * Creates new form AdminDashboard
