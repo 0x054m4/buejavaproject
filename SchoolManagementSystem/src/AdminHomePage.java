@@ -17,6 +17,8 @@ public class AdminHomePage extends javax.swing.JFrame {
         public AdminHomePage() {
                 initComponents();
                 setLocationRelativeTo(null);
+                
+
         }
 
         /**

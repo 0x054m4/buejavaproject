@@ -5,6 +5,8 @@
 
 import java.util.ArrayList;
 
+import javax.swing.JFrame;
+
 /**
  *
  * @author omarhashad
@@ -16,6 +18,7 @@ public class StudentLogin extends javax.swing.JFrame {
      */
     public StudentLogin() {
         initComponents();
+        this.setLocationRelativeTo(null);
     }
 
     /**
