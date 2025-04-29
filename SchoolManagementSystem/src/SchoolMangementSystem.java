@@ -16,7 +16,9 @@ public class SchoolMangementSystem {
         System.out.println("Enter student year (1-12): ");
         Scanner sc1 = new Scanner(System.in);
         int year = sc1.nextInt();
-        Student newStudent = new Student(name, email, annualFee, year);
+        System.out.println("Enter student name: ");
+        String password = new Scanner(System.in).nextLine();
+        Student newStudent = new Student(name, email, annualFee, year, password);
         newStudent.createAccount(students, newStudent);
         System.out.println("Student added successfully!");
     }
@@ -576,7 +578,9 @@ public class SchoolMangementSystem {
         System.out.println("Enter role: ");
         String role = new Scanner(System.in).nextLine();
         StaffStatus status = StaffStatus.ACTIVE;
-        Teacher newTeacher = new Teacher(name, email, role, status);
+        System.out.println("Enter student name: ");
+        String password = new Scanner(System.in).nextLine();
+        Teacher newTeacher = new Teacher(name, email, role, status, password);
         teachers.add(newTeacher);
         System.out.println("Teacher added successfully!");
     }
