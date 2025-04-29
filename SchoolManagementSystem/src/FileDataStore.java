@@ -10,6 +10,7 @@ public class FileDataStore {
     private static final String SESSIONS_FILE = DATA_DIRECTORY + "sessions.txt";
     private static final String PAYMENTS_FILE = DATA_DIRECTORY + "payments.txt";
     private static final String TEACHERS_FILE = DATA_DIRECTORY + "teachers.txt";
+    private static final String ADMINS_FILE = DATA_DIRECTORY + "admins.txt";
 
     // Initialize the data directory if it doesn't exist
     static {
@@ -90,7 +91,7 @@ public class FileDataStore {
     public static ArrayList<Admin> loadAdmins() {
         ArrayList<Admin> admins = new ArrayList<>();
         try {
-            File file = new File(TEACHERS_FILE);
+            File file = new File(ADMINS_FILE);
             if (!file.exists()) {
                 return admins;
             }
@@ -122,7 +123,7 @@ public class FileDataStore {
     }
     public static void saveAdmins(ArrayList<Admin> admins) {
         try {
-            DataOutputStream output = new DataOutputStream(new FileOutputStream(TEACHERS_FILE));
+            DataOutputStream output = new DataOutputStream(new FileOutputStream(ADMINS_FILE));
             BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(output));
             
             for (Admin admin : admins) {
