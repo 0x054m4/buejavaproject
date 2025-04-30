@@ -14,6 +14,7 @@ public class AdminView extends javax.swing.JFrame {
      */
     public AdminView() {
         initComponents();
+        this.setExtendedState(JFrame.MAXIMIZED_BOTH);
     }
 
     /**
