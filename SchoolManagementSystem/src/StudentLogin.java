@@ -246,7 +246,7 @@ public class StudentLogin extends javax.swing.JFrame {
             }
             else{
                 if(a.getRole().equals("admin")){
-                    AdminDashboard admin = new AdminDashboard();
+                    AdminView admin = new AdminView();
                     admin.setVisible(true);
                     this.dispose(); 
                 }

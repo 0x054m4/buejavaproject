@@ -4,6 +4,9 @@
  */
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import java.util.ArrayList;
 
 /**
  *
@@ -20,15 +23,211 @@ public class AdminView extends javax.swing.JFrame {
     private final java.awt.Color SELECTED_COLOR = new java.awt.Color(153, 204, 255);
     private final java.awt.Color DEFAULT_COLOR = new java.awt.Color(230, 230, 230);
     
+    // Data collections
+    private ArrayList<Student> students;
+    private ArrayList<Admin> admins;
+    private ArrayList<Teacher> teachers;
+    private ArrayList<Module> modules;
+    private ArrayList<Assessment> assessments;
+    private ArrayList<Payment> payments;
+    private ArrayList<Classroom> classrooms;
+    private ArrayList<Session> sessions;
+    private ArrayList<Enrollment> enrollments;
+    
     public AdminView() {
         initComponents();
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
         // Store the panel border for later updates
         panelBorder = (javax.swing.border.TitledBorder) jPanel3.getBorder();
+        
+        // Load all data from files
+        loadAllData();
+        
         // Set up sidebar effects
         setupSidebarEffects();
+        
         // Set Students as default selected item
         setSelectedSidebarItem(jLabel1);
+        
+        // Display student data by default
+        updateMainPanel("Students");
+        
+        // Set up button action listeners
+        setupButtonListeners();
+    }
+    
+    /**
+     * Load all data from files using FileDataStore
+     */
+    private void loadAllData() {
+        try {
+            // Load data collections
+            students = FileDataStore.loadStudents();
+            admins = FileDataStore.loadAdmins();
+            teachers = FileDataStore.loadTeachers();
+            modules = FileDataStore.loadModules();
+            classrooms = FileDataStore.loadClassrooms();
+            sessions = FileDataStore.loadSessions(modules, classrooms);
+            
+            // Load enrollments after students and modules are loaded
+            enrollments = FileDataStore.loadEnrollments(students, modules);
+            
+            // Load payments after students are loaded
+            payments = FileDataStore.loadPayments(students);
+            
+            // Load assessments (if separate file exists)
+            assessments = new ArrayList<>();
+            
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, 
+                "Error loading data: " + e.getMessage(), 
+                "Data Loading Error", 
+                JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+        }
+    }
+    
+    /**
+     * Set up action listeners for action buttons
+     */
+    private void setupButtonListeners() {
+        // Add button
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                handleAddAction(selectedLabel.getText());
+            }
+        });
+        
+        // Update button
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                handleUpdateAction(selectedLabel.getText());
+            }
+        });
+        
+        // Delete button
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                handleDeleteAction(selectedLabel.getText());
+            }
+        });
+    }
+    
+    /**
+     * Handle add action based on the selected category
+     * @param category The current selected category
+     */
+    private void handleAddAction(String category) {
+        switch (category) {
+            case "Students":
+                addStudent();
+                break;
+            case "Teachers":
+                addTeacher();
+                break;
+            case "Modules":
+                addModule();
+                break;
+            case "Assessments":
+                addAssessment();
+                break;
+            case "Payments":
+                addPayment();
+                break;
+            case "Admins":
+                addAdmin();
+                break;
+            default:
+                break;
+        }
+    }
+    
+    /**
+     * Handle update action based on the selected category
+     * @param category The current selected category
+     */
+    private void handleUpdateAction(String category) {
+        // Get the selected row
+        int selectedRow = tblCourses.getSelectedRow();
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this, 
+                    "Please select a row to update", 
+                    "No Selection", 
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
+        switch (category) {
+            case "Students":
+                updateStudent(selectedRow);
+                break;
+            case "Teachers":
+                updateTeacher(selectedRow);
+                break;
+            case "Modules":
+                updateModule(selectedRow);
+                break;
+            case "Assessments":
+                updateAssessment(selectedRow);
+                break;
+            case "Payments":
+                updatePayment(selectedRow);
+                break;
+            case "Admins":
+                updateAdmin(selectedRow);
+                break;
+            default:
+                break;
+        }
+    }
+    
+    /**
+     * Handle delete action based on the selected category
+     * @param category The current selected category
+     */
+    private void handleDeleteAction(String category) {
+        // Get the selected row
+        int selectedRow = tblCourses.getSelectedRow();
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this, 
+                    "Please select a row to delete", 
+                    "No Selection", 
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
+        // Confirm deletion
+        int confirm = JOptionPane.showConfirmDialog(this, 
+                "Are you sure you want to delete this " + category.substring(0, category.length()-1) + "?", 
+                "Confirm Delete", 
+                JOptionPane.YES_NO_OPTION);
+        
+        if (confirm != JOptionPane.YES_OPTION) {
+            return;
+        }
+        
+        switch (category) {
+            case "Students":
+                deleteStudent(selectedRow);
+                break;
+            case "Teachers":
+                deleteTeacher(selectedRow);
+                break;
+            case "Modules":
+                deleteModule(selectedRow);
+                break;
+            case "Assessments":
+                deleteAssessment(selectedRow);
+                break;
+            case "Payments":
+                deletePayment(selectedRow);
+                break;
+            case "Admins":
+                deleteAdmin(selectedRow);
+                break;
+            default:
+                break;
+        }
     }
     
     /**
@@ -392,27 +591,99 @@ public class AdminView extends javax.swing.JFrame {
         switch (category) {
             case "Students":
                 model.setColumnIdentifiers(new String[]{"Student ID", "Name", "Email", "Year", "Annual Fee"});
-                // Here you would load student data from your database or data source
+                // Load student data from the collection
+                if (students != null) {
+                    for (Student student : students) {
+                        model.addRow(new Object[]{
+                            student.getStudentID(),
+                            student.getName(),
+                            student.getEmail(),
+                            student.getYear(),
+                            student.getAnnualFee()
+                        });
+                    }
+                }
                 break;
             case "Teachers":
-                model.setColumnIdentifiers(new String[]{"Teacher ID", "Name", "Email", "Department", "Salary"});
+                model.setColumnIdentifiers(new String[]{"Teacher ID", "Name", "Email", "Status", "Password"});
                 // Load teacher data
+                if (teachers != null) {
+                    for (Teacher teacher : teachers) {
+                        model.addRow(new Object[]{
+                            teacher.getStaffId(),
+                            teacher.getName(),
+                            teacher.getEmail(),
+                            teacher.getStatus(),
+                            teacher.getPassword()
+                        });
+                    }
+                }
                 break;
             case "Modules":
-                model.setColumnIdentifiers(new String[]{"Module ID", "Module Name", "Credits", "Teacher", "Year"});
+                model.setColumnIdentifiers(new String[]{"Module ID", "Module Name", "Capacity", "Year"});
                 // Load module data
+                if (modules != null) {
+                    for (Module module : modules) {
+                        model.addRow(new Object[]{
+                            module.getModuleID(),
+                            module.getModuleName(),
+                            module.getMaxCapacity(),
+                            module.getModuleYear()
+                        });
+                    }
+                }
                 break;
             case "Assessments":
-                model.setColumnIdentifiers(new String[]{"Assessment ID", "Module", "Type", "Weight", "Deadline"});
-                // Load assessment data
+                model.setColumnIdentifiers(new String[]{"Assessment ID", "Module", "Title", "Duration", "Date"});
+                // Load assessment data (if implemented)
+                if (assessments != null) {
+                    for (Assessment assessment : assessments) {
+                        // Format date for display
+                        String formattedDate = "";
+                        if (assessment.getDate() != null) {
+                            java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("MM/dd/yyyy");
+                            formattedDate = sdf.format(assessment.getDate());
+                        }
+                        
+                        model.addRow(new Object[]{
+                            assessment.getAssessmentID(),
+                            assessment.getModule().getModuleName(),
+                            assessment.getTitle(),
+                            assessment.getDuration(),
+                            formattedDate
+                        });
+                    }
+                }
                 break;
             case "Payments":
-                model.setColumnIdentifiers(new String[]{"Payment ID", "Student", "Amount", "Date", "Status"});
+                model.setColumnIdentifiers(new String[]{"Payment ID", "Student", "Amount", "Description", "Date"});
                 // Load payment data
+                if (payments != null) {
+                    for (Payment payment : payments) {
+                        model.addRow(new Object[]{
+                            payment.getPaymentID(),
+                            payment.getPayeeId().getName(),
+                            payment.getAmount(),
+                            payment.getDescription(),
+                            payment.getDate()
+                        });
+                    }
+                }
                 break;
             case "Admins":
-                model.setColumnIdentifiers(new String[]{"Admin ID", "Name", "Email", "Role", "Status"});
+                model.setColumnIdentifiers(new String[]{"Admin ID", "Name", "Email", "Status", "Password"});
                 // Load admin data
+                if (admins != null) {
+                    for (Admin admin : admins) {
+                        model.addRow(new Object[]{
+                            admin.getStaffId(),
+                            admin.getName(),
+                            admin.getEmail(),
+                            admin.getStatus(),
+                            admin.getPassword()
+                        });
+                    }
+                }
                 break;
             default:
                 break;
@@ -471,6 +742,1376 @@ public class AdminView extends javax.swing.JFrame {
                 updateMainPanel("Admins");
             }
         });
+    }
+
+    /**
+     * Add a new student
+     */
+    private void addStudent() {
+        // Create input dialog for student information
+        String name = JOptionPane.showInputDialog(this, "Enter student name:");
+        if (name == null || name.trim().isEmpty()) return;
+        
+        String email = JOptionPane.showInputDialog(this, "Enter student email:");
+        if (email == null || email.trim().isEmpty()) return;
+        
+        String password = JOptionPane.showInputDialog(this, "Enter student password:");
+        if (password == null || password.trim().isEmpty()) return;
+        
+        String yearStr = JOptionPane.showInputDialog(this, "Enter student year (1-4):");
+        if (yearStr == null || yearStr.trim().isEmpty()) return;
+        
+        String feeStr = JOptionPane.showInputDialog(this, "Enter annual fee:");
+        if (feeStr == null || feeStr.trim().isEmpty()) return;
+        
+        try {
+            int year = Integer.parseInt(yearStr);
+            float fee = Float.parseFloat(feeStr);
+            
+            // Create new student object
+            Student student = new Student(name, email, fee, year, password);
+            
+            // Add to collection
+            students.add(student);
+            
+            // Save to file
+            FileDataStore.saveStudents(students);
+            
+            // Refresh table
+            updateMainPanel("Students");
+            
+            JOptionPane.showMessageDialog(this, 
+                    "Student added successfully!", 
+                    "Success", 
+                    JOptionPane.INFORMATION_MESSAGE);
+            
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, 
+                    "Invalid number format. Please enter valid numbers.", 
+                    "Input Error", 
+                    JOptionPane.ERROR_MESSAGE);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, 
+                    "Error adding student: " + e.getMessage(), 
+                    "Error", 
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    /**
+     * Update an existing student
+     * @param selectedRow The selected row in the table
+     */
+    private void updateStudent(int selectedRow) {
+        try {
+            // Get the selected student from the collection
+            int studentId = (int) tblCourses.getValueAt(selectedRow, 0);
+            Student studentToUpdate = null;
+            for (Student s : students) {
+                if (s.getStudentID() == studentId) {
+                    studentToUpdate = s;
+                    break;
+                }
+            }
+            
+            if (studentToUpdate == null) {
+                JOptionPane.showMessageDialog(this, 
+                        "Student not found.", 
+                        "Error", 
+                        JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            
+            // Show input dialogs with current values
+            String name = JOptionPane.showInputDialog(this, 
+                    "Enter student name:", 
+                    studentToUpdate.getName());
+            if (name == null) return;
+            
+            String email = JOptionPane.showInputDialog(this, 
+                    "Enter student email:", 
+                    studentToUpdate.getEmail());
+            if (email == null) return;
+            
+            String password = JOptionPane.showInputDialog(this, 
+                    "Enter student password:", 
+                    studentToUpdate.getPassword());
+            if (password == null) return;
+            
+            String yearStr = JOptionPane.showInputDialog(this, 
+                    "Enter student year (1-4):", 
+                    studentToUpdate.getYear());
+            if (yearStr == null) return;
+            
+            String feeStr = JOptionPane.showInputDialog(this, 
+                    "Enter annual fee:", 
+                    studentToUpdate.getAnnualFee());
+            if (feeStr == null) return;
+            
+            int year = Integer.parseInt(yearStr);
+            float fee = Float.parseFloat(feeStr);
+            
+            // Update student object
+            studentToUpdate.setName(name);
+            studentToUpdate.setEmail(email);
+            studentToUpdate.setPassword(password);
+            studentToUpdate.setYear(year);
+            studentToUpdate.setAnnualFee(fee);
+            
+            // Save to file
+            FileDataStore.saveStudents(students);
+            
+            // Refresh table
+            updateMainPanel("Students");
+            
+            JOptionPane.showMessageDialog(this, 
+                    "Student updated successfully!", 
+                    "Success", 
+                    JOptionPane.INFORMATION_MESSAGE);
+            
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, 
+                    "Invalid number format. Please enter valid numbers.", 
+                    "Input Error", 
+                    JOptionPane.ERROR_MESSAGE);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, 
+                    "Error updating student: " + e.getMessage(), 
+                    "Error", 
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    /**
+     * Delete a student
+     * @param selectedRow The selected row in the table
+     */
+    private void deleteStudent(int selectedRow) {
+        try {
+            // Get the selected student from the collection
+            int studentId = (int) tblCourses.getValueAt(selectedRow, 0);
+            Student studentToDelete = null;
+            int indexToRemove = -1;
+            
+            for (int i = 0; i < students.size(); i++) {
+                if (students.get(i).getStudentID() == studentId) {
+                    studentToDelete = students.get(i);
+                    indexToRemove = i;
+                    break;
+                }
+            }
+            
+            if (studentToDelete == null) {
+                JOptionPane.showMessageDialog(this, 
+                        "Student not found.", 
+                        "Error", 
+                        JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            
+            // Check if the student is enrolled in any modules
+            boolean isEnrolled = false;
+            for (Enrollment enrollment : enrollments) {
+                if (enrollment.getStudent().getStudentID() == studentId) {
+                    isEnrolled = true;
+                    break;
+                }
+            }
+            
+            if (isEnrolled) {
+                int confirm = JOptionPane.showConfirmDialog(this, 
+                        "This student is enrolled in modules. Delete anyway?", 
+                        "Warning", 
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.WARNING_MESSAGE);
+                
+                if (confirm != JOptionPane.YES_OPTION) {
+                    return;
+                }
+                
+                // Remove related enrollments
+                ArrayList<Enrollment> enrollmentsToRemove = new ArrayList<>();
+                for (Enrollment enrollment : enrollments) {
+                    if (enrollment.getStudent().getStudentID() == studentId) {
+                        enrollmentsToRemove.add(enrollment);
+                    }
+                }
+                
+                enrollments.removeAll(enrollmentsToRemove);
+                FileDataStore.saveEnrollments(enrollments);
+            }
+            
+            // Check if the student has payments
+            boolean hasPayments = false;
+            for (Payment payment : payments) {
+                if (payment.getPayeeId().getStudentID() == studentId) {
+                    hasPayments = true;
+                    break;
+                }
+            }
+            
+            if (hasPayments) {
+                int confirm = JOptionPane.showConfirmDialog(this, 
+                        "This student has payment records. Delete anyway?", 
+                        "Warning", 
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.WARNING_MESSAGE);
+                
+                if (confirm != JOptionPane.YES_OPTION) {
+                    return;
+                }
+                
+                // Remove related payments
+                ArrayList<Payment> paymentsToRemove = new ArrayList<>();
+                for (Payment payment : payments) {
+                    if (payment.getPayeeId().getStudentID() == studentId) {
+                        paymentsToRemove.add(payment);
+                    }
+                }
+                
+                payments.removeAll(paymentsToRemove);
+                FileDataStore.savePayments(payments);
+            }
+            
+            // Remove student
+            students.remove(indexToRemove);
+            
+            // Save to file
+            FileDataStore.saveStudents(students);
+            
+            // Refresh table
+            updateMainPanel("Students");
+            
+            JOptionPane.showMessageDialog(this, 
+                    "Student deleted successfully!", 
+                    "Success", 
+                    JOptionPane.INFORMATION_MESSAGE);
+            
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, 
+                    "Error deleting student: " + e.getMessage(), 
+                    "Error", 
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    /**
+     * Add a new teacher
+     */
+    private void addTeacher() {
+        // Create input dialog for teacher information
+        String name = JOptionPane.showInputDialog(this, "Enter teacher name:");
+        if (name == null || name.trim().isEmpty()) return;
+        
+        String email = JOptionPane.showInputDialog(this, "Enter teacher email:");
+        if (email == null || email.trim().isEmpty()) return;
+        
+        String password = JOptionPane.showInputDialog(this, "Enter teacher password:");
+        if (password == null || password.trim().isEmpty()) return;
+        
+        String[] statusOptions = {"ACTIVE", "INACTIVE", "ON_LEAVE"};
+        String statusStr = (String) JOptionPane.showInputDialog(this,
+                "Select status:",
+                "Teacher Status",
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                statusOptions,
+                statusOptions[0]);
+        if (statusStr == null) return;
+        
+        try {
+            StaffStatus status = StaffStatus.valueOf(statusStr);
+            
+            // Create new teacher object
+            Teacher teacher = new Teacher(name, email, "teacher", status, password);
+            
+            // Add to collection
+            teachers.add(teacher);
+            
+            // Save to file
+            FileDataStore.saveTeachers(teachers);
+            
+            // Refresh table
+            updateMainPanel("Teachers");
+            
+            JOptionPane.showMessageDialog(this, 
+                    "Teacher added successfully!", 
+                    "Success", 
+                    JOptionPane.INFORMATION_MESSAGE);
+            
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, 
+                    "Error adding teacher: " + e.getMessage(), 
+                    "Error", 
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    /**
+     * Update an existing teacher
+     * @param selectedRow The selected row in the table
+     */
+    private void updateTeacher(int selectedRow) {
+        try {
+            // Get the selected teacher from the collection
+            int teacherId = (int) tblCourses.getValueAt(selectedRow, 0);
+            Teacher teacherToUpdate = null;
+            for (Teacher t : teachers) {
+                if (t.getStaffId() == teacherId) {
+                    teacherToUpdate = t;
+                    break;
+                }
+            }
+            
+            if (teacherToUpdate == null) {
+                JOptionPane.showMessageDialog(this, 
+                        "Teacher not found.", 
+                        "Error", 
+                        JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            
+            // Show input dialogs with current values
+            String name = JOptionPane.showInputDialog(this, 
+                    "Enter teacher name:", 
+                    teacherToUpdate.getName());
+            if (name == null) return;
+            
+            String email = JOptionPane.showInputDialog(this, 
+                    "Enter teacher email:", 
+                    teacherToUpdate.getEmail());
+            if (email == null) return;
+            
+            String password = JOptionPane.showInputDialog(this, 
+                    "Enter teacher password:", 
+                    teacherToUpdate.getPassword());
+            if (password == null) return;
+            
+            String[] statusOptions = {"ACTIVE", "INACTIVE", "ON_LEAVE"};
+            String statusStr = (String) JOptionPane.showInputDialog(this,
+                    "Select status:",
+                    "Teacher Status",
+                    JOptionPane.QUESTION_MESSAGE,
+                    null,
+                    statusOptions,
+                    teacherToUpdate.getStatus().toString());
+            if (statusStr == null) return;
+            
+            StaffStatus status = StaffStatus.valueOf(statusStr);
+            
+            // Update teacher object
+            teacherToUpdate.setName(name);
+            teacherToUpdate.setEmail(email);
+            teacherToUpdate.setPassword(password);
+            teacherToUpdate.setStatus(status);
+            
+            // Save to file
+            FileDataStore.saveTeachers(teachers);
+            
+            // Refresh table
+            updateMainPanel("Teachers");
+            
+            JOptionPane.showMessageDialog(this, 
+                    "Teacher updated successfully!", 
+                    "Success", 
+                    JOptionPane.INFORMATION_MESSAGE);
+            
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, 
+                    "Error updating teacher: " + e.getMessage(), 
+                    "Error", 
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    /**
+     * Delete a teacher
+     * @param selectedRow The selected row in the table
+     */
+    private void deleteTeacher(int selectedRow) {
+        try {
+            // Get the selected teacher from the collection
+            int teacherId = (int) tblCourses.getValueAt(selectedRow, 0);
+            Teacher teacherToDelete = null;
+            int indexToRemove = -1;
+            
+            for (int i = 0; i < teachers.size(); i++) {
+                if (teachers.get(i).getStaffId() == teacherId) {
+                    teacherToDelete = teachers.get(i);
+                    indexToRemove = i;
+                    break;
+                }
+            }
+            
+            if (teacherToDelete == null) {
+                JOptionPane.showMessageDialog(this, 
+                        "Teacher not found.", 
+                        "Error", 
+                        JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            
+            // Check if the teacher has associated sessions
+            boolean hasSessions = false;
+            for (Session session : sessions) {
+                // Add logic to check if teacher is associated with session
+                // This depends on how teacher-session relationships are modeled
+            }
+            
+            if (hasSessions) {
+                int confirm = JOptionPane.showConfirmDialog(this, 
+                        "This teacher has associated sessions. Delete anyway?", 
+                        "Warning", 
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.WARNING_MESSAGE);
+                
+                if (confirm != JOptionPane.YES_OPTION) {
+                    return;
+                }
+                
+                // Handle deletion of associated sessions if necessary
+            }
+            
+            // Remove teacher
+            teachers.remove(indexToRemove);
+            
+            // Save to file
+            FileDataStore.saveTeachers(teachers);
+            
+            // Refresh table
+            updateMainPanel("Teachers");
+            
+            JOptionPane.showMessageDialog(this, 
+                    "Teacher deleted successfully!", 
+                    "Success", 
+                    JOptionPane.INFORMATION_MESSAGE);
+            
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, 
+                    "Error deleting teacher: " + e.getMessage(), 
+                    "Error", 
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    /**
+     * Add a new module
+     */
+    private void addModule() {
+        // Create input dialog for module information
+        String moduleName = JOptionPane.showInputDialog(this, "Enter module name:");
+        if (moduleName == null || moduleName.trim().isEmpty()) return;
+        
+        String capacityStr = JOptionPane.showInputDialog(this, "Enter maximum capacity:");
+        if (capacityStr == null || capacityStr.trim().isEmpty()) return;
+        
+        String yearStr = JOptionPane.showInputDialog(this, "Enter module year (1-4):");
+        if (yearStr == null || yearStr.trim().isEmpty()) return;
+        
+        try {
+            int capacity = Integer.parseInt(capacityStr);
+            int year = Integer.parseInt(yearStr);
+            
+            // Create new module object with empty assessments list
+            Module module = new Module(moduleName, capacity, new ArrayList<>(), year);
+            
+            // Add to collection
+            modules.add(module);
+            
+            // Save to file
+            FileDataStore.saveModules(modules);
+            
+            // Refresh table
+            updateMainPanel("Modules");
+            
+            JOptionPane.showMessageDialog(this, 
+                    "Module added successfully!", 
+                    "Success", 
+                    JOptionPane.INFORMATION_MESSAGE);
+            
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, 
+                    "Invalid number format. Please enter valid numbers.", 
+                    "Input Error", 
+                    JOptionPane.ERROR_MESSAGE);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, 
+                    "Error adding module: " + e.getMessage(), 
+                    "Error", 
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    /**
+     * Update an existing module
+     * @param selectedRow The selected row in the table
+     */
+    private void updateModule(int selectedRow) {
+        try {
+            // Get the selected module from the collection
+            int moduleId = (int) tblCourses.getValueAt(selectedRow, 0);
+            Module moduleToUpdate = null;
+            for (Module m : modules) {
+                if (m.getModuleID() == moduleId) {
+                    moduleToUpdate = m;
+                    break;
+                }
+            }
+            
+            if (moduleToUpdate == null) {
+                JOptionPane.showMessageDialog(this, 
+                        "Module not found.", 
+                        "Error", 
+                        JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            
+            // Show input dialogs with current values
+            String moduleName = JOptionPane.showInputDialog(this, 
+                    "Enter module name:", 
+                    moduleToUpdate.getModuleName());
+            if (moduleName == null) return;
+            
+            String capacityStr = JOptionPane.showInputDialog(this, 
+                    "Enter maximum capacity:", 
+                    moduleToUpdate.getMaxCapacity());
+            if (capacityStr == null) return;
+            
+            String yearStr = JOptionPane.showInputDialog(this, 
+                    "Enter module year (1-4):", 
+                    moduleToUpdate.getModuleYear());
+            if (yearStr == null) return;
+            
+            int capacity = Integer.parseInt(capacityStr);
+            int year = Integer.parseInt(yearStr);
+            
+            // Update module object
+            moduleToUpdate.setModuleName(moduleName);
+            moduleToUpdate.setMaxCapacity(capacity);
+            moduleToUpdate.setModuleYear(year);
+            
+            // Save to file
+            FileDataStore.saveModules(modules);
+            
+            // Refresh table
+            updateMainPanel("Modules");
+            
+            JOptionPane.showMessageDialog(this, 
+                    "Module updated successfully!", 
+                    "Success", 
+                    JOptionPane.INFORMATION_MESSAGE);
+            
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, 
+                    "Invalid number format. Please enter valid numbers.", 
+                    "Input Error", 
+                    JOptionPane.ERROR_MESSAGE);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, 
+                    "Error updating module: " + e.getMessage(), 
+                    "Error", 
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    /**
+     * Delete a module
+     * @param selectedRow The selected row in the table
+     */
+    private void deleteModule(int selectedRow) {
+        try {
+            // Get the selected module from the collection
+            int moduleId = (int) tblCourses.getValueAt(selectedRow, 0);
+            Module moduleToDelete = null;
+            int indexToRemove = -1;
+            
+            for (int i = 0; i < modules.size(); i++) {
+                if (modules.get(i).getModuleID() == moduleId) {
+                    moduleToDelete = modules.get(i);
+                    indexToRemove = i;
+                    break;
+                }
+            }
+            
+            if (moduleToDelete == null) {
+                JOptionPane.showMessageDialog(this, 
+                        "Module not found.", 
+                        "Error", 
+                        JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            
+            // Check if students are enrolled in this module
+            boolean hasEnrollments = false;
+            for (Enrollment enrollment : enrollments) {
+                if (enrollment.getModule().getModuleID() == moduleId) {
+                    hasEnrollments = true;
+                    break;
+                }
+            }
+            
+            if (hasEnrollments) {
+                int confirm = JOptionPane.showConfirmDialog(this, 
+                        "Students are enrolled in this module. Delete anyway?", 
+                        "Warning", 
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.WARNING_MESSAGE);
+                
+                if (confirm != JOptionPane.YES_OPTION) {
+                    return;
+                }
+                
+                // Remove related enrollments
+                ArrayList<Enrollment> enrollmentsToRemove = new ArrayList<>();
+                for (Enrollment enrollment : enrollments) {
+                    if (enrollment.getModule().getModuleID() == moduleId) {
+                        enrollmentsToRemove.add(enrollment);
+                    }
+                }
+                
+                enrollments.removeAll(enrollmentsToRemove);
+                FileDataStore.saveEnrollments(enrollments);
+            }
+            
+            // Check if sessions are associated with this module
+            boolean hasSessions = false;
+            for (Session session : sessions) {
+                if (session.getModule().getModuleID() == moduleId) {
+                    hasSessions = true;
+                    break;
+                }
+            }
+            
+            if (hasSessions) {
+                int confirm = JOptionPane.showConfirmDialog(this, 
+                        "This module has associated sessions. Delete anyway?", 
+                        "Warning", 
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.WARNING_MESSAGE);
+                
+                if (confirm != JOptionPane.YES_OPTION) {
+                    return;
+                }
+                
+                // Remove related sessions
+                ArrayList<Session> sessionsToRemove = new ArrayList<>();
+                for (Session session : sessions) {
+                    if (session.getModule().getModuleID() == moduleId) {
+                        sessionsToRemove.add(session);
+                    }
+                }
+                
+                sessions.removeAll(sessionsToRemove);
+                FileDataStore.saveSessions(sessions);
+            }
+            
+            // Remove module
+            modules.remove(indexToRemove);
+            
+            // Save to file
+            FileDataStore.saveModules(modules);
+            
+            // Refresh table
+            updateMainPanel("Modules");
+            
+            JOptionPane.showMessageDialog(this, 
+                    "Module deleted successfully!", 
+                    "Success", 
+                    JOptionPane.INFORMATION_MESSAGE);
+            
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, 
+                    "Error deleting module: " + e.getMessage(), 
+                    "Error", 
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    /**
+     * Add a new admin
+     */
+    private void addAdmin() {
+        // Create input dialog for admin information
+        String name = JOptionPane.showInputDialog(this, "Enter admin name:");
+        if (name == null || name.trim().isEmpty()) return;
+        
+        String email = JOptionPane.showInputDialog(this, "Enter admin email:");
+        if (email == null || email.trim().isEmpty()) return;
+        
+        String password = JOptionPane.showInputDialog(this, "Enter admin password:");
+        if (password == null || password.trim().isEmpty()) return;
+        
+        String[] statusOptions = {"ACTIVE", "INACTIVE", "ON_LEAVE"};
+        String statusStr = (String) JOptionPane.showInputDialog(this,
+                "Select status:",
+                "Admin Status",
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                statusOptions,
+                statusOptions[0]);
+        if (statusStr == null) return;
+        
+        try {
+            StaffStatus status = StaffStatus.valueOf(statusStr);
+            
+            // Create new admin object
+            Admin admin = new Admin(name, email, "admin", status, password);
+            
+            // Add to collection
+            admins.add(admin);
+            
+            // Save to file
+            FileDataStore.saveAdmins(admins);
+            
+            // Refresh table
+            updateMainPanel("Admins");
+            
+            JOptionPane.showMessageDialog(this, 
+                    "Admin added successfully!", 
+                    "Success", 
+                    JOptionPane.INFORMATION_MESSAGE);
+            
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, 
+                    "Error adding admin: " + e.getMessage(), 
+                    "Error", 
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    /**
+     * Update an existing admin
+     * @param selectedRow The selected row in the table
+     */
+    private void updateAdmin(int selectedRow) {
+        try {
+            // Get the selected admin from the collection
+            int adminId = (int) tblCourses.getValueAt(selectedRow, 0);
+            Admin adminToUpdate = null;
+            for (Admin a : admins) {
+                if (a.getStaffId() == adminId) {
+                    adminToUpdate = a;
+                    break;
+                }
+            }
+            
+            if (adminToUpdate == null) {
+                JOptionPane.showMessageDialog(this, 
+                        "Admin not found.", 
+                        "Error", 
+                        JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            
+            // Show input dialogs with current values
+            String name = JOptionPane.showInputDialog(this, 
+                    "Enter admin name:", 
+                    adminToUpdate.getName());
+            if (name == null) return;
+            
+            String email = JOptionPane.showInputDialog(this, 
+                    "Enter admin email:", 
+                    adminToUpdate.getEmail());
+            if (email == null) return;
+            
+            String password = JOptionPane.showInputDialog(this, 
+                    "Enter admin password:", 
+                    adminToUpdate.getPassword());
+            if (password == null) return;
+            
+            String[] statusOptions = {"ACTIVE", "INACTIVE", "ON_LEAVE"};
+            String statusStr = (String) JOptionPane.showInputDialog(this,
+                    "Select status:",
+                    "Admin Status",
+                    JOptionPane.QUESTION_MESSAGE,
+                    null,
+                    statusOptions,
+                    adminToUpdate.getStatus().toString());
+            if (statusStr == null) return;
+            
+            StaffStatus status = StaffStatus.valueOf(statusStr);
+            
+            // Update admin object
+            adminToUpdate.setName(name);
+            adminToUpdate.setEmail(email);
+            adminToUpdate.setPassword(password);
+            adminToUpdate.setStatus(status);
+            
+            // Save to file
+            FileDataStore.saveAdmins(admins);
+            
+            // Refresh table
+            updateMainPanel("Admins");
+            
+            JOptionPane.showMessageDialog(this, 
+                    "Admin updated successfully!", 
+                    "Success", 
+                    JOptionPane.INFORMATION_MESSAGE);
+            
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, 
+                    "Error updating admin: " + e.getMessage(), 
+                    "Error", 
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    /**
+     * Delete an admin
+     * @param selectedRow The selected row in the table
+     */
+    private void deleteAdmin(int selectedRow) {
+        try {
+            // Get the selected admin from the collection
+            int adminId = (int) tblCourses.getValueAt(selectedRow, 0);
+            Admin adminToDelete = null;
+            int indexToRemove = -1;
+            
+            for (int i = 0; i < admins.size(); i++) {
+                if (admins.get(i).getStaffId() == adminId) {
+                    adminToDelete = admins.get(i);
+                    indexToRemove = i;
+                    break;
+                }
+            }
+            
+            if (adminToDelete == null) {
+                JOptionPane.showMessageDialog(this, 
+                        "Admin not found.", 
+                        "Error", 
+                        JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            
+            // Check if this is the only admin
+            if (admins.size() <= 1) {
+                JOptionPane.showMessageDialog(this, 
+                        "Cannot delete the only admin in the system.", 
+                        "Error", 
+                        JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            
+            // Remove admin
+            admins.remove(indexToRemove);
+            
+            // Save to file
+            FileDataStore.saveAdmins(admins);
+            
+            // Refresh table
+            updateMainPanel("Admins");
+            
+            JOptionPane.showMessageDialog(this, 
+                    "Admin deleted successfully!", 
+                    "Success", 
+                    JOptionPane.INFORMATION_MESSAGE);
+            
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, 
+                    "Error deleting admin: " + e.getMessage(), 
+                    "Error", 
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    /**
+     * Add a new assessment
+     */
+    private void addAssessment() {
+        if (modules.isEmpty()) {
+            JOptionPane.showMessageDialog(this, 
+                    "No modules available. Please create a module first.", 
+                    "Error", 
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        // Create array of module names for selection
+        String[] moduleNames = new String[modules.size()];
+        for (int i = 0; i < modules.size(); i++) {
+            moduleNames[i] = modules.get(i).getModuleName();
+        }
+        
+        // Select module
+        String selectedModuleName = (String) JOptionPane.showInputDialog(this,
+                "Select module:",
+                "Module Selection",
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                moduleNames,
+                moduleNames[0]);
+        if (selectedModuleName == null) return;
+        
+        // Find the selected module
+        Module selectedModule = null;
+        for (Module module : modules) {
+            if (module.getModuleName().equals(selectedModuleName)) {
+                selectedModule = module;
+                break;
+            }
+        }
+        
+        if (selectedModule == null) return;
+        
+        // Get assessment details
+        String title = JOptionPane.showInputDialog(this, "Enter assessment title:");
+        if (title == null || title.trim().isEmpty()) return;
+        
+        String duration = JOptionPane.showInputDialog(this, "Enter duration (e.g., 2 hours):");
+        if (duration == null || duration.trim().isEmpty()) return;
+        
+        // Get date in a format compatible with Date
+        String dateStr = JOptionPane.showInputDialog(this, "Enter date (MM/DD/YYYY):");
+        if (dateStr == null || dateStr.trim().isEmpty()) return;
+        
+        try {
+            // Parse date string to Date object
+            java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("MM/dd/yyyy");
+            java.util.Date date = sdf.parse(dateStr);
+            
+            // Create new assessment object using the correct constructor
+            Assessment assessment = new Assessment(0, date, duration, selectedModule, title);
+            
+            // Add to the module's assessments list
+            selectedModule.getAssessments().add(assessment);
+            
+            // Add to our local collection for display
+            assessments.add(assessment);
+            
+            // Save module (which includes assessments)
+            FileDataStore.saveModules(modules);
+            
+            // Refresh table
+            updateMainPanel("Assessments");
+            
+            JOptionPane.showMessageDialog(this, 
+                    "Assessment added successfully!", 
+                    "Success", 
+                    JOptionPane.INFORMATION_MESSAGE);
+            
+        } catch (java.text.ParseException e) {
+            JOptionPane.showMessageDialog(this, 
+                    "Invalid date format. Please use MM/DD/YYYY format.", 
+                    "Input Error", 
+                    JOptionPane.ERROR_MESSAGE);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, 
+                    "Error adding assessment: " + e.getMessage(), 
+                    "Error", 
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    /**
+     * Update an existing assessment
+     * @param selectedRow The selected row in the table
+     */
+    private void updateAssessment(int selectedRow) {
+        try {
+            // Get the selected assessment
+            int assessmentId = (int) tblCourses.getValueAt(selectedRow, 0);
+            Assessment assessmentToUpdate = null;
+            for (Assessment a : assessments) {
+                if (a.getAssessmentID() == assessmentId) {
+                    assessmentToUpdate = a;
+                    break;
+                }
+            }
+            
+            if (assessmentToUpdate == null) {
+                JOptionPane.showMessageDialog(this, 
+                        "Assessment not found.", 
+                        "Error", 
+                        JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            
+            // Create array of module names for selection
+            String[] moduleNames = new String[modules.size()];
+            for (int i = 0; i < modules.size(); i++) {
+                moduleNames[i] = modules.get(i).getModuleName();
+            }
+            
+            // Current module name
+            String currentModuleName = assessmentToUpdate.getModule().getModuleName();
+            
+            // Select module
+            String selectedModuleName = (String) JOptionPane.showInputDialog(this,
+                    "Select module:",
+                    "Module Selection",
+                    JOptionPane.QUESTION_MESSAGE,
+                    null,
+                    moduleNames,
+                    currentModuleName);
+            if (selectedModuleName == null) return;
+            
+            // Find the selected module
+            Module selectedModule = null;
+            for (Module module : modules) {
+                if (module.getModuleName().equals(selectedModuleName)) {
+                    selectedModule = module;
+                    break;
+                }
+            }
+            
+            if (selectedModule == null) return;
+            
+            // Get updated assessment details
+            String title = JOptionPane.showInputDialog(this, 
+                    "Enter assessment title:", 
+                    assessmentToUpdate.getTitle());
+            if (title == null) return;
+            
+            String duration = JOptionPane.showInputDialog(this, 
+                    "Enter duration (e.g., 2 hours):", 
+                    assessmentToUpdate.getDuration());
+            if (duration == null) return;
+            
+            // Get date in a format compatible with Date
+            java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("MM/dd/yyyy");
+            String dateStr = JOptionPane.showInputDialog(this, 
+                    "Enter date (MM/DD/YYYY):", 
+                    sdf.format(assessmentToUpdate.getDate()));
+            if (dateStr == null) return;
+            
+            try {
+                // Parse date string to Date object
+                java.util.Date date = sdf.parse(dateStr);
+                
+                // If module changed, remove from old module and add to new one
+                if (assessmentToUpdate.getModule() != selectedModule) {
+                    assessmentToUpdate.getModule().getAssessments().remove(assessmentToUpdate);
+                    selectedModule.getAssessments().add(assessmentToUpdate);
+                    assessmentToUpdate.setModule(selectedModule);
+                }
+                
+                // Update assessment object
+                assessmentToUpdate.setTitle(title);
+                assessmentToUpdate.setDuration(duration);
+                assessmentToUpdate.setDate(date);
+                
+                // Save modules (which include assessments)
+                FileDataStore.saveModules(modules);
+                
+                // Refresh table
+                updateMainPanel("Assessments");
+                
+                JOptionPane.showMessageDialog(this, 
+                        "Assessment updated successfully!", 
+                        "Success", 
+                        JOptionPane.INFORMATION_MESSAGE);
+                
+            } catch (java.text.ParseException e) {
+                JOptionPane.showMessageDialog(this, 
+                        "Invalid date format. Please use MM/DD/YYYY format.", 
+                        "Input Error", 
+                        JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, 
+                    "Error updating assessment: " + e.getMessage(), 
+                    "Error", 
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    /**
+     * Delete an assessment
+     * @param selectedRow The selected row in the table
+     */
+    private void deleteAssessment(int selectedRow) {
+        try {
+            // Get the selected assessment
+            int assessmentId = (int) tblCourses.getValueAt(selectedRow, 0);
+            Assessment assessmentToDelete = null;
+            int indexToRemove = -1;
+            
+            for (int i = 0; i < assessments.size(); i++) {
+                if (assessments.get(i).getAssessmentID() == assessmentId) {
+                    assessmentToDelete = assessments.get(i);
+                    indexToRemove = i;
+                    break;
+                }
+            }
+            
+            if (assessmentToDelete == null) {
+                JOptionPane.showMessageDialog(this, 
+                        "Assessment not found.", 
+                        "Error", 
+                        JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            
+            // Remove from module's assessment list
+            Module module = assessmentToDelete.getModule();
+            module.getAssessments().remove(assessmentToDelete);
+            
+            // Remove from our local collection
+            assessments.remove(indexToRemove);
+            
+            // Save modules (which include assessments)
+            FileDataStore.saveModules(modules);
+            
+            // Refresh table
+            updateMainPanel("Assessments");
+            
+            JOptionPane.showMessageDialog(this, 
+                    "Assessment deleted successfully!", 
+                    "Success", 
+                    JOptionPane.INFORMATION_MESSAGE);
+            
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, 
+                    "Error deleting assessment: " + e.getMessage(), 
+                    "Error", 
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    /**
+     * Add a new payment
+     */
+    private void addPayment() {
+        if (students.isEmpty()) {
+            JOptionPane.showMessageDialog(this, 
+                    "No students available. Please create a student first.", 
+                    "Error", 
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        // Create array of student names for selection
+        String[] studentNames = new String[students.size()];
+        for (int i = 0; i < students.size(); i++) {
+            studentNames[i] = students.get(i).getName() + " (ID: " + students.get(i).getStudentID() + ")";
+        }
+        
+        // Select student
+        String selectedStudentName = (String) JOptionPane.showInputDialog(this,
+                "Select student:",
+                "Student Selection",
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                studentNames,
+                studentNames[0]);
+        if (selectedStudentName == null) return;
+        
+        // Parse student ID from the selected option
+        int selectedStudentId = Integer.parseInt(selectedStudentName.substring(
+                selectedStudentName.lastIndexOf("ID: ") + 4, 
+                selectedStudentName.lastIndexOf(")")
+        ));
+        
+        // Find the selected student
+        Student selectedStudent = null;
+        for (Student student : students) {
+            if (student.getStudentID() == selectedStudentId) {
+                selectedStudent = student;
+                break;
+            }
+        }
+        
+        if (selectedStudent == null) return;
+        
+        // Get payment details
+        String amountStr = JOptionPane.showInputDialog(this, "Enter payment amount:");
+        if (amountStr == null || amountStr.trim().isEmpty()) return;
+        
+        String description = JOptionPane.showInputDialog(this, "Enter payment description:");
+        if (description == null || description.trim().isEmpty()) return;
+        
+        String date = JOptionPane.showInputDialog(this, "Enter payment date (YYYY-MM-DD):");
+        if (date == null || date.trim().isEmpty()) return;
+        
+        try {
+            float amount = Float.parseFloat(amountStr);
+            
+            // Create new payment object
+            Payment payment = new Payment(amount, selectedStudent, description, date);
+            
+            // Add to collection
+            payments.add(payment);
+            
+            // Save to file
+            FileDataStore.savePayments(payments);
+            
+            // Refresh table
+            updateMainPanel("Payments");
+            
+            JOptionPane.showMessageDialog(this, 
+                    "Payment added successfully!", 
+                    "Success", 
+                    JOptionPane.INFORMATION_MESSAGE);
+            
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, 
+                    "Invalid number format. Please enter valid numbers.", 
+                    "Input Error", 
+                    JOptionPane.ERROR_MESSAGE);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, 
+                    "Error adding payment: " + e.getMessage(), 
+                    "Error", 
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    /**
+     * Update an existing payment
+     * @param selectedRow The selected row in the table
+     */
+    private void updatePayment(int selectedRow) {
+        try {
+            // Get the selected payment from the collection
+            int paymentId = (int) tblCourses.getValueAt(selectedRow, 0);
+            Payment paymentToUpdate = null;
+            for (Payment p : payments) {
+                if (p.getPaymentID() == paymentId) {
+                    paymentToUpdate = p;
+                    break;
+                }
+            }
+            
+            if (paymentToUpdate == null) {
+                JOptionPane.showMessageDialog(this, 
+                        "Payment not found.", 
+                        "Error", 
+                        JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            
+            // Create array of student names for selection
+            String[] studentNames = new String[students.size()];
+            for (int i = 0; i < students.size(); i++) {
+                studentNames[i] = students.get(i).getName() + " (ID: " + students.get(i).getStudentID() + ")";
+            }
+            
+            // Current student name
+            String currentStudentName = paymentToUpdate.getPayeeId().getName() + 
+                    " (ID: " + paymentToUpdate.getPayeeId().getStudentID() + ")";
+            
+            // Select student
+            String selectedStudentName = (String) JOptionPane.showInputDialog(this,
+                    "Select student:",
+                    "Student Selection",
+                    JOptionPane.QUESTION_MESSAGE,
+                    null,
+                    studentNames,
+                    currentStudentName);
+            if (selectedStudentName == null) return;
+            
+            // Parse student ID from the selected option
+            int selectedStudentId = Integer.parseInt(selectedStudentName.substring(
+                    selectedStudentName.lastIndexOf("ID: ") + 4, 
+                    selectedStudentName.lastIndexOf(")")
+            ));
+            
+            // Find the selected student
+            Student selectedStudent = null;
+            for (Student student : students) {
+                if (student.getStudentID() == selectedStudentId) {
+                    selectedStudent = student;
+                    break;
+                }
+            }
+            
+            if (selectedStudent == null) return;
+            
+            // Get updated payment details
+            String amountStr = JOptionPane.showInputDialog(this, 
+                    "Enter payment amount:", 
+                    paymentToUpdate.getAmount());
+            if (amountStr == null) return;
+            
+            String description = JOptionPane.showInputDialog(this, 
+                    "Enter payment description:", 
+                    paymentToUpdate.getDescription());
+            if (description == null) return;
+            
+            String date = JOptionPane.showInputDialog(this, 
+                    "Enter payment date (YYYY-MM-DD):", 
+                    paymentToUpdate.getDate());
+            if (date == null) return;
+            
+            float amount = Float.parseFloat(amountStr);
+            
+            // Update payment object
+            paymentToUpdate.setAmount(amount);
+            paymentToUpdate.setPayeeId(selectedStudent);
+            paymentToUpdate.setDescription(description);
+            paymentToUpdate.setDate(date);
+            
+            // Save to file
+            FileDataStore.savePayments(payments);
+            
+            // Refresh table
+            updateMainPanel("Payments");
+            
+            JOptionPane.showMessageDialog(this, 
+                    "Payment updated successfully!", 
+                    "Success", 
+                    JOptionPane.INFORMATION_MESSAGE);
+            
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, 
+                    "Invalid number format. Please enter valid numbers.", 
+                    "Input Error", 
+                    JOptionPane.ERROR_MESSAGE);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, 
+                    "Error updating payment: " + e.getMessage(), 
+                    "Error", 
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    /**
+     * Delete a payment
+     * @param selectedRow The selected row in the table
+     */
+    private void deletePayment(int selectedRow) {
+        try {
+            // Get the selected payment from the collection
+            int paymentId = (int) tblCourses.getValueAt(selectedRow, 0);
+            Payment paymentToDelete = null;
+            int indexToRemove = -1;
+            
+            for (int i = 0; i < payments.size(); i++) {
+                if (payments.get(i).getPaymentID() == paymentId) {
+                    paymentToDelete = payments.get(i);
+                    indexToRemove = i;
+                    break;
+                }
+            }
+            
+            if (paymentToDelete == null) {
+                JOptionPane.showMessageDialog(this, 
+                        "Payment not found.", 
+                        "Error", 
+                        JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            
+            // Remove payment
+            payments.remove(indexToRemove);
+            
+            // Save to file
+            FileDataStore.savePayments(payments);
+            
+            // Refresh table
+            updateMainPanel("Payments");
+            
+            JOptionPane.showMessageDialog(this, 
+                    "Payment deleted successfully!", 
+                    "Success", 
+                    JOptionPane.INFORMATION_MESSAGE);
+            
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, 
+                    "Error deleting payment: " + e.getMessage(), 
+                    "Error", 
+                    JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     /**
