@@ -137,6 +137,15 @@ public class AdminView extends javax.swing.JFrame {
             case "Admins":
                 addAdmin();
                 break;
+            case "Sessions":
+                addSession();
+                break;
+            case "Classrooms":
+                addClassroom();
+                break;
+            case "Enrollments":
+                addEnrollment();
+                break;
             default:
                 break;
         }
@@ -175,6 +184,15 @@ public class AdminView extends javax.swing.JFrame {
                 break;
             case "Admins":
                 updateAdmin(selectedRow);
+                break;
+            case "Sessions":
+                updateSession(selectedRow);
+                break;
+            case "Classrooms":
+                updateClassroom(selectedRow);
+                break;
+            case "Enrollments":
+                updateEnrollment(selectedRow);
                 break;
             default:
                 break;
@@ -225,6 +243,15 @@ public class AdminView extends javax.swing.JFrame {
             case "Admins":
                 deleteAdmin(selectedRow);
                 break;
+            case "Sessions":
+                deleteSession(selectedRow);
+                break;
+            case "Classrooms":
+                deleteClassroom(selectedRow);
+                break;
+            case "Enrollments":
+                deleteEnrollment(selectedRow);
+                break;
             default:
                 break;
         }
@@ -250,6 +277,9 @@ public class AdminView extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblCourses = new javax.swing.JTable();
@@ -315,6 +345,15 @@ public class AdminView extends javax.swing.JFrame {
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel5.setText("Payments");
+        
+        jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel7.setText("Sessions");
+        
+        jLabel8.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel8.setText("Classrooms");
+        
+        jLabel9.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel9.setText("Enrollments");
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
@@ -328,7 +367,10 @@ public class AdminView extends javax.swing.JFrame {
                     .addComponent(jLabel6)
                     .addComponent(jLabel1)
                     .addComponent(jLabel4)
-                    .addComponent(jLabel5))
+                    .addComponent(jLabel5)
+                    .addComponent(jLabel7)
+                    .addComponent(jLabel8)
+                    .addComponent(jLabel9))
                 .addGap(50, 50, 50))
         );
         jPanel5Layout.setVerticalGroup(
@@ -346,6 +388,12 @@ public class AdminView extends javax.swing.JFrame {
                 .addComponent(jLabel4)
                 .addGap(25, 25, 25)
                 .addComponent(jLabel5)
+                .addGap(25, 25, 25)
+                .addComponent(jLabel7)
+                .addGap(25, 25, 25)
+                .addComponent(jLabel8)
+                .addGap(25, 25, 25)
+                .addComponent(jLabel9)
                 .addGap(82, 82, 82))
         );
 
@@ -490,7 +538,7 @@ public class AdminView extends javax.swing.JFrame {
 
     private void setupSidebarEffects() {
         // Make sidebar labels opaque so background colors will show
-        javax.swing.JLabel[] labels = {jLabel1, jLabel2, jLabel3, jLabel4, jLabel5, jLabel6};
+        javax.swing.JLabel[] labels = {jLabel1, jLabel2, jLabel3, jLabel4, jLabel5, jLabel6, jLabel7, jLabel8, jLabel9};
         
         // Setup the sidebar item appearance
         for (javax.swing.JLabel label : labels) {
@@ -577,6 +625,21 @@ public class AdminView extends javax.swing.JFrame {
                 jButton1.setText("Add Admin");
                 jButton2.setText("Update Admin");
                 jButton3.setText("Delete Admin");
+                break;
+            case "Sessions":
+                jButton1.setText("Add Session");
+                jButton2.setText("Update Session");
+                jButton3.setText("Delete Session");
+                break;
+            case "Classrooms":
+                jButton1.setText("Add Classroom");
+                jButton2.setText("Update Classroom");
+                jButton3.setText("Delete Classroom");
+                break;
+            case "Enrollments":
+                jButton1.setText("Add Enrollment");
+                jButton2.setText("Update Enrollment");
+                jButton3.setText("Delete Enrollment");
                 break;
             default:
                 break;
@@ -685,6 +748,52 @@ public class AdminView extends javax.swing.JFrame {
                     }
                 }
                 break;
+            case "Sessions":
+                model.setColumnIdentifiers(new String[]{"Session ID", "Module", "Session Name", "Start Time", "End Time", "Classroom", "Status"});
+                // Load session data
+                if (sessions != null) {
+                    for (Session session : sessions) {
+                        model.addRow(new Object[]{
+                            session.getSessionID(),
+                            session.getModule().getModuleName(),
+                            session.getSessionName(),
+                            session.getStartTime(),
+                            session.getEndTime(),
+                            session.getClassroom().getRoomName(),
+                            session.getStatus()
+                        });
+                    }
+                }
+                break;
+            case "Classrooms":
+                model.setColumnIdentifiers(new String[]{"Classroom ID", "Room Name", "Capacity", "Resources"});
+                // Load classroom data
+                if (classrooms != null) {
+                    for (Classroom classroom : classrooms) {
+                        model.addRow(new Object[]{
+                            classroom.getClassroomID(),
+                            classroom.getRoomName(),
+                            classroom.getCapacity(),
+                            classroom.getResources()
+                        });
+                    }
+                }
+                break;
+            case "Enrollments":
+                model.setColumnIdentifiers(new String[]{"Enrollment ID", "Student", "Module", "Grade", "Status"});
+                // Load enrollment data
+                if (enrollments != null) {
+                    for (Enrollment e : enrollments) {
+                        model.addRow(new Object[]{
+                            e.getEnrollmentID(),
+                            e.getStudent().getName() + " (ID: " + e.getStudent().getStudentID() + ")",
+                            e.getModule().getModuleName() + " (Year: " + e.getModule().getModuleYear() + ")",
+                            e.getGrade(),
+                            e.getEnrollmentStatus()
+                        });
+                    }
+                }
+                break;
             default:
                 break;
         }
@@ -740,6 +849,27 @@ public class AdminView extends javax.swing.JFrame {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 setSelectedSidebarItem(jLabel6);
                 updateMainPanel("Admins");
+            }
+        });
+        
+        jLabel7.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                setSelectedSidebarItem(jLabel7);
+                updateMainPanel("Sessions");
+            }
+        });
+        
+        jLabel8.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                setSelectedSidebarItem(jLabel8);
+                updateMainPanel("Classrooms");
+            }
+        });
+        
+        jLabel9.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                setSelectedSidebarItem(jLabel9);
+                updateMainPanel("Enrollments");
             }
         });
     }
@@ -922,8 +1052,7 @@ public class AdminView extends javax.swing.JFrame {
                 int confirm = JOptionPane.showConfirmDialog(this, 
                         "This student is enrolled in modules. Delete anyway?", 
                         "Warning", 
-                        JOptionPane.YES_NO_OPTION,
-                        JOptionPane.WARNING_MESSAGE);
+                        JOptionPane.YES_NO_OPTION);
                 
                 if (confirm != JOptionPane.YES_OPTION) {
                     return;
@@ -954,8 +1083,7 @@ public class AdminView extends javax.swing.JFrame {
                 int confirm = JOptionPane.showConfirmDialog(this, 
                         "This student has payment records. Delete anyway?", 
                         "Warning", 
-                        JOptionPane.YES_NO_OPTION,
-                        JOptionPane.WARNING_MESSAGE);
+                        JOptionPane.YES_NO_OPTION);
                 
                 if (confirm != JOptionPane.YES_OPTION) {
                     return;
@@ -1614,6 +1742,323 @@ public class AdminView extends javax.swing.JFrame {
         }
     }
 
+
+    /**
+     * Add a new session
+     */
+    private void addSession() {
+        if (modules.isEmpty()) {
+            JOptionPane.showMessageDialog(this, 
+                    "No modules available. Please create a module first.", 
+                    "Error", 
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        if (classrooms.isEmpty()) {
+            JOptionPane.showMessageDialog(this, 
+                    "No classrooms available. Please add a classroom first.", 
+                    "Error", 
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        // Create array of module names for selection
+        String[] moduleNames = new String[modules.size()];
+        for (int i = 0; i < modules.size(); i++) {
+            moduleNames[i] = modules.get(i).getModuleName();
+        }
+        
+        // Select module
+        String selectedModuleName = (String) JOptionPane.showInputDialog(this,
+                "Select module:",
+                "Module Selection",
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                moduleNames,
+                moduleNames[0]);
+        if (selectedModuleName == null) return;
+        
+        // Find the selected module
+        Module selectedModule = null;
+        for (Module module : modules) {
+            if (module.getModuleName().equals(selectedModuleName)) {
+                selectedModule = module;
+                break;
+            }
+        }
+        
+        if (selectedModule == null) return;
+        
+        // Create array of classroom names for selection
+        String[] classroomNames = new String[classrooms.size()];
+        for (int i = 0; i < classrooms.size(); i++) {
+            classroomNames[i] = classrooms.get(i).getRoomName() + " (Capacity: " + classrooms.get(i).getCapacity() + ")";
+        }
+        
+        // Select classroom
+        String selectedClassroomName = (String) JOptionPane.showInputDialog(this,
+                "Select classroom:",
+                "Classroom Selection",
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                classroomNames,
+                classroomNames[0]);
+        if (selectedClassroomName == null) return;
+        
+        // Extract classroom name from the selected string
+        String roomName = selectedClassroomName.substring(0, selectedClassroomName.indexOf(" ("));
+        
+        // Find the selected classroom
+        Classroom selectedClassroom = null;
+        for (Classroom classroom : classrooms) {
+            if (classroom.getRoomName().equals(roomName)) {
+                selectedClassroom = classroom;
+                break;
+            }
+        }
+        
+        if (selectedClassroom == null) return;
+        
+        // Get session details
+        String sessionName = JOptionPane.showInputDialog(this, "Enter session name:");
+        if (sessionName == null || sessionName.trim().isEmpty()) return;
+        
+        String startTime = JOptionPane.showInputDialog(this, "Enter start time (e.g., 09:00 AM):");
+        if (startTime == null || startTime.trim().isEmpty()) return;
+        
+        String endTime = JOptionPane.showInputDialog(this, "Enter end time (e.g., 11:00 AM):");
+        if (endTime == null || endTime.trim().isEmpty()) return;
+        
+        String[] statusOptions = {"Scheduled", "In Progress", "Completed", "Cancelled"};
+        String status = (String) JOptionPane.showInputDialog(this,
+                "Select session status:",
+                "Session Status",
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                statusOptions,
+                statusOptions[0]);
+        if (status == null) return;
+        
+        try {
+            // Create empty attendees list (students will be added later)
+            ArrayList<Student> attendees = new ArrayList<>();
+            
+            // Create new session object
+            Session session = new Session(selectedModule, sessionName, startTime, endTime, selectedClassroom, attendees, status);
+            
+            // Add to collection
+            sessions.add(session);
+            
+            // Save to file
+            FileDataStore.saveSessions(sessions);
+            
+            // Refresh table
+            updateMainPanel("Sessions");
+            
+            JOptionPane.showMessageDialog(this, 
+                    "Session added successfully!", 
+                    "Success", 
+                    JOptionPane.INFORMATION_MESSAGE);
+            
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, 
+                    "Error adding session: " + e.getMessage(), 
+                    "Error", 
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    /**
+     * Update an existing session
+     * @param selectedRow The selected row in the table
+     */
+    private void updateSession(int selectedRow) {
+        try {
+            // Get the selected session from the collection
+            int sessionId = (int) tblCourses.getValueAt(selectedRow, 0);
+            Session sessionToUpdate = null;
+            for (Session s : sessions) {
+                if (s.getSessionID() == sessionId) {
+                    sessionToUpdate = s;
+                    break;
+                }
+            }
+            
+            if (sessionToUpdate == null) {
+                JOptionPane.showMessageDialog(this, 
+                        "Session not found.", 
+                        "Error", 
+                        JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            
+            // Create array of module names for selection
+            String[] moduleNames = new String[modules.size()];
+            for (int i = 0; i < modules.size(); i++) {
+                moduleNames[i] = modules.get(i).getModuleName();
+            }
+            
+            // Current module name
+            String currentModuleName = sessionToUpdate.getModule().getModuleName();
+            
+            // Select module
+            String selectedModuleName = (String) JOptionPane.showInputDialog(this,
+                    "Select module:",
+                    "Module Selection",
+                    JOptionPane.QUESTION_MESSAGE,
+                    null,
+                    moduleNames,
+                    currentModuleName);
+            if (selectedModuleName == null) return;
+            
+            // Find the selected module
+            Module selectedModule = null;
+            for (Module module : modules) {
+                if (module.getModuleName().equals(selectedModuleName)) {
+                    selectedModule = module;
+                    break;
+                }
+            }
+            
+            if (selectedModule == null) return;
+            
+            // Create array of classroom names for selection
+            String[] classroomNames = new String[classrooms.size()];
+            for (int i = 0; i < classrooms.size(); i++) {
+                classroomNames[i] = classrooms.get(i).getRoomName() + " (Capacity: " + classrooms.get(i).getCapacity() + ")";
+            }
+            
+            // Current classroom name
+            String currentClassroomName = sessionToUpdate.getClassroom().getRoomName() + 
+                    " (Capacity: " + sessionToUpdate.getClassroom().getCapacity() + ")";
+            
+            // Select classroom
+            String selectedClassroomName = (String) JOptionPane.showInputDialog(this,
+                    "Select classroom:",
+                    "Classroom Selection",
+                    JOptionPane.QUESTION_MESSAGE,
+                    null,
+                    classroomNames,
+                    currentClassroomName);
+            if (selectedClassroomName == null) return;
+            
+            // Extract classroom name from the selected string
+            String roomName = selectedClassroomName.substring(0, selectedClassroomName.indexOf(" ("));
+            
+            // Find the selected classroom
+            Classroom selectedClassroom = null;
+            for (Classroom classroom : classrooms) {
+                if (classroom.getRoomName().equals(roomName)) {
+                    selectedClassroom = classroom;
+                    break;
+                }
+            }
+            
+            if (selectedClassroom == null) return;
+            
+            // Get updated session details
+            String sessionName = JOptionPane.showInputDialog(this, 
+                    "Enter session name:", 
+                    sessionToUpdate.getSessionName());
+            if (sessionName == null) return;
+            
+            String startTime = JOptionPane.showInputDialog(this, 
+                    "Enter start time (e.g., 09:00 AM):", 
+                    sessionToUpdate.getStartTime());
+            if (startTime == null) return;
+            
+            String endTime = JOptionPane.showInputDialog(this, 
+                    "Enter end time (e.g., 11:00 AM):", 
+                    sessionToUpdate.getEndTime());
+            if (endTime == null) return;
+            
+            String[] statusOptions = {"Scheduled", "In Progress", "Completed", "Cancelled"};
+            String status = (String) JOptionPane.showInputDialog(this,
+                    "Select session status:",
+                    "Session Status",
+                    JOptionPane.QUESTION_MESSAGE,
+                    null,
+                    statusOptions,
+                    sessionToUpdate.getStatus());
+            if (status == null) return;
+            
+            // Update session object
+            sessionToUpdate.setModule(selectedModule);
+            sessionToUpdate.setSessionName(sessionName);
+            sessionToUpdate.setStartTime(startTime);
+            sessionToUpdate.setEndTime(endTime);
+            sessionToUpdate.setClassroom(selectedClassroom);
+            sessionToUpdate.setStatus(status);
+            
+            // Save to file
+            FileDataStore.saveSessions(sessions);
+            
+            // Refresh table
+            updateMainPanel("Sessions");
+            
+            JOptionPane.showMessageDialog(this, 
+                    "Session updated successfully!", 
+                    "Success", 
+                    JOptionPane.INFORMATION_MESSAGE);
+            
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, 
+                    "Error updating session: " + e.getMessage(), 
+                    "Error", 
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    /**
+     * Delete a session
+     * @param selectedRow The selected row in the table
+     */
+    private void deleteSession(int selectedRow) {
+        try {
+            // Get the selected session from the collection
+            int sessionId = (int) tblCourses.getValueAt(selectedRow, 0);
+            Session sessionToDelete = null;
+            int indexToRemove = -1;
+            
+            for (int i = 0; i < sessions.size(); i++) {
+                if (sessions.get(i).getSessionID() == sessionId) {
+                    sessionToDelete = sessions.get(i);
+                    indexToRemove = i;
+                    break;
+                }
+            }
+            
+            if (sessionToDelete == null) {
+                JOptionPane.showMessageDialog(this, 
+                        "Session not found.", 
+                        "Error", 
+                        JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            
+            // Remove session
+            sessions.remove(indexToRemove);
+            
+            // Save to file
+            FileDataStore.saveSessions(sessions);
+            
+            // Refresh table
+            updateMainPanel("Sessions");
+            
+            JOptionPane.showMessageDialog(this, 
+                    "Session deleted successfully!", 
+                    "Success", 
+                    JOptionPane.INFORMATION_MESSAGE);
+            
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, 
+                    "Error deleting session: " + e.getMessage(), 
+                    "Error", 
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
     /**
      * Add a new assessment
      */
@@ -1821,12 +2266,12 @@ public class AdminView extends javax.swing.JFrame {
      */
     private void deleteAssessment(int selectedRow) {
         try {
-            // Get the selected assessment
+            // Get the selected assessment from the collection
             int assessmentId = (int) tblCourses.getValueAt(selectedRow, 0);
             Assessment assessmentToDelete = null;
             int indexToRemove = -1;
             
-            for (int i = 0; i < assessments.size(); i++) {
+            for (int i = 0; i <assessments.size(); i++) {
                 if (assessments.get(i).getAssessmentID() == assessmentId) {
                     assessmentToDelete = assessments.get(i);
                     indexToRemove = i;
@@ -2113,6 +2558,583 @@ public class AdminView extends javax.swing.JFrame {
                     JOptionPane.ERROR_MESSAGE);
         }
     }
+    
+    private void addClassroom() {
+    // Create input dialog for classroom information
+    String roomName = JOptionPane.showInputDialog(this, "Enter classroom name:");
+    if (roomName == null || roomName.trim().isEmpty()) return;
+    
+    String capacityStr = JOptionPane.showInputDialog(this, "Enter capacity:");
+    if (capacityStr == null || capacityStr.trim().isEmpty()) return;
+    
+    String resources = JOptionPane.showInputDialog(this, "Enter available resources (optional):");
+    
+    try {
+        int capacity = Integer.parseInt(capacityStr);
+        
+        // Create new classroom object
+        Classroom classroom = new Classroom(roomName, capacity);
+        if (resources != null && !resources.trim().isEmpty()) {
+            classroom.setResources(resources);
+        }
+        
+        // Add to collection and save to file
+        classroom.addClassroom(classrooms);
+        
+        // Refresh table
+        updateMainPanel("Classrooms");
+        
+        JOptionPane.showMessageDialog(this, 
+                "Classroom added successfully!", 
+                "Success", 
+                JOptionPane.INFORMATION_MESSAGE);
+        
+    } catch (NumberFormatException e) {
+        JOptionPane.showMessageDialog(this, 
+                "Invalid number format for capacity. Please enter a valid number.", 
+                "Input Error", 
+                JOptionPane.ERROR_MESSAGE);
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, 
+                "Error adding classroom: " + e.getMessage(), 
+                "Error", 
+                JOptionPane.ERROR_MESSAGE);
+    }
+}
+
+/**
+ * Update an existing classroom
+ * @param selectedRow The selected row in the table
+ */
+private void updateClassroom(int selectedRow) {
+    try {
+        // Get the selected classroom from the collection
+        int classroomId = (int) tblCourses.getValueAt(selectedRow, 0);
+        Classroom classroomToUpdate = null;
+        for (Classroom c : classrooms) {
+            if (c.getClassroomId() == classroomId) {
+                classroomToUpdate = c;
+                break;
+            }
+        }
+        
+        if (classroomToUpdate == null) {
+            JOptionPane.showMessageDialog(this, 
+                    "Classroom not found.", 
+                    "Error", 
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        // Show input dialogs with current values
+        String roomName = JOptionPane.showInputDialog(this, 
+                "Enter classroom name:", 
+                classroomToUpdate.getRoomName());
+        if (roomName == null) return;
+        
+        String capacityStr = JOptionPane.showInputDialog(this, 
+                "Enter capacity:", 
+                classroomToUpdate.getCapacity());
+        if (capacityStr == null) return;
+        
+        String resources = JOptionPane.showInputDialog(this, 
+                "Enter available resources (optional):", 
+                classroomToUpdate.getResources());
+        
+        int capacity = Integer.parseInt(capacityStr);
+        
+        // Update classroom object
+        classroomToUpdate.setRoomName(roomName);
+        classroomToUpdate.setCapacity(capacity);
+        if (resources != null) {
+            classroomToUpdate.setResources(resources);
+        }
+        
+        // Update in collection and save to file
+        classroomToUpdate.updateClassroom(classrooms);
+        
+        // Refresh table
+        updateMainPanel("Classrooms");
+        
+        JOptionPane.showMessageDialog(this, 
+                "Classroom updated successfully!", 
+                "Success", 
+                JOptionPane.INFORMATION_MESSAGE);
+        
+    } catch (NumberFormatException e) {
+        JOptionPane.showMessageDialog(this, 
+                "Invalid number format for capacity. Please enter a valid number.", 
+                "Input Error", 
+                JOptionPane.ERROR_MESSAGE);
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, 
+                "Error updating classroom: " + e.getMessage(), 
+                "Error", 
+                JOptionPane.ERROR_MESSAGE);
+    }
+}
+
+/**
+ * Delete a classroom
+ * @param selectedRow The selected row in the table
+ */
+private void deleteClassroom(int selectedRow) {
+    try {
+        // Get the selected classroom from the collection
+        int classroomId = (int) tblCourses.getValueAt(selectedRow, 0);
+        Classroom classroomToDelete = null;
+        
+        for (Classroom c : classrooms) {
+            if (c.getClassroomId() == classroomId) {
+                classroomToDelete = c;
+                break;
+            }
+        }
+        
+        if (classroomToDelete == null) {
+            JOptionPane.showMessageDialog(this, 
+                    "Classroom not found.", 
+                    "Error", 
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        // Check if any sessions are scheduled in this classroom
+        boolean hasScheduledSessions = false;
+        for (Session session : sessions) {
+            if (session.getClassroom().getClassroomId() == classroomId) {
+                hasScheduledSessions = true;
+                break;
+            }
+        }
+        
+        if (hasScheduledSessions) {
+            int confirm = JOptionPane.showConfirmDialog(this, 
+                    "This classroom has scheduled sessions. Delete anyway?", 
+                    "Warning", 
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.WARNING_MESSAGE);
+            
+            if (confirm != JOptionPane.YES_OPTION) {
+                return;
+            }
+            
+            // Remove related sessions
+            ArrayList<Session> sessionsToRemove = new ArrayList<>();
+            for (Session session : sessions) {
+                if (session.getClassroom().getClassroomId() == classroomId) {
+                    sessionsToRemove.add(session);
+                }
+            }
+            
+            sessions.removeAll(sessionsToRemove);
+            FileDataStore.saveSessions(sessions);
+        }
+        
+        // Delete from collection and save to file
+        classroomToDelete.deleteClassroom(classrooms);
+        
+        // Refresh table
+        updateMainPanel("Classrooms");
+        
+        JOptionPane.showMessageDialog(this, 
+                "Classroom deleted successfully!", 
+                "Success", 
+                JOptionPane.INFORMATION_MESSAGE);
+        
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, 
+                "Error deleting classroom: " + e.getMessage(), 
+                "Error", 
+                JOptionPane.ERROR_MESSAGE);
+    }
+}
+
+/**
+     * Add a new enrollment
+     */
+    private void addEnrollment() {
+        if (students.isEmpty()) {
+            JOptionPane.showMessageDialog(this, 
+                    "No students available. Please create a student first.", 
+                    "Error", 
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        if (modules.isEmpty()) {
+            JOptionPane.showMessageDialog(this, 
+                    "No modules available. Please create a module first.", 
+                    "Error", 
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        // Create array of student names for selection
+        String[] studentNames = new String[students.size()];
+        for (int i = 0; i < students.size(); i++) {
+            studentNames[i] = students.get(i).getName() + " (ID: " + students.get(i).getStudentID() + ")";
+        }
+        
+        // Select student
+        String selectedStudentName = (String) JOptionPane.showInputDialog(this,
+                "Select student:",
+                "Student Selection",
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                studentNames,
+                studentNames[0]);
+        if (selectedStudentName == null) return;
+        
+        // Parse student ID from the selected option
+        int selectedStudentId = Integer.parseInt(selectedStudentName.substring(
+                selectedStudentName.lastIndexOf("ID: ") + 4, 
+                selectedStudentName.lastIndexOf(")")
+        ));
+        
+        // Find the selected student
+        Student selectedStudent = null;
+        for (Student student : students) {
+            if (student.getStudentID() == selectedStudentId) {
+                selectedStudent = student;
+                break;
+            }
+        }
+        
+        if (selectedStudent == null) return;
+        
+        // Create array of module names for selection
+        String[] moduleNames = new String[modules.size()];
+        for (int i = 0; i < modules.size(); i++) {
+            moduleNames[i] = modules.get(i).getModuleName() + " (Year: " + modules.get(i).getModuleYear() + ")";
+        }
+        
+        // Select module
+        String selectedModuleName = (String) JOptionPane.showInputDialog(this,
+                "Select module:",
+                "Module Selection",
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                moduleNames,
+                moduleNames[0]);
+        if (selectedModuleName == null) return;
+        
+        // Extract module name from the selected string
+        String moduleName = selectedModuleName.substring(0, selectedModuleName.indexOf(" (Year:"));
+        
+        // Find the selected module
+        Module selectedModule = null;
+        for (Module module : modules) {
+            if (module.getModuleName().equals(moduleName)) {
+                selectedModule = module;
+                break;
+            }
+        }
+        
+        if (selectedModule == null) return;
+        
+        // Check if module year and student year match
+        if (selectedStudent.getYear() != selectedModule.getModuleYear()) {
+            int confirm = JOptionPane.showConfirmDialog(this, 
+                    "Student year (" + selectedStudent.getYear() + ") does not match module year (" 
+                            + selectedModule.getModuleYear() + "). Enroll anyway?", 
+                    "Year Mismatch", 
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.WARNING_MESSAGE);
+            
+            if (confirm != JOptionPane.YES_OPTION) {
+                return;
+            }
+        }
+        
+        // Check if module is at capacity
+        int enrolledCount = 0;
+        for (Enrollment e : enrollments) {
+            if (e.getModule().getModuleID() == selectedModule.getModuleID() && 
+                e.getEnrollmentStatus() == Status.ACTIVE) {
+                enrolledCount++;
+            }
+        }
+        
+        if (enrolledCount >= selectedModule.getMaxCapacity()) {
+            int confirm = JOptionPane.showConfirmDialog(this, 
+                    "This module is at maximum capacity. Enroll anyway?", 
+                    "Module Full", 
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.WARNING_MESSAGE);
+            
+            if (confirm != JOptionPane.YES_OPTION) {
+                return;
+            }
+        }
+        
+        // Check if student is already enrolled in this module
+        for (Enrollment e : enrollments) {
+            if (e.getStudent().getStudentID() == selectedStudent.getStudentID() && 
+                e.getModule().getModuleID() == selectedModule.getModuleID() &&
+                e.getEnrollmentStatus() == Status.ACTIVE) {
+                
+                JOptionPane.showMessageDialog(this, 
+                    "This student is already enrolled in this module.", 
+                    "Duplicate Enrollment", 
+                    JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+        }
+        
+        try {
+            // Create new enrollment object with ACTIVE status
+            Enrollment newEnrollment = new Enrollment(selectedStudent, selectedModule, Status.ACTIVE);
+            
+            // Add to collection
+            newEnrollment.addEnrollment(enrollments);
+            
+            // Refresh table
+            updateMainPanel("Enrollments");
+            
+            JOptionPane.showMessageDialog(this, 
+                    "Enrollment added successfully!", 
+                    "Success", 
+                    JOptionPane.INFORMATION_MESSAGE);
+            
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, 
+                    "Error adding enrollment: " + e.getMessage(), 
+                    "Error", 
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    /**
+     * Update an existing enrollment
+     * @param selectedRow The selected row in the table
+     */
+    private void updateEnrollment(int selectedRow) {
+        try {
+            // Get the selected enrollment from the collection
+            int enrollmentId = (int) tblCourses.getValueAt(selectedRow, 0);
+            Enrollment enrollmentToUpdate = null;
+            
+            for (Enrollment e : enrollments) {
+                if (e.getEnrollmentID() == enrollmentId) {
+                    enrollmentToUpdate = e;
+                    break;
+                }
+            }
+            
+            if (enrollmentToUpdate == null) {
+                JOptionPane.showMessageDialog(this, 
+                        "Enrollment not found.", 
+                        "Error", 
+                        JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            
+            // Create array of student names for selection
+            String[] studentNames = new String[students.size()];
+            for (int i = 0; i < students.size(); i++) {
+                studentNames[i] = students.get(i).getName() + " (ID: " + students.get(i).getStudentID() + ")";
+            }
+            
+            // Current student name with ID
+            String currentStudentName = enrollmentToUpdate.getStudent().getName() + 
+                    " (ID: " + enrollmentToUpdate.getStudent().getStudentID() + ")";
+            
+            // Select student
+            String selectedStudentName = (String) JOptionPane.showInputDialog(this,
+                    "Select student:",
+                    "Student Selection",
+                    JOptionPane.QUESTION_MESSAGE,
+                    null,
+                    studentNames,
+                    currentStudentName);
+            if (selectedStudentName == null) return;
+            
+            // Parse student ID from the selected option
+            int selectedStudentId = Integer.parseInt(selectedStudentName.substring(
+                    selectedStudentName.lastIndexOf("ID: ") + 4, 
+                    selectedStudentName.lastIndexOf(")")
+            ));
+            
+            // Find the selected student
+            Student selectedStudent = null;
+            for (Student student : students) {
+                if (student.getStudentID() == selectedStudentId) {
+                    selectedStudent = student;
+                    break;
+                }
+            }
+            
+            if (selectedStudent == null) return;
+            
+            // Create array of module names for selection
+            String[] moduleNames = new String[modules.size()];
+            for (int i = 0; i < modules.size(); i++) {
+                moduleNames[i] = modules.get(i).getModuleName() + " (Year: " + modules.get(i).getModuleYear() + ")";
+            }
+            
+            // Current module name with year
+            String currentModuleName = enrollmentToUpdate.getModule().getModuleName() + 
+                    " (Year: " + enrollmentToUpdate.getModule().getModuleYear() + ")";
+            
+            // Select module
+            String selectedModuleName = (String) JOptionPane.showInputDialog(this,
+                    "Select module:",
+                    "Module Selection",
+                    JOptionPane.QUESTION_MESSAGE,
+                    null,
+                    moduleNames,
+                    currentModuleName);
+            if (selectedModuleName == null) return;
+            
+            // Extract module name from the selected string
+            String moduleName = selectedModuleName.substring(0, selectedModuleName.indexOf(" (Year:"));
+            
+            // Find the selected module
+            Module selectedModule = null;
+            for (Module module : modules) {
+                if (module.getModuleName().equals(moduleName)) {
+                    selectedModule = module;
+                    break;
+                }
+            }
+            
+            if (selectedModule == null) return;
+            
+            // Get grade
+            String gradeStr = JOptionPane.showInputDialog(this, 
+                    "Enter grade (0-100):", 
+                    enrollmentToUpdate.getGrade());
+            if (gradeStr == null) return;
+            
+            // Status selection
+            String[] statusOptions = {"ACTIVE", "CANCELLED"};
+            String currentStatus = enrollmentToUpdate.getEnrollmentStatus().toString();
+            
+            String statusStr = (String) JOptionPane.showInputDialog(this,
+                    "Select enrollment status:",
+                    "Status Selection",
+                    JOptionPane.QUESTION_MESSAGE,
+                    null,
+                    statusOptions,
+                    currentStatus);
+            if (statusStr == null) return;
+            
+            // Parse grade and status
+            float grade = Float.parseFloat(gradeStr);
+            Status status = Status.valueOf(statusStr);
+            
+            // If changing student or module, check if this creates a duplicate
+            if ((selectedStudent.getStudentID() != enrollmentToUpdate.getStudent().getStudentID() ||
+                 selectedModule.getModuleID() != enrollmentToUpdate.getModule().getModuleID()) &&
+                status == Status.ACTIVE) {
+                
+                // Check for existing active enrollment
+                for (Enrollment e : enrollments) {
+                    if (e.getEnrollmentID() != enrollmentToUpdate.getEnrollmentID() &&
+                        e.getStudent().getStudentID() == selectedStudent.getStudentID() && 
+                        e.getModule().getModuleID() == selectedModule.getModuleID() &&
+                        e.getEnrollmentStatus() == Status.ACTIVE) {
+                        
+                        JOptionPane.showMessageDialog(this, 
+                            "This student is already enrolled in this module.", 
+                            "Duplicate Enrollment", 
+                            JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+                }
+            }
+            
+            // Update enrollment object
+            enrollmentToUpdate.setStudent(selectedStudent);
+            enrollmentToUpdate.setModule(selectedModule);
+            enrollmentToUpdate.setGrade(grade);
+            
+            // Update status
+            if (status == Status.ACTIVE) {
+                enrollmentToUpdate.activate();
+            } else {
+                enrollmentToUpdate.cancel();
+            }
+            
+            // Save changes
+            enrollmentToUpdate.updateEnrollment(enrollments);
+            
+            // Refresh table
+            updateMainPanel("Enrollments");
+            
+            JOptionPane.showMessageDialog(this, 
+                    "Enrollment updated successfully!", 
+                    "Success", 
+                    JOptionPane.INFORMATION_MESSAGE);
+            
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, 
+                    "Invalid number format. Please enter valid numbers.", 
+                    "Input Error", 
+                    JOptionPane.ERROR_MESSAGE);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, 
+                    "Error updating enrollment: " + e.getMessage(), 
+                    "Error", 
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    /**
+     * Delete an enrollment
+     * @param selectedRow The selected row in the table
+     */
+    private void deleteEnrollment(int selectedRow) {
+        try {
+            // Get the selected enrollment from the collection
+            int enrollmentId = (int) tblCourses.getValueAt(selectedRow, 0);
+            Enrollment enrollmentToDelete = null;
+            
+            for (Enrollment e : enrollments) {
+                if (e.getEnrollmentID() == enrollmentId) {
+                    enrollmentToDelete = e;
+                    break;
+                }
+            }
+            
+            if (enrollmentToDelete == null) {
+                JOptionPane.showMessageDialog(this, 
+                        "Enrollment not found.", 
+                        "Error", 
+                        JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            
+            // Confirm deletion
+            int confirm = JOptionPane.showConfirmDialog(this, 
+                    "Are you sure you want to delete this enrollment?", 
+                    "Confirm Delete", 
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.WARNING_MESSAGE);
+            
+            if (confirm != JOptionPane.YES_OPTION) {
+                return;
+            }
+            
+            // Delete enrollment
+            enrollmentToDelete.removeEnrollment(enrollments);
+            
+            // Refresh table
+            updateMainPanel("Enrollments");
+            
+            JOptionPane.showMessageDialog(this, 
+                    "Enrollment deleted successfully!", 
+                    "Success", 
+                    JOptionPane.INFORMATION_MESSAGE);
+            
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, 
+                    "Error deleting enrollment: " + e.getMessage(), 
+                    "Error", 
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    }
 
     /**
      * @param args the command line arguments
@@ -2160,6 +3182,9 @@ public class AdminView extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;

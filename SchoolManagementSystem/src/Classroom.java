@@ -5,11 +5,13 @@ public class Classroom {
     private int classroomId;
     private String roomName;
     private int capacity;
+    private String resources;
     
     public Classroom(String roomName, int capacity) {
         this.roomName = roomName;
         this.capacity = capacity;
         this.classroomId = classroomCounter++;
+        this.resources = "";
         // This constructor will be used to create a new classroom that's not in the database yet
     }
     
@@ -19,6 +21,11 @@ public class Classroom {
     }
 
     public int getClassroomId() {
+        return classroomId;
+    }
+    
+    // Added for backwards compatibility with existing code
+    public int getClassroomID() {
         return classroomId;
     }
 
@@ -36,6 +43,14 @@ public class Classroom {
 
     public int getCapacity() {
         return capacity;
+    }
+    
+    public void setResources(String resources) {
+        this.resources = resources;
+    }
+    
+    public String getResources() {
+        return resources;
     }
     
     public void updateClassroom(ArrayList<Classroom> classrooms) {
