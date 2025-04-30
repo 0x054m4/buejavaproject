@@ -3,6 +3,8 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 
+import javax.swing.JFrame;
+
 /**
  *
  * @author Omayr
@@ -12,11 +14,23 @@ public class AdminView extends javax.swing.JFrame {
     /**
      * Creates new form AdminView
      */
+    private javax.swing.border.TitledBorder panelBorder; // Store the border
+    private javax.swing.JLabel selectedLabel; // Track the currently selected sidebar item
+    private final java.awt.Color HOVER_COLOR = new java.awt.Color(204, 229, 255);
+    private final java.awt.Color SELECTED_COLOR = new java.awt.Color(153, 204, 255);
+    private final java.awt.Color DEFAULT_COLOR = new java.awt.Color(230, 230, 230);
+    
     public AdminView() {
         initComponents();
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        // Store the panel border for later updates
+        panelBorder = (javax.swing.border.TitledBorder) jPanel3.getBorder();
+        // Set up sidebar effects
+        setupSidebarEffects();
+        // Set Students as default selected item
+        setSelectedSidebarItem(jLabel1);
     }
-
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -212,7 +226,7 @@ public class AdminView extends javax.swing.JFrame {
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
-                .addGap(139, 139, 139)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jButton1)
                 .addGap(18, 18, 18)
                 .addComponent(jButton2)
@@ -275,94 +289,188 @@ public class AdminView extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton3ActionPerformed
 
-    private void setupSidebarListeners() {
-        jLabel1.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                updateMainPanel("Students");
-            }
-        });
+    private void setupSidebarEffects() {
+        // Make sidebar labels opaque so background colors will show
+        javax.swing.JLabel[] labels = {jLabel1, jLabel2, jLabel3, jLabel4, jLabel5, jLabel6};
+        
+        // Setup the sidebar item appearance
+        for (javax.swing.JLabel label : labels) {
+            // Make label opaque to show background color
+            label.setOpaque(true);
+            
+            // Add padding to labels for better appearance
+            label.setBorder(javax.swing.BorderFactory.createEmptyBorder(8, 15, 8, 15));
+            
+            // Add hover effect with mouse listeners
+            label.addMouseListener(new java.awt.event.MouseAdapter() {
+                public void mouseEntered(java.awt.event.MouseEvent evt) {
+                    if (label != selectedLabel) {
+                        label.setBackground(HOVER_COLOR);
+                        label.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+                    }
+                }
 
-        jLabel2.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                updateMainPanel("Teachers");
-            }
-        });
-
-        jLabel3.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                updateMainPanel("Modules");
-            }
-        });
-
-        jLabel4.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                updateMainPanel("Assessments");
-            }
-        });
-
-        jLabel5.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                updateMainPanel("Payments");
-            }
-        });
-
-        jLabel6.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                updateMainPanel("Admins");
-            }
-        });
-    }
-
-    private void updateMainPanel(String category) {
-        switch (category) {
-            case "Students":
-                updateTable(new String[]{"Student ID", "Name", "Email", "Year", "Annual Fee"});
-                updateButtons("Add Student", "Update Student", "Delete Student");
-                break;
-            case "Teachers":
-                updateTable(new String[]{"Teacher ID", "Name", "Email", "Department", "Salary"});
-                updateButtons("Add Teacher", "Update Teacher", "Delete Teacher");
-                break;
-            case "Modules":
-                updateTable(new String[]{"Module ID", "Name", "Credits", "Instructor"});
-                updateButtons("Add Module", "Update Module", "Delete Module");
-                break;
-            case "Assessments":
-                updateTable(new String[]{"Assessment ID", "Name", "Type", "Module", "Date"});
-                updateButtons("Add Assessment", "Update Assessment", "Delete Assessment");
-                break;
-            case "Payments":
-                updateTable(new String[]{"Payment ID", "Student ID", "Amount", "Date", "Status"});
-                updateButtons("Add Payment", "Update Payment", "Delete Payment");
-                break;
-            case "Admins":
-                updateTable(new String[]{"Admin ID", "Name", "Email", "Role"});
-                updateButtons("Add Admin", "Update Admin", "Delete Admin");
-                break;
+                public void mouseExited(java.awt.event.MouseEvent evt) {
+                    if (label != selectedLabel) {
+                        label.setBackground(DEFAULT_COLOR);
+                    }
+                }
+                
+                public void mouseClicked(java.awt.event.MouseEvent evt) {
+                    setSelectedSidebarItem(label);
+                    updateMainPanel(label.getText());
+                }
+            });
+        }
+        
+        // Set up initial state
+        for (javax.swing.JLabel label : labels) {
+            label.setBackground(DEFAULT_COLOR);
         }
     }
 
-    private void updateTable(String[] columnNames) {
-        javax.swing.table.DefaultTableModel model = new javax.swing.table.DefaultTableModel(new Object[][]{}, columnNames) {
-            boolean[] canEdit = new boolean[columnNames.length];
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit[columnIndex];
-            }
-        };
-        tblCourses.setModel(model);
+    private void setSelectedSidebarItem(javax.swing.JLabel label) {
+        if (selectedLabel != null) {
+            selectedLabel.setBackground(DEFAULT_COLOR);
+            selectedLabel.setForeground(java.awt.Color.BLACK);
+        }
+        selectedLabel = label;
+        selectedLabel.setBackground(SELECTED_COLOR);
+        selectedLabel.setForeground(new java.awt.Color(0, 51, 153));
+        
+        // Update panel title
+        panelBorder.setTitle(label.getText());
+        jPanel3.repaint();
+        
+        // Update button labels based on selected item
+        updateButtonLabels(label.getText());
     }
 
-    private void updateButtons(String addText, String updateText, String deleteText) {
-        jButton1.setText(addText);
-        jButton2.setText(updateText);
-        jButton3.setText(deleteText);
+    private void updateButtonLabels(String category) {
+        // Update action button labels based on selected sidebar item
+        switch (category) {
+            case "Students":
+                jButton1.setText("Add Student");
+                jButton2.setText("Update Student");
+                jButton3.setText("Delete Student");
+                break;
+            case "Teachers":
+                jButton1.setText("Add Teacher");
+                jButton2.setText("Update Teacher");
+                jButton3.setText("Delete Teacher");
+                break;
+            case "Modules":
+                jButton1.setText("Add Module");
+                jButton2.setText("Update Module");
+                jButton3.setText("Delete Module");
+                break;
+            case "Assessments":
+                jButton1.setText("Add Assessment");
+                jButton2.setText("Update Assessment");
+                jButton3.setText("Delete Assessment");
+                break;
+            case "Payments":
+                jButton1.setText("Add Payment");
+                jButton2.setText("Update Payment");
+                jButton3.setText("Delete Payment");
+                break;
+            case "Admins":
+                jButton1.setText("Add Admin");
+                jButton2.setText("Update Admin");
+                jButton3.setText("Delete Admin");
+                break;
+            default:
+                break;
+        }
+    }
+    
+    private void updateMainPanel(String category) {
+        // Update table columns and load appropriate data based on selected category
+        javax.swing.table.DefaultTableModel model = (javax.swing.table.DefaultTableModel) tblCourses.getModel();
+        model.setRowCount(0); // Clear existing data
+        
+        switch (category) {
+            case "Students":
+                model.setColumnIdentifiers(new String[]{"Student ID", "Name", "Email", "Year", "Annual Fee"});
+                // Here you would load student data from your database or data source
+                break;
+            case "Teachers":
+                model.setColumnIdentifiers(new String[]{"Teacher ID", "Name", "Email", "Department", "Salary"});
+                // Load teacher data
+                break;
+            case "Modules":
+                model.setColumnIdentifiers(new String[]{"Module ID", "Module Name", "Credits", "Teacher", "Year"});
+                // Load module data
+                break;
+            case "Assessments":
+                model.setColumnIdentifiers(new String[]{"Assessment ID", "Module", "Type", "Weight", "Deadline"});
+                // Load assessment data
+                break;
+            case "Payments":
+                model.setColumnIdentifiers(new String[]{"Payment ID", "Student", "Amount", "Date", "Status"});
+                // Load payment data
+                break;
+            case "Admins":
+                model.setColumnIdentifiers(new String[]{"Admin ID", "Name", "Email", "Role", "Status"});
+                // Load admin data
+                break;
+            default:
+                break;
+        }
+        
+        // Refresh UI
+        jPanel3.repaint();
     }
 
     @Override
     public void setVisible(boolean b) {
         super.setVisible(b);
         setupSidebarListeners();
+    }
+
+    private void setupSidebarListeners() {
+        // Add click listeners for sidebar navigation
+        jLabel1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                setSelectedSidebarItem(jLabel1);
+                updateMainPanel("Students");
+            }
+        });
+        
+        jLabel2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                setSelectedSidebarItem(jLabel2);
+                updateMainPanel("Teachers");
+            }
+        });
+        
+        jLabel3.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                setSelectedSidebarItem(jLabel3);
+                updateMainPanel("Modules");
+            }
+        });
+        
+        jLabel4.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                setSelectedSidebarItem(jLabel4);
+                updateMainPanel("Assessments");
+            }
+        });
+        
+        jLabel5.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                setSelectedSidebarItem(jLabel5);
+                updateMainPanel("Payments");
+            }
+        });
+        
+        jLabel6.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                setSelectedSidebarItem(jLabel6);
+                updateMainPanel("Admins");
+            }
+        });
     }
 
     /**
