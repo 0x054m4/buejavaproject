@@ -274,6 +274,96 @@ public class AdminView extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton3ActionPerformed
 
+    private void setupSidebarListeners() {
+        jLabel1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                updateMainPanel("Students");
+            }
+        });
+
+        jLabel2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                updateMainPanel("Teachers");
+            }
+        });
+
+        jLabel3.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                updateMainPanel("Modules");
+            }
+        });
+
+        jLabel4.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                updateMainPanel("Assessments");
+            }
+        });
+
+        jLabel5.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                updateMainPanel("Payments");
+            }
+        });
+
+        jLabel6.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                updateMainPanel("Admins");
+            }
+        });
+    }
+
+    private void updateMainPanel(String category) {
+        switch (category) {
+            case "Students":
+                updateTable(new String[]{"Student ID", "Name", "Email", "Year", "Annual Fee"});
+                updateButtons("Add Student", "Update Student", "Delete Student");
+                break;
+            case "Teachers":
+                updateTable(new String[]{"Teacher ID", "Name", "Email", "Department", "Salary"});
+                updateButtons("Add Teacher", "Update Teacher", "Delete Teacher");
+                break;
+            case "Modules":
+                updateTable(new String[]{"Module ID", "Name", "Credits", "Instructor"});
+                updateButtons("Add Module", "Update Module", "Delete Module");
+                break;
+            case "Assessments":
+                updateTable(new String[]{"Assessment ID", "Name", "Type", "Module", "Date"});
+                updateButtons("Add Assessment", "Update Assessment", "Delete Assessment");
+                break;
+            case "Payments":
+                updateTable(new String[]{"Payment ID", "Student ID", "Amount", "Date", "Status"});
+                updateButtons("Add Payment", "Update Payment", "Delete Payment");
+                break;
+            case "Admins":
+                updateTable(new String[]{"Admin ID", "Name", "Email", "Role"});
+                updateButtons("Add Admin", "Update Admin", "Delete Admin");
+                break;
+        }
+    }
+
+    private void updateTable(String[] columnNames) {
+        javax.swing.table.DefaultTableModel model = new javax.swing.table.DefaultTableModel(new Object[][]{}, columnNames) {
+            boolean[] canEdit = new boolean[columnNames.length];
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit[columnIndex];
+            }
+        };
+        tblCourses.setModel(model);
+    }
+
+    private void updateButtons(String addText, String updateText, String deleteText) {
+        jButton1.setText(addText);
+        jButton2.setText(updateText);
+        jButton3.setText(deleteText);
+    }
+
+    @Override
+    public void setVisible(boolean b) {
+        super.setVisible(b);
+        setupSidebarListeners();
+    }
+
     /**
      * @param args the command line arguments
      */
