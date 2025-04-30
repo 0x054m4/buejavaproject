@@ -239,6 +239,14 @@ public class StudentLogin extends javax.swing.JFrame {
             if (t == null) {
                 javax.swing.JOptionPane.showMessageDialog(this, "Invalid email or password");
             }
+            else {
+                // Proceed to teacher dashboard
+                ArrayList<Module> modules = null;
+                modules = t.getAssignedModules();
+                TeacherView teacherView = new TeacherView(t, modules);
+                teacherView.setVisible(true);
+                this.dispose(); // Close the login window
+            }
         } else if (role.equals("Admin")) {
             Admin a = adminLogin(email, password);
             if (a == null) {

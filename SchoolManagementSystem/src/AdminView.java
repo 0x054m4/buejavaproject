@@ -7,6 +7,15 @@
  import javax.swing.JOptionPane;
  import javax.swing.table.DefaultTableModel;
  import java.util.ArrayList;
+ import java.awt.BorderLayout;
+ import java.awt.FlowLayout;
+ import java.awt.event.ActionEvent;
+ import java.awt.event.ActionListener;
+ import javax.swing.JDialog;
+ import javax.swing.JPanel;
+ import javax.swing.JTable;
+ import javax.swing.JScrollPane;
+ import javax.swing.JButton;
  
  /**
   *
@@ -54,6 +63,9 @@
          
          // Set up button action listeners
          setupButtonListeners();
+         
+         // Set up right-click context menu for teacher management
+         setupTeacherContextMenu();
      }
      
      /**
@@ -354,6 +366,7 @@
          
          jLabel9.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
          jLabel9.setText("Enrollments");
+         // SA
  
          javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
          jPanel5.setLayout(jPanel5Layout);
@@ -821,6 +834,9 @@
              public void mouseClicked(java.awt.event.MouseEvent evt) {
                  setSelectedSidebarItem(jLabel2);
                  updateMainPanel("Teachers");
+                 
+                 // Add special buttons for teacher module management
+                 AdminView.this.addTeacherModuleManagementButtons();
              }
          });
          
@@ -1741,7 +1757,364 @@
                      JOptionPane.ERROR_MESSAGE);
          }
      }
- 
+     
+     /**
+      * Add special buttons for teacher module management
+      */
+     private void addTeacherModuleManagementButtons() {
+         // Create a panel for special teacher management buttons
+         JPanel teacherManagementPanel = new JPanel();
+         teacherManagementPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+         
+         // Create assign module button
+         JButton assignModuleBtn = new JButton("Assign Module");
+         assignModuleBtn.addActionListener(new ActionListener() {
+             @Override
+             public void actionPerformed(ActionEvent e) {
+                 assignModuleToTeacher();
+             }
+         });
+         
+         // Create manage modules button
+         JButton manageModulesBtn = new JButton("Manage Modules");
+         manageModulesBtn.addActionListener(new ActionListener() {
+             @Override
+             public void actionPerformed(ActionEvent e) {
+                 manageTeacherModules();
+             }
+         });
+         
+         // Add buttons to panel
+         teacherManagementPanel.add(assignModuleBtn);
+         teacherManagementPanel.add(manageModulesBtn);
+         
+         // Add panel to the bottom of the main panel
+         // This is a temporary solution that adds buttons directly to the UI
+         // In a more complete implementation, we would restructure the UI to have
+         // a dedicated area for these special buttons
+         
+         // For now, we'll just show a dialog telling the admin about these functions
+         JOptionPane.showMessageDialog(this,
+                 "Use the 'Assign Module' and 'Manage Modules' options from the right-click menu",
+                 "Teacher Module Management",
+                 JOptionPane.INFORMATION_MESSAGE);
+     }
+     
+     /**
+      * Assign a module to a teacher
+      */
+     private void assignModuleToTeacher() {
+         if (teachers.isEmpty()) {
+             JOptionPane.showMessageDialog(this, 
+                     "No teachers available. Please add a teacher first.", 
+                     "Error", 
+                     JOptionPane.ERROR_MESSAGE);
+             return;
+         }
+         
+         if (modules.isEmpty()) {
+             JOptionPane.showMessageDialog(this, 
+                     "No modules available. Please add a module first.", 
+                     "Error", 
+                     JOptionPane.ERROR_MESSAGE);
+             return;
+         }
+         
+         // Create array of teacher names for selection
+         String[] teacherNames = new String[teachers.size()];
+         for (int i = 0; i < teachers.size(); i++) {
+             Teacher t = teachers.get(i);
+             teacherNames[i] = t.getName() + " (ID: " + t.getStaffId() + ")";
+         }
+         
+         // Select teacher
+         String selectedTeacherName = (String) JOptionPane.showInputDialog(this,
+                 "Select teacher:",
+                 "Teacher Selection",
+                 JOptionPane.QUESTION_MESSAGE,
+                 null,
+                 teacherNames,
+                 teacherNames[0]);
+         if (selectedTeacherName == null) return;
+         
+         // Parse teacher ID from the selected option
+         int selectedTeacherId = Integer.parseInt(selectedTeacherName.substring(
+                 selectedTeacherName.lastIndexOf("ID: ") + 4, 
+                 selectedTeacherName.lastIndexOf(")")
+         ));
+         
+         // Find the selected teacher
+         Teacher selectedTeacher = null;
+         for (Teacher teacher : teachers) {
+             if (teacher.getStaffId() == selectedTeacherId) {
+                 selectedTeacher = teacher;
+                 break;
+             }
+         }
+         
+         if (selectedTeacher == null) {
+             JOptionPane.showMessageDialog(this, 
+                     "Teacher not found.", 
+                     "Error", 
+                     JOptionPane.ERROR_MESSAGE);
+             return;
+         }
+         
+         // Create array of module names for selection
+         String[] moduleNames = new String[modules.size()];
+         for (int i = 0; i < modules.size(); i++) {
+             Module m = modules.get(i);
+             moduleNames[i] = m.getModuleName() + " (Year: " + m.getModuleYear() + ", ID: " + m.getModuleID() + ")";
+         }
+         
+         // Select module
+         String selectedModuleName = (String) JOptionPane.showInputDialog(this,
+                 "Select module to assign:",
+                 "Module Selection",
+                 JOptionPane.QUESTION_MESSAGE,
+                 null,
+                 moduleNames,
+                 moduleNames[0]);
+         if (selectedModuleName == null) return;
+         
+         // Extract module ID from the selected string
+         int moduleId = Integer.parseInt(selectedModuleName.substring(
+                 selectedModuleName.lastIndexOf("ID: ") + 4, 
+                 selectedModuleName.lastIndexOf(")")
+         ));
+         
+         // Find the selected module
+         Module selectedModule = null;
+         for (Module module : modules) {
+             if (module.getModuleID() == moduleId) {
+                 selectedModule = module;
+                 break;
+             }
+         }
+         
+         if (selectedModule == null) {
+             JOptionPane.showMessageDialog(this, 
+                     "Module not found.", 
+                     "Error", 
+                     JOptionPane.ERROR_MESSAGE);
+             return;
+         }
+         
+         // Check if module is already assigned to this teacher
+         boolean alreadyAssigned = false;
+         ArrayList<Module> teacherModules = selectedTeacher.getAssignedModules();
+         if (teacherModules != null) {
+             for (Module m : teacherModules) {
+                 if (m.getModuleID() == selectedModule.getModuleID()) {
+                     alreadyAssigned = true;
+                     break;
+                 }
+             }
+         }
+         
+         if (alreadyAssigned) {
+             JOptionPane.showMessageDialog(this, 
+                     "This module is already assigned to this teacher.", 
+                     "Module Already Assigned", 
+                     JOptionPane.WARNING_MESSAGE);
+             return;
+         }
+         
+         try {
+             // Assign module to teacher
+             if (teacherModules == null) {
+                 teacherModules = new ArrayList<>();
+                 selectedTeacher.setAssignedModules(teacherModules);
+             }
+             
+             teacherModules.add(selectedModule);
+             
+             // Save teacher data to file
+             FileDataStore.saveTeachers(teachers);
+             
+             JOptionPane.showMessageDialog(this, 
+                     "Module assigned successfully to teacher.", 
+                     "Success", 
+                     JOptionPane.INFORMATION_MESSAGE);
+             
+         } catch (Exception e) {
+             JOptionPane.showMessageDialog(this, 
+                     "Error assigning module: " + e.getMessage(), 
+                     "Error", 
+                     JOptionPane.ERROR_MESSAGE);
+         }
+     }
+     
+     /**
+      * View and manage module assignments for a teacher
+      */
+     private void manageTeacherModules() {
+         if (teachers.isEmpty()) {
+             JOptionPane.showMessageDialog(this, 
+                     "No teachers available.", 
+                     "Error", 
+                     JOptionPane.ERROR_MESSAGE);
+             return;
+         }
+         
+         // Create array of teacher names for selection
+         String[] teacherNames = new String[teachers.size()];
+         for (int i = 0; i < teachers.size(); i++) {
+             Teacher t = teachers.get(i);
+             teacherNames[i] = t.getName() + " (ID: " + t.getStaffId() + ")";
+         }
+         
+         // Select teacher
+         String selectedTeacherName = (String) JOptionPane.showInputDialog(this,
+                 "Select teacher:",
+                 "Teacher Selection",
+                 JOptionPane.QUESTION_MESSAGE,
+                 null,
+                 teacherNames,
+                 teacherNames[0]);
+         if (selectedTeacherName == null) return;
+         
+         // Parse teacher ID from the selected option
+         int selectedTeacherId = Integer.parseInt(selectedTeacherName.substring(
+                 selectedTeacherName.lastIndexOf("ID: ") + 4, 
+                 selectedTeacherName.lastIndexOf(")")
+         ));
+         
+         // Find the selected teacher
+         Teacher selectedTeacher = null;
+         for (Teacher teacher : teachers) {
+             if (teacher.getStaffId() == selectedTeacherId) {
+                 selectedTeacher = teacher;
+                 break;
+             }
+         }
+         
+         if (selectedTeacher == null) return;
+         
+         // Get assigned modules
+         ArrayList<Module> assignedModules = selectedTeacher.getAssignedModules();
+         
+         if (assignedModules == null || assignedModules.isEmpty()) {
+             JOptionPane.showMessageDialog(this, 
+                     "This teacher has no assigned modules.", 
+                     "No Modules", 
+                     JOptionPane.INFORMATION_MESSAGE);
+             return;
+         }
+         
+         // Create dialog to display assigned modules
+         JDialog moduleDialog = new JDialog(this, "Modules for " + selectedTeacher.getName(), true);
+         moduleDialog.setLayout(new BorderLayout());
+         
+         // Create table model for modules
+         DefaultTableModel moduleTableModel = new DefaultTableModel(
+                 new Object[]{"Module ID", "Module Name", "Year", "Capacity"}, 0) {
+             @Override
+             public boolean isCellEditable(int row, int column) {
+                 return false;
+             }
+         };
+         
+         // Add modules to table
+         for (Module module : assignedModules) {
+             moduleTableModel.addRow(new Object[]{
+                 module.getModuleID(),
+                 module.getModuleName(),
+                 module.getModuleYear(),
+                 module.getMaxCapacity()
+             });
+         }
+         
+         // Create table with the model
+         JTable moduleTable = new JTable(moduleTableModel);
+         moduleTable.getTableHeader().setReorderingAllowed(false);
+         
+         // Add table to a scroll pane
+         JScrollPane scrollPane = new JScrollPane(moduleTable);
+         moduleDialog.add(scrollPane, BorderLayout.CENTER);
+         
+         // Create button panel
+         JPanel buttonPanel = new JPanel();
+         
+         // Add remove button
+         JButton removeButton = new JButton("Remove Module");
+         removeButton.addActionListener(new ActionListener() {
+             @Override
+             public void actionPerformed(ActionEvent e) {
+                 int selectedRow = moduleTable.getSelectedRow();
+                 if (selectedRow == -1) {
+                     JOptionPane.showMessageDialog(moduleDialog, 
+                             "Please select a module to remove.", 
+                             "No Selection", 
+                             JOptionPane.WARNING_MESSAGE);
+                     return;
+                 }
+                 
+                 int moduleId = (int) moduleTable.getValueAt(selectedRow, 0);
+                 
+                 // Find module to remove
+                 Module moduleToRemove = null;
+                 for (Module module : assignedModules) {
+                     if (module.getModuleID() == moduleId) {
+                         moduleToRemove = module;
+                         break;
+                     }
+                 }
+                 
+                 if (moduleToRemove != null) {
+                     // Confirm removal
+                     int confirm = JOptionPane.showConfirmDialog(moduleDialog, 
+                             "Are you sure you want to remove this module from the teacher?", 
+                             "Confirm Remove", 
+                             JOptionPane.YES_NO_OPTION);
+                     
+                     if (confirm == JOptionPane.YES_OPTION) {
+                         // Remove module from teacher
+                         assignedModules.remove(moduleToRemove);
+                         
+                         // Save teacher data
+                         try {
+                             FileDataStore.saveTeachers(teachers);
+                             
+                             // Update table
+                             moduleTableModel.removeRow(selectedRow);
+                             
+                             if (assignedModules.isEmpty()) {
+                                 JOptionPane.showMessageDialog(moduleDialog, 
+                                         "Teacher has no more assigned modules.", 
+                                         "No Modules", 
+                                         JOptionPane.INFORMATION_MESSAGE);
+                                 moduleDialog.dispose();
+                             }
+                         } catch (Exception ex) {
+                             JOptionPane.showMessageDialog(moduleDialog, 
+                                     "Error removing module: " + ex.getMessage(), 
+                                     "Error", 
+                                     JOptionPane.ERROR_MESSAGE);
+                         }
+                     }
+                 }
+             }
+         });
+         
+         // Add close button
+         JButton closeButton = new JButton("Close");
+         closeButton.addActionListener(new ActionListener() {
+             @Override
+             public void actionPerformed(ActionEvent e) {
+                 moduleDialog.dispose();
+             }
+         });
+         
+         buttonPanel.add(removeButton);
+         buttonPanel.add(closeButton);
+         moduleDialog.add(buttonPanel, BorderLayout.SOUTH);
+         
+         // Set dialog properties
+         moduleDialog.setSize(600, 400);
+         moduleDialog.setLocationRelativeTo(this);
+         moduleDialog.setVisible(true);
+     }
  
      /**
       * Add a new session
@@ -1893,71 +2266,7 @@
                  return;
              }
              
-             // Create array of module names for selection
-             String[] moduleNames = new String[modules.size()];
-             for (int i = 0; i < modules.size(); i++) {
-                 moduleNames[i] = modules.get(i).getModuleName();
-             }
-             
-             // Current module name
-             String currentModuleName = sessionToUpdate.getModule().getModuleName();
-             
-             // Select module
-             String selectedModuleName = (String) JOptionPane.showInputDialog(this,
-                     "Select module:",
-                     "Module Selection",
-                     JOptionPane.QUESTION_MESSAGE,
-                     null,
-                     moduleNames,
-                     currentModuleName);
-             if (selectedModuleName == null) return;
-             
-             // Find the selected module
-             Module selectedModule = null;
-             for (Module module : modules) {
-                 if (module.getModuleName().equals(selectedModuleName)) {
-                     selectedModule = module;
-                     break;
-                 }
-             }
-             
-             if (selectedModule == null) return;
-             
-             // Create array of classroom names for selection
-             String[] classroomNames = new String[classrooms.size()];
-             for (int i = 0; i < classrooms.size(); i++) {
-                 classroomNames[i] = classrooms.get(i).getRoomName() + " (Capacity: " + classrooms.get(i).getCapacity() + ")";
-             }
-             
-             // Current classroom name
-             String currentClassroomName = sessionToUpdate.getClassroom().getRoomName() + 
-                     " (Capacity: " + sessionToUpdate.getClassroom().getCapacity() + ")";
-             
-             // Select classroom
-             String selectedClassroomName = (String) JOptionPane.showInputDialog(this,
-                     "Select classroom:",
-                     "Classroom Selection",
-                     JOptionPane.QUESTION_MESSAGE,
-                     null,
-                     classroomNames,
-                     currentClassroomName);
-             if (selectedClassroomName == null) return;
-             
-             // Extract classroom name from the selected string
-             String roomName = selectedClassroomName.substring(0, selectedClassroomName.indexOf(" ("));
-             
-             // Find the selected classroom
-             Classroom selectedClassroom = null;
-             for (Classroom classroom : classrooms) {
-                 if (classroom.getRoomName().equals(roomName)) {
-                     selectedClassroom = classroom;
-                     break;
-                 }
-             }
-             
-             if (selectedClassroom == null) return;
-             
-             // Get updated session details
+             // Show input dialogs with current values
              String sessionName = JOptionPane.showInputDialog(this, 
                      "Enter session name:", 
                      sessionToUpdate.getSessionName());
@@ -1984,11 +2293,9 @@
              if (status == null) return;
              
              // Update session object
-             sessionToUpdate.setModule(selectedModule);
              sessionToUpdate.setSessionName(sessionName);
              sessionToUpdate.setStartTime(startTime);
              sessionToUpdate.setEndTime(endTime);
-             sessionToUpdate.setClassroom(selectedClassroom);
              sessionToUpdate.setStatus(status);
              
              // Save to file
@@ -1997,8 +2304,7 @@
              // Refresh table
              updateMainPanel("Sessions");
              
-             JOptionPane.showMessageDialog(this, 
-                     "Session updated successfully!", 
+             JOptionPane.showMessageDialog(this, "Session updated successfully!", 
                      "Success", 
                      JOptionPane.INFORMATION_MESSAGE);
              
@@ -2177,8 +2483,8 @@
                  moduleNames[i] = modules.get(i).getModuleName();
              }
              
-             // Current module name
-             String currentModuleName = assessmentToUpdate.getModule().getModuleName();
+             // Current module
+             Module currentModule = assessmentToUpdate.getModule();
              
              // Select module
              String selectedModuleName = (String) JOptionPane.showInputDialog(this,
@@ -2187,7 +2493,7 @@
                      JOptionPane.QUESTION_MESSAGE,
                      null,
                      moduleNames,
-                     currentModuleName);
+                     currentModule.getModuleName());
              if (selectedModuleName == null) return;
              
              // Find the selected module
@@ -2201,7 +2507,7 @@
              
              if (selectedModule == null) return;
              
-             // Get updated assessment details
+             // Show input dialogs with current values
              String title = JOptionPane.showInputDialog(this, 
                      "Enter assessment title:", 
                      assessmentToUpdate.getTitle());
@@ -2559,6 +2865,67 @@
          }
      }
      
+     /**
+      * Set up the context menu for teacher table management
+      */
+     private void setupTeacherContextMenu() {
+         // Create a popup menu for right-click actions
+         final javax.swing.JPopupMenu teacherPopupMenu = new javax.swing.JPopupMenu();
+         
+         // Create menu items
+         javax.swing.JMenuItem assignModuleItem = new javax.swing.JMenuItem("Assign Module");
+         javax.swing.JMenuItem manageModulesItem = new javax.swing.JMenuItem("Manage Modules");
+         
+         // Add action listeners to menu items
+         assignModuleItem.addActionListener(new java.awt.event.ActionListener() {
+             public void actionPerformed(java.awt.event.ActionEvent evt) {
+                 assignModuleToTeacher();
+             }
+         });
+         
+         manageModulesItem.addActionListener(new java.awt.event.ActionListener() {
+             public void actionPerformed(java.awt.event.ActionEvent evt) {
+                 manageTeacherModules();
+             }
+         });
+         
+         // Add menu items to popup
+         teacherPopupMenu.add(assignModuleItem);
+         teacherPopupMenu.add(manageModulesItem);
+         
+         // Add mouse listener to the table
+         tblCourses.addMouseListener(new java.awt.event.MouseAdapter() {
+             @Override
+             public void mousePressed(java.awt.event.MouseEvent evt) {
+                 showContextMenu(evt);
+             }
+             
+             @Override
+             public void mouseReleased(java.awt.event.MouseEvent evt) {
+                 showContextMenu(evt);
+             }
+             
+             private void showContextMenu(java.awt.event.MouseEvent evt) {
+                 // Only show context menu when Teachers section is selected
+                 if (selectedLabel != null && selectedLabel.getText().equals("Teachers")) {
+                     // Show popup on right-click
+                     if (evt.isPopupTrigger()) {
+                         // Select the row that was right-clicked
+                         int row = tblCourses.rowAtPoint(evt.getPoint());
+                         if (row >= 0 && row < tblCourses.getRowCount()) {
+                             tblCourses.setRowSelectionInterval(row, row);
+                         } else {
+                             tblCourses.clearSelection();
+                         }
+                         
+                         // Show the popup menu
+                         teacherPopupMenu.show(evt.getComponent(), evt.getX(), evt.getY());
+                     }
+                 }
+             }
+         });
+     }
+     
      private void addClassroom() {
      // Create input dialog for classroom information
      String roomName = JOptionPane.showInputDialog(this, "Enter classroom name:");
@@ -2839,8 +3206,7 @@
                      "Student year (" + selectedStudent.getYear() + ") does not match module year (" 
                              + selectedModule.getModuleYear() + "). Enroll anyway?", 
                      "Year Mismatch", 
-                     JOptionPane.YES_NO_OPTION,
-                     JOptionPane.WARNING_MESSAGE);
+                     JOptionPane.YES_NO_OPTION);
              
              if (confirm != JOptionPane.YES_OPTION) {
                  return;
@@ -2860,8 +3226,7 @@
              int confirm = JOptionPane.showConfirmDialog(this, 
                      "This module is at maximum capacity. Enroll anyway?", 
                      "Module Full", 
-                     JOptionPane.YES_NO_OPTION,
-                     JOptionPane.WARNING_MESSAGE);
+                     JOptionPane.YES_NO_OPTION);
              
              if (confirm != JOptionPane.YES_OPTION) {
                  return;
@@ -3195,4 +3560,3 @@
      private javax.swing.JTable tblCourses;
      // End of variables declaration//GEN-END:variables
  }
- 
